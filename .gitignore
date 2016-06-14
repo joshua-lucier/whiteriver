@@ -5,6 +5,7 @@ npm-debug.log*
 
 # website settings
 settings.js
+*node_modules*
 
 # Runtime data
 pids
