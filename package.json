@@ -1,28 +1,17 @@
 {
   "name": "whiteriver",
-  "version": "1.0.0",
-  "description": "White River Valley Ambulance Service Intranet site",
-  "main": "index.js",
-  "dependencies": {
-    "express": "^4.13.4"
-  },
-  "devDependencies": {},
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "node index.js"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://git.heroku.com/whiteriver.git"
-  },
-  "keywords": [
-    "White",
-    "River",
-    "Valley",
-    "Ambulance",
-    "Service",
-    "Admin",
-    "Site"
-  ],
-  "author": "Joshua Lucier",
-  "license": "MIT"
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0"
+  }
 }
