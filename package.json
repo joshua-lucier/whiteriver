@@ -1,0 +1,28 @@
+{
+  "name": "whiteriver",
+  "version": "1.0.0",
+  "description": "White River Valley Ambulance Service Intranet site",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/whiteriver.git"
+  },
+  "keywords": [
+    "White",
+    "River",
+    "Valley",
+    "Ambulance",
+    "Service",
+    "Admin",
+    "Site"
+  ],
+  "author": "Joshua Lucier",
+  "license": "MIT"
+}
