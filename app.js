@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
@@ -23,7 +24,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(secret));
-app.use(cookieSession());
+app.use(cookieSession({
+  name: 'whiteriver',
+  keys: [secret]
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
