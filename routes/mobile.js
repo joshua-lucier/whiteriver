@@ -7,7 +7,6 @@ var router = express.Router();
 var secret = process.env.secret;
 var accid = process.env.accid;
 var key = process.env.key;
-var url = process.env.url;
 var parseString = require('xml2js').parseString;
 router.use(cookieParser(secret));
 router.use(cookieSession({

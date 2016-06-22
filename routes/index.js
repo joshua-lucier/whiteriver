@@ -7,7 +7,6 @@ var router = express.Router();
 var secret = process.env.secret;
 var accid = process.env.accid;
 var key = process.env.key;
-var url = process.env.url;
 var parseString = require('xml2js').parseString;
 router.use(cookieParser(secret));
 router.use(cookieSession({
@@ -20,7 +19,6 @@ Authenticate = require('./functions').Authenticate;
 router.get('/', function(req, res, next) {
 	Authenticate('index', {title: 'Home'}, req, res);
 });
-
 
 router.get('/test', function(req,res,next){
 	var post_data = querystring.stringify({

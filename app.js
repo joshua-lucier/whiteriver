@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
 var login = require('./routes/login');
@@ -37,7 +37,7 @@ app.use(cookieSession({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/login', login);

@@ -7,7 +7,6 @@ var router = express.Router();
 var secret = process.env.secret;
 var accid = process.env.accid;
 var key = process.env.key;
-var url = process.env.url;
 var parseString = require('xml2js').parseString;
 router.use(cookieParser(secret));
 router.use(cookieSession({
@@ -15,8 +14,20 @@ router.use(cookieSession({
   keys: [secret]
 }));
 AppDevAuthenticate = require('./functions').AppDevAuthenticate;
+DatabaseInit = require('./functions').DatabaseInit;
+DatabaseClear = require('./functions').DatabaseClear;
 
 
-router.get('/manage', function(req, res, next) {
+router.get('/', function(req, res, next) {
 	AppDevAuthenticate('manage', {title: 'Database Management'}, req, res);
 });
+
+router.get('/init', function(req,res,next){
+	DatabaseInit('manage', {title: 'Database Management'}, req, res);
+});
+
+router.get('/clear', function(req,res,next){
+	DatabaseClear('manage', {title: 'Database Management'}, req, res);
+});
+
+module.exports = router;
