@@ -13,7 +13,7 @@ router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret]
 }));
-Authenticate = require('./functions').Authenticate;
+AdminAuthenticate = require('./functions').AdminAuthenticate;
 
 
 /*Main Page of the admin app*/
