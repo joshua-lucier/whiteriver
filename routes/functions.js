@@ -115,15 +115,36 @@ module.exports = {
 			post_res.setEncoding('utf8');
 			post_res.on('data',function (chunk){
 				parseString(chunk, function(err, result){
-					console.log(result);
+					console.log(result.results.authentication[0].member[0]['$'].id);
+					id = result.results.authentication[0].member[0]['$'].id;
+					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 					admin = false;
-					if((result.results.authentication[0]['$'].code==0 && (username == 'AppDev' || admin == true)) 
-					{
-						res.cookie('username',username);
-						res.cookie('password',password);
-						res.render(page,data);
-					}
-					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+					pg.connect(connectionString, function(err,client,done){
+						if(err){
+							return console.error('could not connect to postgres', err);
+						}
+						var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+						query.on('row', function(row){
+							console.log(row);
+							if(row.memberid == id){
+								admin = true;
+							}
+						});
+						query.on('error', function(error){
+							console.log(error);
+							res.render('error', {title: 'Error'});
+						});
+						query.on('end', function(results){
+							done();
+							if(result.results.authentication[0]['$'].code==0 && (username == 'AppDev' || admin == true))
+							{
+								res.cookie('username',username);
+								res.cookie('password',password);
+								res.render(page,data);
+							}
+							else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+						});
+					});					
 				});
 			});
 		});

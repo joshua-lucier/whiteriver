@@ -14,6 +14,8 @@ router.use(cookieSession({
   keys: [secret]
 }));
 Authenticate = require('./functions').Authenticate;
+AppDevAuthenticate = require('./functions').AppDevAuthenticate;
+AdminAuthenticate = require('./functions').AdminAuthenticate;
 
 router.post('/', function(req,res,next){
 	Authenticate(req.cookies.page,req.cookies.data,req,res);
@@ -21,6 +23,10 @@ router.post('/', function(req,res,next){
 
 router.post('/appdev', function(req,res,next){
 	AppDevAuthenticate(req.cookies.page,req.cookies.data,req,res);
+});
+
+router.post('/admin', function(req,res,next){
+	AdminAuthenticate(req.cookies.page,req.cookies.data,req,res);
 });
 
 module.exports = router;
