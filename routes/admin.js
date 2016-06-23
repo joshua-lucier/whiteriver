@@ -30,7 +30,7 @@ router.post('/finishtruck', function(req,res,next){
 	AddTruck('admin',{title: 'Admin'},req,res);
 });
 
-router.get('/getTrucks', function(req,res,next){
+router.get('/gettrucks', function(req,res,next){
 	GetTrucks(req,res);
 });
 
