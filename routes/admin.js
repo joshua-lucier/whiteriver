@@ -16,6 +16,7 @@ router.use(cookieSession({
 AdminAuthenticate = require('./functions').AdminAuthenticate;
 AddTruck = require('./functions').AddTruck;
 GetTrucks = require('./functions').GetTrucks;
+DeleteTruck = require('./functions').DeleteTruck;
 
 /*Main Page of the admin app*/
 router.get('/', function(req, res, next){
@@ -32,6 +33,10 @@ router.post('/finishtruck', function(req,res,next){
 
 router.get('/gettrucks', function(req,res,next){
 	GetTrucks(req,res);
+});
+
+router.post('/deletetruckprompt', function(req,res,next){
+	DeleteTruck('deletetruck', {title: 'Remove Truck?'},req,res);
 });
 
 module.exports = router;

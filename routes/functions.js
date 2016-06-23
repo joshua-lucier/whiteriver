@@ -15,6 +15,7 @@ var router = express.Router();
 var pg = require('pg');
 var Pool = pg.Pool;
 var Client = pg.Client;
+var pgescape = require('pg-escape');
 router.use(cookieParser(secret));
 router.use(cookieSession({
   name: 'whiteriver',
@@ -63,6 +64,12 @@ module.exports = {
 				console.log('Response: ' + chunk);
 				*/
 				parseString(chunk, function(err, result){
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]);
+						res.render('error',{title: 'Error', error: result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id});
+						return;
+					}
 					console.log(result.results.authentication[0]['$'].message);
 					if(result.results.authentication[0]['$'].code==0) 
 					{
@@ -115,6 +122,12 @@ module.exports = {
 			post_res.setEncoding('utf8');
 			post_res.on('data',function (chunk){
 				parseString(chunk, function(err, result){
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]);
+						res.render('error',{title: 'Error', error: result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id});
+						return;
+					}
 					//console.log(result.results.authentication[0].member[0]['$'].id);
 					id = result.results.authentication[0].member[0]['$'].id;
 					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -261,7 +274,7 @@ module.exports = {
 							client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);");
 							client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));");
 							client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp);");
-							client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text, TruckPlate text, DateCreated timestamp  not null default current_timestamp);");
+							client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);");
 							client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));");
 							client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);");
 							client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);");
@@ -456,7 +469,7 @@ module.exports = {
 												if(err3){
 													console.error('could not connect to postgres', err);
 												}
-												var query2 = client2.query("insert into Trucks(TruckCreatorName,TruckSerial,TruckMake,TruckModel,TruckName,TruckPlate) values ('"+TruckCreatorName+"','"+TruckSerial+"','"+TruckMake+"','"+TruckModel+"','"+TruckName+"','"+TruckPlate+ "');");
+												var query2 = client2.query("insert into Trucks(TruckCreatorName,TruckSerial,TruckMake,TruckModel,TruckName,TruckPlate) values ($1,$2,$3,$4,$5,$6);",[TruckCreatorName,TruckSerial,TruckMake,TruckModel,TruckName,TruckPlate]);
 												console.log('query complete');
 												query2.on('end', function(results){
 													done2();
@@ -525,6 +538,13 @@ module.exports = {
 			post_res.on('data',function (chunk){
 				parseString(chunk, function(err, result){
 					//console.log(result.results.authentication[0].member[0]['$'].id);
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]);
+						res.send(result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id);
+						return;
+					}
+					console.log(result.results);
 					id = result.results.authentication[0].member[0]['$'].id;
 					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 					admin = false;
@@ -555,7 +575,7 @@ module.exports = {
 									if(err3){
 										console.error('could not connect to postgres', err);
 									}
-									var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+									var query = client.query("select TruckName from Trucks;");
 									query.on('row', function(row2){
 										//console.log(row);
 										trucks.push(row2);
@@ -566,9 +586,15 @@ module.exports = {
 									});
 									query.on('end', function(results2){
 										done();
+										console.log(trucks);
+										finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
+										trucks.forEach(function(item){
+											finalhtml = finalhtml + '<input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+' ">' + item.truckname + '</input><br>';
+										});
+										finalhtml = finalhtml + '<input type="submit" value="Delete Truck"></input></form>';
 										res.cookie('username',username);
 										res.cookie('password',password);
-										res.send(trucks);
+										res.send(finalhtml);
 									});
 								});
 							}
