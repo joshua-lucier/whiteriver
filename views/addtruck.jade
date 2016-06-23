@@ -1,0 +1,28 @@
+extends layout
+
+block content
+	div(class="container HomeContainer")
+		div(class="row")
+			div(class="span12 text-center") 
+				h1 Add a Truck
+		div(class="row")
+			div(class="span6 offset3")
+				form(action="/admin/finishtruck",method="post")
+					label Truck Label:
+						input(type="text", name="truckname")
+					br
+					label Truck Serial:
+						input(type="text", name="truckserial")
+					br
+					label Truck Make:
+						input(type="text", name="truckmake")
+					br
+					label Truck Model:
+						input(type="text", name="truckmodel")
+					br
+					label Truck Plate:
+						input(type="text", name="truckplate")
+					br
+					input(type="submit", value="Submit")
+
+			div(class="span3")
