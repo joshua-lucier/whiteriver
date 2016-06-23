@@ -547,8 +547,30 @@ module.exports = {
 							done();
 							if(result.results.authentication[0]['$'].code==0 && (username == 'AppDev' || admin == true))
 							{
-								res.cookie('username',username);
-								res.cookie('password',password);
+								//Get trucks from database as an object
+								var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+								pg.connect(connectionString, function(err3,client2,done2){
+									console.log('connection complete');
+									trucks = [];
+									if(err3){
+										console.error('could not connect to postgres', err);
+									}
+									var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+									query.on('row', function(row2){
+										//console.log(row);
+										trucks.push(row2);
+									});
+									query.on('error', function(error2){
+										console.log(error);
+										res.render('error', {title: 'Error', error: error});
+									});
+									query.on('end', function(results2){
+										done();
+										res.cookie('username',username);
+										res.cookie('password',password);
+										res.send(trucks);
+									});
+								});
 							}
 							else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 						});
