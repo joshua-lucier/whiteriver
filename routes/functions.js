@@ -216,6 +216,7 @@ module.exports = {
 						TruckModel = req.body.truckmodel;
 						TruckName = req.body.truckname;
 						TruckPlate = req.body.truckplate;
+						var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 						pg.connect(connectionString, function(err3,client2,done2){
 							console.log('connection complete');
 							if(err3){
@@ -276,6 +277,7 @@ module.exports = {
 	},
 
 	DeleteTruck: function(req,res,next,callback){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err2,client2,done2){
 			if(err2){
 				return console.error('could not connect to postgres', err2);
@@ -299,6 +301,7 @@ module.exports = {
 
 	EditTruck: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(auth,username){
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err2,client2,done2){
 				if(err2){
 					return console.error('could not connect to postgres', err2);
