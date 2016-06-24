@@ -87,7 +87,7 @@ module.exports = {
 
 	},
 
-	Auth: function(req,res,next,callback){
+	Authorize: function(req,res,next,callback){
 		if(req.body.username && req.body.password){//if coming from /login
 			username = req.body.username;
 			password = req.body.password;
@@ -95,7 +95,7 @@ module.exports = {
 			username = req.cookies.username;
 			password = req.cookies.password;
 		} else {  //not authenticated or coming from /login need to redirect to login
-			res.cookie('page',req.originalUrl);
+			res.cookie('url',req.originalUrl);
 			res.render('login',{title: 'Login'});
 			return;
 		}
@@ -140,7 +140,7 @@ module.exports = {
 					{
 						res.cookie('username',username);
 						res.cookie('password',password);
-						callback(req,res,next);
+						callback(result);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
@@ -149,6 +149,40 @@ module.exports = {
 		
 		post_req.write(post_data);
 		post_req.end();
+	},
+
+	AdminAuthorize: function(req,res,next,callback){
+		Authorize(req,res,next,function(auth){
+			id = auth.results.authentication[0].member[0]['$'].id;
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+			admin = false;
+			pg.connect(connectionString, function(err,client,done){
+				if(err){
+					return console.error('could not connect to postgres', err);
+				}
+				var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+				query.on('row', function(row){
+					//console.log(row);
+					if(row.memberid == id){
+						admin = true;
+					}
+				});
+				query.on('error', function(error){
+					console.log(error);
+					res.render('error', {title: 'Error'});
+				});
+				query.on('end', function(results){
+					done();
+					if(username == 'AppDev' || admin == true)
+					{
+						res.cookie('username',username);
+						res.cookie('password',password);
+						callback(auth);
+					}
+					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+				});
+			});
+		});
 	},
 
 	AdminAuthenticate: function(page,data,req,res){

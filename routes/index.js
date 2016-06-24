@@ -14,10 +14,13 @@ router.use(cookieSession({
   keys: [secret]
 }));
 Authenticate = require('./functions').Authenticate;
+Authorize = require('./functions').Authorize;
 
 /* GET home page.  This page selects which app your in. */
-router.get('/', function(req, res, next) {
-	Authenticate('index', {title: 'Home'}, req, res);
+router.get('/', function(req,res,next){
+	Authorize(req,res,next,function(auth){
+		res.render('index',{title: 'Home Page'});
+	});
 });
 
 router.get('/test', function(req,res,next){

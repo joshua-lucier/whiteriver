@@ -16,9 +16,12 @@ router.use(cookieSession({
 Authenticate = require('./functions').Authenticate;
 AppDevAuthenticate = require('./functions').AppDevAuthenticate;
 AdminAuthenticate = require('./functions').AdminAuthenticate;
+Authorize = require('./functions').Authorize;
 
 router.post('/', function(req,res,next){
-	Authenticate(req.cookies.page,req.cookies.data,req,res);
+	Authorize(req,res,next,function(){
+		res.redirect(req.cookies.url);
+	});
 });
 
 router.post('/appdev', function(req,res,next){
@@ -26,7 +29,9 @@ router.post('/appdev', function(req,res,next){
 });
 
 router.post('/admin', function(req,res,next){
-	AdminAuthenticate(req.cookies.page,req.cookies.data,req,res);
+	AdminAuthorize(req,res,next,function(auth){
+		res.render('admin',{title: 'Admin'});
+	});
 });
 
 module.exports = router;
