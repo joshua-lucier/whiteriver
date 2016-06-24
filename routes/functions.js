@@ -292,7 +292,7 @@ module.exports = {
 				res.render('error', {title: 'Error'});
 			});
 			query2.on('end', function(results2){
-				done();
+				done2();
 				message = "Deleted truck with id "+req.body.truckid;
 				callback(message);
 			});
