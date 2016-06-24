@@ -88,8 +88,6 @@ module.exports = {
 		post_req.end();
 	},
 
-	Authenticate: this.Authorize,
-
 	AdminAuthorize: function(req,res,next,callback){
 		Authorize(req,res,next,function(auth,username){
 			id = auth.results.authentication[0].member[0]['$'].id;
@@ -132,43 +130,53 @@ module.exports = {
 		});
 	},
 
-	AdminAuthenticate: this.AdminAuthorize,
-
-	AppDevAuthenticate: this.AppDevAuthorize,
-
-	DatabaseInit: function(req,res,next){
+	DatabaseInit: function(req,res,next,callback){
 		AppDevAuthorize(req,res,next,function(auth,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err,client,done){
 				if(err){
 					return console.error('could not connect to postgres', err);
 				}
-				client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);");
-				client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));");
-				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp);");
-				client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);");
-				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));");
-				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);");
-				client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);");
+				message = 'Created Tables';
+				client.on('error', function(error){
+					message = error;
+				});
+				client.on('end',function(){
+					callback(message);
+				});
+				client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = error2;});
+				client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));").on('error', function(error2){message = error2;});
+				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp);").on('error', function(error2){message = error2;});
+				client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = error2;});
+				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));").on('error', function(error2){message = error2;});
+				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
+				client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);").on('error', function(error2){message = error2;});
 				done();
 			});
 		});
 	},
 
-	DatabaseClear: function(req,res,next){
+	DatabaseClear: function(req,res,next,callback){
 		AppDevAuthorize(req,res,next,function(auth,username){	
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err,client,done){
 				if(err){
 					return console.error('could not connect to postgres', err);
 				}
-				client.query("drop table CallEntries;");
-				client.query("drop table TruckStatusEntries;");
-				client.query("drop table Runs;");
-				client.query("drop table Trucks;");
-				client.query("drop table Tasks;");
-				client.query("drop table Alerts;");
-				client.query("drop table Administrators;");
+				message = 'Dropped Tables';
+				client.on('error', function(error){
+					message = error;
+				});
+				client.on('end',function(){
+					callback(message);
+				});
+				client.query("drop table CallEntries;").on('error', function(error2){message = error2;});
+				client.query("drop table TruckStatusEntries;").on('error', function(error2){message = error2;});
+				client.query("drop table Runs;").on('error', function(error2){message = error2;});
+				client.query("drop table Trucks;").on('error', function(error2){message = error2;});
+				client.query("drop table Tasks;").on('error', function(error2){message = error2;});
+				client.query("drop table Alerts;").on('error', function(error2){message = error2;});
+				client.query("drop table Administrators;").on('error', function(error2){message = error2;});
 				done();
 			});
 		});

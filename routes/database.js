@@ -13,7 +13,7 @@ router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret]
 }));
-AppDevAuthenticate = require('./functions').AppDevAuthenticate;
+AppDevAuthorize = require('./functions').AppDevAuthorize;
 DatabaseInit = require('./functions').DatabaseInit;
 DatabaseClear = require('./functions').DatabaseClear;
 
@@ -25,14 +25,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/init', function(req,res,next){
-	DatabaseInit(req,res,next,function(){
-		res.render('manage', {title: 'Database Management'});
+	DatabaseInit(req,res,next,function(message){
+		res.render('manage', {title: 'Database Management', message: message});
 	});
 });
 
 router.get('/clear', function(req,res,next){
-	DatabaseClear(req,res,next,function(){
-		res.render('manage', {title: 'Database Management'});
+	DatabaseClear(req,res,next,function(message){
+		res.render('manage', {title: 'Database Management', message: message});
 	});
 });
 
