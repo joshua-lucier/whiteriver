@@ -25,11 +25,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/init', function(req,res,next){
-	DatabaseInit('manage', {title: 'Database Management'}, req, res);
+	DatabaseInit(req,res,next,function(){
+		res.render('manage', {title: 'Database Management'});
+	});
 });
 
 router.get('/clear', function(req,res,next){
-	DatabaseClear('manage', {title: 'Database Management'}, req, res);
+	DatabaseClear(req,res,next,function(){
+		res.render('manage', {title: 'Database Management'});
+	});
 });
 
 module.exports = router;
