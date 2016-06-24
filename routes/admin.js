@@ -18,7 +18,6 @@ router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret]
 }));
-AdminAuthenticate = require('./functions').AdminAuthenticate;
 AddTruck = require('./functions').AddTruck;
 GetTrucks = require('./functions').GetTrucks;
 DeleteTruck = require('./functions').DeleteTruck;
@@ -39,11 +38,14 @@ router.get('/addtruck', function(req,res,next){
 });
 
 router.post('/finishtruck', function(req,res,next){
-	AddTruck('admin',{title: 'Admin'},req,res);
+	AddTruck(req,res,next,function(message){
+
+		res.render('admin',{title: 'Admin', message:message});
+	});
 });
 
 router.get('/gettrucks', function(req,res,next){
-	GetTrucks(req,res);
+	GetTrucks(req,res,next);
 });
 
 router.post('/deletetruckprompt', function(req,res,next){
@@ -67,13 +69,17 @@ router.post('/deletetruckprompt', function(req,res,next){
 		query.on('end', function(results){
 			done();
 			console.log(truck);
-			AdminAuthenticate('deletetruck', {title: 'Remove Truck?',truck: truck},req,res);
+			AdminAuthorize(req,res,next,function(auth,username){
+				res.render('deletetruck', {title: 'Remove Truck?',truck: truck};
+			});
 		});
 	});
 });
 
 router.post('/deletetruck', function(req,res,next){
-	DeleteTruck('admin',{title: ' Admin'}, req,res);
+	DeleteTruck(req,res,next,function(message){
+		res.render('admin',{title: ' Admin', message: message});
+	});
 });
 
 router.get('/edittruckform', function(req,res,next){
@@ -97,12 +103,16 @@ router.get('/edittruckform', function(req,res,next){
 		query.on('end', function(results){
 			done();
 			console.log(truck);
-			AdminAuthenticate('edittruck', {title: 'Edit Truck',truck: truck},req,res);
+			AdminAuthorize(req,res,next,function(auth,username){
+				res.render('edittruck', {title: 'Edit Truck',truck: truck});
+			});
 		});
 	});
 });
 
 router.post('/edittruck', function(req,res,next){
-	EditTruck('Admin',{title: 'Admin'},req,res);
+	EditTruck(req,res,next,function(message){
+		res.render('admin',{title: 'Admin',message: message});
+	});
 });
 module.exports = router;
