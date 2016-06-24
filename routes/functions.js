@@ -124,8 +124,11 @@ module.exports = {
 				parseString(chunk, function(err, result){
 					if(result.results.errors)
 					{
-						console.log(result.results.errors[0].error[0]);
-						res.render('error',{title: 'Error', error: result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id});
+						console.log(result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id);
+						error = result.results.errors[0].error[0];
+						error.status = result.results.errors[0].error[0]['$'].id;
+						error.stack = result.results.errors[0].error[0]['_'];
+						res.render('error',{title: 'Error', error: error});
 						return;
 					}
 					//console.log(result.results.authentication[0].member[0]['$'].id);
@@ -575,7 +578,7 @@ module.exports = {
 									if(err3){
 										console.error('could not connect to postgres', err);
 									}
-									var query = client.query("select TruckName from Trucks;");
+									var query = client.query("select TruckName,TruckID from Trucks;");
 									query.on('row', function(row2){
 										//console.log(row);
 										trucks.push(row2);
@@ -589,7 +592,7 @@ module.exports = {
 										console.log(trucks);
 										finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
 										trucks.forEach(function(item){
-											finalhtml = finalhtml + '<input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+' ">' + item.truckname + '</input><br>';
+											finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+'"><a href="/admin/edittruckform?truckid='+item.truckid+'">' + item.truckname + '</a></input></div>';
 										});
 										finalhtml = finalhtml + '<input type="submit" value="Delete Truck"></input></form>';
 										res.cookie('username',username);
@@ -597,6 +600,208 @@ module.exports = {
 										res.send(finalhtml);
 									});
 								});
+							}
+							else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+						});
+					});					
+				});
+			});
+		});
+		
+		post_req.write(post_data);
+		post_req.end();
+	},
+
+	DeleteTruck: function(page,data,req,res){
+		if(req.body.username && req.body.password){//if coming from /login
+			username = req.body.username;
+			password = req.body.password;
+		} else if (req.cookies.username && req.cookies.password){//if coming from other but already authenticated
+			username = req.cookies.username;
+			password = req.cookies.password;
+		} else {  //not authenticated or coming from /login need to redirect to login
+			res.cookie('page',page);
+			res.cookie('data',data);
+			res.render('adminlogin',{title: 'Login'});
+			return;
+		}
+
+		var post_data = querystring.stringify({
+			accid: accid,
+			acckey: key,
+			cmd: 'authenticateMember',
+			memun: username,
+			mempw: password
+		});
+		var post_options = {
+			host: 'secure2.aladtec.com',
+			port: 443,
+			path: '/wrva/xmlapi.php',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(post_data)
+			}
+		}
+		var post_req = https.request(post_options, function(post_res){
+			post_res.setEncoding('utf8');
+			post_res.on('data',function (chunk){
+				parseString(chunk, function(err, result){
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id);
+						error = result.results.errors[0].error[0];
+						error.status = result.results.errors[0].error[0]['$'].id;
+						error.stack = result.results.errors[0].error[0]['_'];
+						res.render('error',{title: 'Error', error: error});
+						return;
+					}
+					//console.log(result.results.authentication[0].member[0]['$'].id);
+					id = result.results.authentication[0].member[0]['$'].id;
+					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+					admin = false;
+					pg.connect(connectionString, function(err,client,done){
+						if(err){
+							return console.error('could not connect to postgres', err);
+						}
+						var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+						query.on('row', function(row){
+							//console.log(row);
+							if(row.memberid == id){
+								admin = true;
+							}
+						});
+						query.on('error', function(error){
+							console.log(error);
+							res.render('error', {title: 'Error'});
+						});
+						query.on('end', function(results){
+							done();
+							if(result.results.authentication[0]['$'].code==0 && (username == 'AppDev' || admin == true))
+							{
+								pg.connect(connectionString, function(err2,client2,done2){
+									if(err2){
+										return console.error('could not connect to postgres', err2);
+									}
+									var query2 = client2.query("delete from Trucks where truckid=$1;",[req.body.truckid]);
+									query2.on('row', function(row2){
+										console.log(row);
+
+									});
+									query2.on('error', function(error2){
+										console.log(error2);
+										res.render('error', {title: 'Error'});
+									});
+									query2.on('end', function(results2){
+										done();
+										res.cookie('username',username);
+										res.cookie('password',password);
+										data.message = 'Deleted truck from the database';
+										res.render(page,data);
+									});
+								});
+
+							}
+							else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+						});
+					});					
+				});
+			});
+		});
+		
+		post_req.write(post_data);
+		post_req.end();
+	},
+
+	EditTruck: function(page,data,req,res){
+		if(req.body.username && req.body.password){//if coming from /login
+			username = req.body.username;
+			password = req.body.password;
+		} else if (req.cookies.username && req.cookies.password){//if coming from other but already authenticated
+			username = req.cookies.username;
+			password = req.cookies.password;
+		} else {  //not authenticated or coming from /login need to redirect to login
+			res.cookie('page',page);
+			res.cookie('data',data);
+			res.render('adminlogin',{title: 'Login'});
+			return;
+		}
+
+		var post_data = querystring.stringify({
+			accid: accid,
+			acckey: key,
+			cmd: 'authenticateMember',
+			memun: username,
+			mempw: password
+		});
+		var post_options = {
+			host: 'secure2.aladtec.com',
+			port: 443,
+			path: '/wrva/xmlapi.php',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(post_data)
+			}
+		}
+		var post_req = https.request(post_options, function(post_res){
+			post_res.setEncoding('utf8');
+			post_res.on('data',function (chunk){
+				parseString(chunk, function(err, result){
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id);
+						error = result.results.errors[0].error[0];
+						error.status = result.results.errors[0].error[0]['$'].id;
+						error.stack = result.results.errors[0].error[0]['_'];
+						res.render('error',{title: 'Error', error: error});
+						return;
+					}
+					//console.log(result.results.authentication[0].member[0]['$'].id);
+					id = result.results.authentication[0].member[0]['$'].id;
+					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+					admin = false;
+					pg.connect(connectionString, function(err,client,done){
+						if(err){
+							return console.error('could not connect to postgres', err);
+						}
+						var query = client.query("select MemberID from Administrators where MemberID=" + id + ";");
+						query.on('row', function(row){
+							//console.log(row);
+							if(row.memberid == id){
+								admin = true;
+							}
+						});
+						query.on('error', function(error){
+							console.log(error);
+							res.render('error', {title: 'Error'});
+						});
+						query.on('end', function(results){
+							done();
+							if(result.results.authentication[0]['$'].code==0 && (username == 'AppDev' || admin == true))
+							{
+								pg.connect(connectionString, function(err2,client2,done2){
+									if(err2){
+										return console.error('could not connect to postgres', err2);
+									}
+									var query2 = client2.query("update Trucks set TruckName = $1, TruckSerial = $2, TruckMake = $3, TruckModel = $4, TruckPlate = $5 where TruckID = $6;",[req.body.truckname,req.body.truckserial,req.body.truckmake,req.body.truckmodel,req.body.truckplate,req.body.truckid]);
+									query2.on('row', function(row2){
+										console.log(row);
+
+									});
+									query2.on('error', function(error2){
+										console.log(error2);
+										res.render('error', {title: 'Error'});
+									});
+									query2.on('end', function(results2){
+										done();
+										res.cookie('username',username);
+										res.cookie('password',password);
+										data.message = 'Updated Truck Information';
+										res.render(page,data);
+									});
+								});
+
 							}
 							else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 						});
