@@ -252,17 +252,17 @@ module.exports = {
 				if(err3){
 					console.error('could not connect to postgres', err);
 				}
-				var query = client.query("select TruckName,TruckID from Trucks;");
-				query.on('row', function(row2){
+				var query2 = client2.query("select TruckName,TruckID from Trucks;");
+				query2.on('row', function(row2){
 					//console.log(row);
 					trucks.push(row2);
 				});
-				query.on('error', function(error2){
+				query2.on('error', function(error2){
 					console.log(error);
 					res.render('error', {title: 'Error', error: error});
 				});
-				query.on('end', function(results2){
-					done();
+				query2.on('end', function(results2){
+					done2();
 					console.log(trucks);
 					finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
 					trucks.forEach(function(item){
@@ -297,7 +297,7 @@ module.exports = {
 		});
 	},
 
-	EditTruck: function(page,data,req,res){
+	EditTruck: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(auth,username){
 			pg.connect(connectionString, function(err2,client2,done2){
 				if(err2){
