@@ -140,7 +140,7 @@ module.exports = {
 					{
 						res.cookie('username',username);
 						res.cookie('password',password);
-						callback(result);
+						callback(result,username);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
@@ -152,7 +152,7 @@ module.exports = {
 	},
 
 	AdminAuthorize: function(req,res,next,callback){
-		Authorize(req,res,next,function(auth){
+		Authorize(req,res,next,function(auth,username){
 			id = auth.results.authentication[0].member[0]['$'].id;
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			admin = false;
@@ -175,13 +175,21 @@ module.exports = {
 					done();
 					if(username == 'AppDev' || admin == true)
 					{
-						res.cookie('username',username);
-						res.cookie('password',password);
 						callback(auth);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
 			});
+		});
+	},
+
+	AppDevAuthorize: function(req,res,next,callback)
+	{
+		Authorize(req,res,next,function(auth,username){
+			if(auth.results.authentication[0]['$'].code==0 && username == 'AppDev'){
+				callback(auth,username);
+			}
+			else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 		});
 	},
 

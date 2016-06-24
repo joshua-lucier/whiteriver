@@ -20,6 +20,7 @@ router.get('/', function(req,res,next){
 	res.clearCookie('password', {path: '/'});
 	res.clearCookie('page', {path: '/'});
 	res.clearCookie('data', {path: '/'});
+	res.clearCookie('url', {path: '/'});
 	res.render('logout',{title: 'Login'});
 });
 

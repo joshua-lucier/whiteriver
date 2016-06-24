@@ -23,14 +23,19 @@ AddTruck = require('./functions').AddTruck;
 GetTrucks = require('./functions').GetTrucks;
 DeleteTruck = require('./functions').DeleteTruck;
 EditTruck = require('./functions').EditTruck;
+AdminAuthorize = require('./functions').AdminAuthorize;
 
 /*Main Page of the admin app*/
 router.get('/', function(req, res, next){
-	AdminAuthenticate('admin',{title: 'Admin'},req,res);
+	AdminAuthorize(req,res,next,function(auth,username){
+		res.render('admin', {title: 'Admin Page'});
+	});
 });
 
 router.get('/addtruck', function(req,res,next){
-	AdminAuthenticate('addtruck', {title: 'Add a Truck'},req,res);
+	AdminAuthorize(req,res,next,function(auth,username){	
+		res.render('addtruck', {title: 'Add a Truck'};
+	});
 });
 
 router.post('/finishtruck', function(req,res,next){
