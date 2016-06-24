@@ -19,7 +19,9 @@ DatabaseClear = require('./functions').DatabaseClear;
 
 
 router.get('/', function(req, res, next) {
-	AppDevAuthenticate('manage', {title: 'Database Management'}, req, res);
+	AppDevAuthorize(req,res,next,function(auth,username){
+		res.render('manage', {title: 'Database Management'});
+	});
 });
 
 router.get('/init', function(req,res,next){

@@ -27,13 +27,13 @@ AdminAuthorize = require('./functions').AdminAuthorize;
 /*Main Page of the admin app*/
 router.get('/', function(req, res, next){
 	AdminAuthorize(req,res,next,function(auth,username){
-		res.render('admin', {title: 'Admin Page'});
+		res.render('admin', {title: 'Admin Page', username: username});
 	});
 });
 
 router.get('/addtruck', function(req,res,next){
 	AdminAuthorize(req,res,next,function(auth,username){	
-		res.render('addtruck', {title: 'Add a Truck'};
+		res.render('addtruck', {title: 'Add a Truck', username: username};
 	});
 });
 
@@ -70,7 +70,7 @@ router.post('/deletetruckprompt', function(req,res,next){
 			done();
 			console.log(truck);
 			AdminAuthorize(req,res,next,function(auth,username){
-				res.render('deletetruck', {title: 'Remove Truck?',truck: truck};
+				res.render('deletetruck', {title: 'Remove Truck?',truck: truck, username: username};
 			});
 		});
 	});
@@ -78,7 +78,7 @@ router.post('/deletetruckprompt', function(req,res,next){
 
 router.post('/deletetruck', function(req,res,next){
 	DeleteTruck(req,res,next,function(message){
-		res.render('admin',{title: ' Admin', message: message});
+		res.render('admin',{title: ' Admin', message: message, username: username});
 	});
 });
 
@@ -112,7 +112,7 @@ router.get('/edittruckform', function(req,res,next){
 
 router.post('/edittruck', function(req,res,next){
 	EditTruck(req,res,next,function(message){
-		res.render('admin',{title: 'Admin',message: message});
+		res.render('admin',{title: 'Admin',message: message, username: username});
 	});
 });
 module.exports = router;
