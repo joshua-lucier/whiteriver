@@ -88,7 +88,7 @@ module.exports = {
 		post_req.end();
 	},
 
-	Authenticate: Authorize,
+	Authenticate: this.Authorize,
 
 	AdminAuthorize: function(req,res,next,callback){
 		Authorize(req,res,next,function(auth,username){
@@ -132,10 +132,9 @@ module.exports = {
 		});
 	},
 
-	AdminAuthenticate: AdminAuthorize,
+	AdminAuthenticate: this.AdminAuthorize,
 
-	AppDevAuthenticate: AppDevAuthorize,
-	},
+	AppDevAuthenticate: this.AppDevAuthorize,
 
 	DatabaseInit: function(req,res,next){
 		AppDevAuthorize(req,res,next,function(auth,username){
@@ -319,4 +318,5 @@ module.exports = {
 				});
 			});
 		});
+	}
 }

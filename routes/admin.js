@@ -33,7 +33,7 @@ router.get('/', function(req, res, next){
 
 router.get('/addtruck', function(req,res,next){
 	AdminAuthorize(req,res,next,function(auth,username){	
-		res.render('addtruck', {title: 'Add a Truck', username: username};
+		res.render('addtruck', {title: 'Add a Truck', username: username});
 	});
 });
 
@@ -70,7 +70,7 @@ router.post('/deletetruckprompt', function(req,res,next){
 			done();
 			console.log(truck);
 			AdminAuthorize(req,res,next,function(auth,username){
-				res.render('deletetruck', {title: 'Remove Truck?',truck: truck, username: username};
+				res.render('deletetruck', {title: 'Remove Truck?',truck: truck, username: username});
 			});
 		});
 	});
