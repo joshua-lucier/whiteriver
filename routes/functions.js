@@ -112,7 +112,7 @@ module.exports = {
 					done();
 					if(username == 'AppDev' || admin == true)
 					{
-						callback(auth);
+						callback(auth,username);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
@@ -146,7 +146,7 @@ module.exports = {
 				});
 				client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));").on('error', function(error2){message = error2;});
-				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp);").on('error', function(error2){message = error2;});
+				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));").on('error', function(error2){message = error2;});
 				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
@@ -356,6 +356,7 @@ module.exports = {
 
 	GetTasks: function(req,res,next){
 		AdminAuthorize(req,res,next,function(auth,username){
+			marked=false;
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err3,client2,done2){
 				console.log('connection complete');
@@ -363,7 +364,7 @@ module.exports = {
 				if(err3){
 					console.log('could not connect to postgres', err);
 				}
-				var query2 = client2.query("select Title,TaskID from Tasks;");
+				var query2 = client2.query("select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks;");
 				query2.on('row', function(row2){
 					console.log('Got a row'); 
 					//console.log(row);
@@ -379,7 +380,58 @@ module.exports = {
 					console.log(tasks);
 					finalhtml = '<form name="deleteTask" action="/admin/deltetaskprompt" method="post">';
 					tasks.forEach(function(item){
+						//check if marked no repeat
+						milli=0;
+						if(item.repeatperiod=="none"){
+							if(item.marktime) marked=true;
+						}
+						//If hourly,daily or weekly use same base
+						if(item.repeatperiod=="hourly"){
+							milli=60*60*1000;
+						} else if (item.repeatperiod=="daily"){
+							milli=24*60*60*1000;
+						} else if (item.repeatperiod=="weekly"){
+							milli=7*24*60*60*1000;
+						}
+						current = new Date();
+						start = new Date(item.timedue);
+						end = new Date(item.repeatend);
+						marktime = new Date(item.marktime);
+						//end date has passed
+						if(end-current < 0 && (item.marktime)) marked=true;
+						else {
+							totalbase=(current-start)/milli;
+							lastincrement = totalbase % item.repeatincrement;
+							lastincrement = totalbase - lastincrement;
+							if(marktime-lastincrement > 0) marked=true;
+							else marked=false;
+						}
+						//if monthly
+						if(item.repeatperiod=="monthly"){
+							totalyears = current.getYear() - start.getYear();
+							totalmonths = (current.getMonth() - start.getMonth())+(totalyears*12);
+							lastincrement = totalmonths % item.repeatincrement;
+							lastincrement = totalmonths - lastincrement;
+							lastmonth = lastincrement%12;
+							lastyear = floor(lastincrement/12);
+							lasttime = start;
+							lasttime.setYear(start.getYear() + lastyear);
+							lasttime.setMonth(start.getMonth() + lastmonth);
+							if(marktime-lasttime > 0) marked = true;
+							else marked = false;
+						}
+						if(item.repeatperiod=="yearly"){
+							totalyears = current.getYear() - start.getYear();
+							lastincrement = totalyears % item.repeatincrement;
+							lastincrement = totalmonths - lastincrement;
+							lasttime = start;
+							lasttime.setYear(start.getYear + lastincrement);
+							if(marktime-lasttime > 0) marked = true;
+							else marked = false;
+						}
+						if(marked) finalhtml==finalhtml+"<s>";
 						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskgroup" value="'+item.taskid+'"><a href="/admin/edittaskform?truckid='+item.taskid+'">' + item.title + '</a></input></div>';
+						if(marked) finalhtml==finalhtml+"</s>";
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
 					res.send(finalhtml);

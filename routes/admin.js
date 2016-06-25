@@ -170,4 +170,30 @@ router.post('/addtask',function(req,res,next){
 router.get('/gettasks',function(req,res,next){
 	GetTasks(req,res,next);
 });
+
+router.get('/togglemark',function(req,res,next){
+	taskid=req.query.taskid;
+	AdminAuthorize(req,res,next,function(auth,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			if(err){
+				return console.error('could not connect to postgres', err);
+			}
+			//console.log(JSON.stringify(req.body.truckgroup));
+			truckid = req.query.truckid;
+			//console.log(JSON.stringify(truckname));
+			var query = client.query("update Tasks set MarkTime=current_timestamp where TaskID=$1;", [taskid]);
+			query.on('row', function(row){
+			});
+			query.on('error', function(error){
+				console.log(error);
+				res.render('error', {title: 'Error'});
+			});
+			query.on('end', function(results){
+				done();
+				console.log(truck);
+			});
+		});
+	});
+});
 module.exports = router;

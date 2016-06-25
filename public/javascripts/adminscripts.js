@@ -15,3 +15,9 @@ trucklistinterval = setInterval(listtrucks, 60000);
 
 $("body").ready(listtasks());
 tasklistinterval = setInterval(listtasks, 60000);
+
+function togglemark(id){
+	$.get("/admin/togglemark?taskid="+id,function(data,status){
+		listtasks();
+	});
+}
