@@ -39,7 +39,7 @@ block content
 									i(data-time-icon="icon-time",data-date-icon="icon-calendar")
 					div(class="row")
 						div(class="span3 text-right")
-							label Repeat Interval:
+							label Repeat period:
 						div(class="span3")
 							select(name="repeatperiod")
 								option(value="none") No Repeat
@@ -48,6 +48,11 @@ block content
 								option(value="weekly") Weekly
 								option(value="monthly") Monthly
 								option(value="yearly") Yearly
+					div(class="row")
+						div(class="span3 text-right")
+							label Repeat interval:
+						div(class="span3")
+							input(type="number",name="repeatincrement",value="1")
 					div(class="row")
 						div(class="span3 text-right")
 							label Repeat end date:
