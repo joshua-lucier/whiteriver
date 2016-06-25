@@ -1,0 +1,67 @@
+extends layout
+
+block content
+	div(class="container HomeContainer")
+		div(class="row")
+			div(class="span12 text-center") 
+				h1 Add a Task
+		div(class="row")
+			div(class="span6")
+				form(action="/admin/addtask",method="post")
+					div(class="row")
+						input(type="hidden", name="creatorid", value="#{id}")
+						div(class="span3 text-right")
+							label Assigned to:
+						div(class="span3")
+							select(name="chargedid")
+								each id, index in ids
+									option(value=id)= names[index]
+					div(class="row")
+						div(class="span3 text-right")
+							label Title:
+						div(class="span3")
+							input(type="text", name="title")
+					div(class="row")
+						div(class="span3 text-right")
+							label Description:
+						div(class="span6 offset3")
+							textarea(name="description",rows="5",cols="20")
+					div(class="row")
+						div(class="span9")
+							br
+					div(class="row")
+						div(class="span3 text-right")
+							label Time and Date due:
+						div(class="span3")
+							div(class='input-append date datetimepicker')
+								input(type='text',data-format="yyyy-MM-dd hh:mm:ss",name="timedue")
+								span(class="add-on")
+									i(data-time-icon="icon-time",data-date-icon="icon-calendar")
+					div(class="row")
+						div(class="span3 text-right")
+							label Repeat Interval:
+						div(class="span3")
+							select(name="repeatperiod")
+								option(value="none") No Repeat
+								option(value="hourly") Hourly
+								option(value="daily") Daily
+								option(value="weekly") Weekly
+								option(value="monthly") Monthly
+								option(value="yearly") Yearly
+					div(class="row")
+						div(class="span3 text-right")
+							label Repeat end date:
+						div(class="span3")
+							div(class='input-append date datetimepicker')
+								input(type='text',data-format="yyyy-MM-dd hh:mm:ss",name="repeatend")
+								span(class="add-on")
+										i(data-time-icon="icon-time",data-date-icon="icon-calendar")
+					div(class="row")
+						div(class="span3 text-right")
+							input(type="submit", value="Submit")
+							br
+							br
+							div(class='button')
+								a(href="/admin") Cancel
+
+			div(class="span3")

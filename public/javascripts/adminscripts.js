@@ -14,4 +14,4 @@ $("body").ready(listtrucks());
 trucklistinterval = setInterval(listtrucks, 60000);
 
 $("body").ready(listtasks());
-trucklistinterval = setInterval(listtasks, 60000);
+tasklistinterval = setInterval(listtasks, 60000);
