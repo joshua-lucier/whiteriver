@@ -174,24 +174,56 @@ router.get('/gettasks',function(req,res,next){
 router.get('/togglemark',function(req,res,next){
 	taskid=req.query.taskid;
 	AdminAuthorize(req,res,next,function(auth,username){
+		marked = false;
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err,client,done){
 			if(err){
 				return console.error('could not connect to postgres', err);
 			}
 			//console.log(JSON.stringify(req.body.truckgroup));
-			truckid = req.query.truckid;
+			taskid = req.query.taskid;
 			//console.log(JSON.stringify(truckname));
-			var query = client.query("update Tasks set MarkTime=current_timestamp where TaskID=$1;", [taskid]);
+			var query = client.query("select MarkTime from Tasks where TaskID=$1",[taskid]);
 			query.on('row', function(row){
+				console.log(row.marktime);
+				if(row.marktime==null) marked=false;
+				else marked=true;
 			});
 			query.on('error', function(error){
 				console.log(error);
-				res.render('error', {title: 'Error'});
+				error = {};
+				error.stack = error;
+				error.status = error;
+				res.render('error', {title: 'Error', error: error});
 			});
 			query.on('end', function(results){
-				done();
-				console.log(truck);
+				if(marked==false){
+					var query2 = client.query("update Tasks set MarkTime=current_timestamp where TaskID=$1;", [taskid]);
+					query2.on('error', function(error){
+						console.log(error);
+						error = {};
+						error.stack = error;
+						error.status = error;
+						res.render('error', {title: 'Error', error: error});
+					});
+					query2.on('end', function(results){
+						done();
+						res.send('Unchecked Item');
+					});
+				} else {
+					var query2 = client.query("update Tasks set MarkTime=NULL where TaskID=$1;",[taskid]);
+					query2.on('error', function(error){
+						console.log(error);
+						error = {};
+						error.stack = error;
+						error.status = error;
+						res.render('error', {title: 'Error', error: error});
+					});
+					query2.on('end', function(results){
+						done();
+						res.send('Unchecked Item');
+					});
+				}
 			});
 		});
 	});

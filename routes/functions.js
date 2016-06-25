@@ -365,8 +365,7 @@ module.exports = {
 					console.log('could not connect to postgres', err);
 				}
 				var query2 = client2.query("select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks;");
-				query2.on('row', function(row2){
-					console.log('Got a row'); 
+				query2.on('row', function(row2){ 
 					//console.log(row);
 					tasks.push(row2);
 				});
@@ -376,14 +375,14 @@ module.exports = {
 				});
 				query2.on('end', function(results2){
 					done2();
-					console.log('query ended')
-					console.log(tasks);
 					finalhtml = '<form name="deleteTask" action="/admin/deltetaskprompt" method="post">';
 					tasks.forEach(function(item){
 						//check if marked no repeat
+						marked=false;
 						milli=0;
 						if(item.repeatperiod=="none"){
 							if(item.marktime) marked=true;
+							else marked=false;
 						}
 						//If hourly,daily or weekly use same base
 						if(item.repeatperiod=="hourly"){
@@ -398,13 +397,15 @@ module.exports = {
 						end = new Date(item.repeatend);
 						marktime = new Date(item.marktime);
 						//end date has passed
-						if(end-current < 0 && (item.marktime)) marked=true;
-						else {
-							totalbase=(current-start)/milli;
-							lastincrement = totalbase % item.repeatincrement;
-							lastincrement = totalbase - lastincrement;
-							if(marktime-lastincrement > 0) marked=true;
-							else marked=false;
+						if(item.repeatperiod=="hourly" || item.repeatperiod=="daily" || item.repeatperiod=="weekly"){
+							if(end-current <= 0 && (item.marktime)) marked=true;
+							else {
+								totalbase=(current-start)/milli;
+								lastincrement = totalbase % item.repeatincrement;
+								lastincrement = totalbase - lastincrement;
+								if(marktime-lastincrement > 0) marked=true;
+								else marked=false;
+							}
 						}
 						//if monthly
 						if(item.repeatperiod=="monthly"){
@@ -417,7 +418,7 @@ module.exports = {
 							lasttime = start;
 							lasttime.setYear(start.getYear() + lastyear);
 							lasttime.setMonth(start.getMonth() + lastmonth);
-							if(marktime-lasttime > 0) marked = true;
+							if(marktime-lasttime >= 0) marked = true;
 							else marked = false;
 						}
 						if(item.repeatperiod=="yearly"){
@@ -426,12 +427,12 @@ module.exports = {
 							lastincrement = totalmonths - lastincrement;
 							lasttime = start;
 							lasttime.setYear(start.getYear + lastincrement);
-							if(marktime-lasttime > 0) marked = true;
+							if(marktime-lasttime >= 0) marked = true;
 							else marked = false;
 						}
-						if(marked) finalhtml==finalhtml+"<s>";
-						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskgroup" value="'+item.taskid+'"><a href="/admin/edittaskform?truckid='+item.taskid+'">' + item.title + '</a></input></div>';
-						if(marked) finalhtml==finalhtml+"</s>";
+						if(marked) finalhtml=finalhtml+"<s>";
+						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskgroup" value="'+item.taskid+'"><a href="#" onClick="togglemark('+item.taskid+');">' + item.title + '</a></input></div>';
+						if(marked) finalhtml=finalhtml+"</s>";
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
 					res.send(finalhtml);
