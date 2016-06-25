@@ -23,6 +23,8 @@ GetTrucks = require('./functions').GetTrucks;
 DeleteTruck = require('./functions').DeleteTruck;
 EditTruck = require('./functions').EditTruck;
 AdminAuthorize = require('./functions').AdminAuthorize;
+AddTask = require('./functions').AddTask;
+GetTasks = require('./functions').GetTasks;
 
 /*Main Page of the admin app*/
 router.get('/', function(req, res, next){
@@ -114,5 +116,58 @@ router.post('/edittruck', function(req,res,next){
 	EditTruck(req,res,next,function(message){
 		res.render('admin',{title: 'Admin',message: message, username: username});
 	});
+});
+
+router.get('/addtaskform', function(req,res,next){
+	AdminAuthorize(req,res,next,function(auth,username){
+		id = auth.results.authentication[0].member[0]['$'].id;
+		names = [];
+		ids = [];
+		var post2_data = querystring.stringify({
+				accid: accid,
+				acckey: key,
+				cmd: 'getMembers',
+			});
+		var post2_options = {
+			host: 'secure2.aladtec.com',
+			port: 443,
+			path: '/wrva/xmlapi.php',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(post2_data)
+			}
+		}
+		var post2_req = https.request(post2_options, function(post2_res){
+			post2_res.setEncoding('utf8');
+			post2_res.on('data',function (chunk2){
+				
+				parseString(chunk2, function(err2, result2){
+					creatorname = '';
+					//console.log(result2.results.members[0].member[0]['$'].id);
+					//console.log(result2.results.members[0].member[0].name[0]);
+					//extract the name of the user from result2
+					result2.results.members[0].member.forEach(function(item){
+						ids.push(item['$'].id);
+						names.push(item.name[0]);
+					});
+					res.render('addtask',{title: 'Add Task',id: id,ids: ids, names: names});
+				});
+			});
+		});
+		post2_req.write(post2_data);
+		post2_req.end();
+
+	});
+});
+
+router.post('/addtask',function(req,res,next){
+	AddTask(req,res,next,function(message){
+		res.render('admin',{title: 'Admin Page',message: message});
+	});
+});
+
+router.get('/gettasks',function(req,res,next){
+	GetTasks(req,res,next);
 });
 module.exports = router;

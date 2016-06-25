@@ -4,5 +4,14 @@ function listtrucks(){
 	});
 }
 
+function listtasks(){
+	$.get("/admin/gettasks", function(data,status){
+		$("#tasklist").html(data);
+	});
+}
+
 $("body").ready(listtrucks());
 trucklistinterval = setInterval(listtrucks, 60000);
+
+$("body").ready(listtasks());
+trucklistinterval = setInterval(listtasks, 60000);

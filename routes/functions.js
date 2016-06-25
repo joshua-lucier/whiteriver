@@ -186,13 +186,11 @@ module.exports = {
 		AdminAuthorize(req,res,next,function(auth,username){
 			//add the truck to the database
 			//first get the first and last name of the currently logged in user
-			console.log('Setup post2 data');
 			var post2_data = querystring.stringify({
 				accid: accid,
 				acckey: key,
 				cmd: 'getMembers',
 			});
-			console.log('setup post2 options');
 			var post2_options = {
 				host: 'secure2.aladtec.com',
 				port: 443,
@@ -203,9 +201,7 @@ module.exports = {
 					'Content-Length': Buffer.byteLength(post2_data)
 				}
 			}
-			console.log('setup post2 request');
 			var post2_req = https.request(post2_options, function(post2_res){
-				console.log('setup post2 response');
 				post2_res.setEncoding('utf8');
 				post2_res.on('data',function (chunk2){
 					console.log('setup parse2');
@@ -326,6 +322,67 @@ module.exports = {
 				query2.on('end', function(results2){
 					message = 'Updated Truck Information';
 					callback(message);
+				});
+			});
+		});
+	},
+
+	AddTask: function(req,res,next,callback){
+		AdminAuthorize(req,res,next,function(auth,username){
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+			pg.connect(connectionString, function(err2,client2,done2){
+				if(err2){
+					return console.error('could not connect to postgres', err2);
+				}
+				var query2 = client2.query("insert into Tasks(CreatorID,ChargedID,Title,Description,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd) values($1,$2,$3,$4,$5,$6,$7,$8);",[req.body.creatorid,req.body.chargedid,req.body.title,req.body.description,req.body.timedue,req.body.repeatperiod,req.body.repeatincrement,req.body.repeatend]);
+				query2.on('row', function(row2){
+					console.log(row);
+
+				});
+				query2.on('error', function(error2){
+					console.log(error2);
+					error={};
+					error.status=error2;
+					error.stack=error2;
+					res.render('error', {title: 'Error',error: error});
+				});
+				query2.on('end', function(results2){
+					message = 'Added Task ' + req.body.title;
+					callback(message);
+				});
+			});
+		});
+	},
+
+	GetTasks: function(req,res,next){
+		AdminAuthorize(req,res,next,function(auth,username){
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+			pg.connect(connectionString, function(err3,client2,done2){
+				console.log('connection complete');
+				tasks = [];
+				if(err3){
+					console.log('could not connect to postgres', err);
+				}
+				var query2 = client2.query("select Title,TaskID from Tasks;");
+				query2.on('row', function(row2){
+					console.log('Got a row'); 
+					//console.log(row);
+					tasks.push(row2);
+				});
+				query2.on('error', function(error2){
+					console.log(error);
+					res.send(error);
+				});
+				query2.on('end', function(results2){
+					done2();
+					console.log('query ended')
+					console.log(tasks);
+					finalhtml = '<form name="deleteTask" action="/admin/deltetaskprompt" method="post">';
+					tasks.forEach(function(item){
+						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskgroup" value="'+item.taskid+'"><a href="/admin/edittaskform?truckid='+item.taskid+'">' + item.title + '</a></input></div>';
+					});
+					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
+					res.send(finalhtml);
 				});
 			});
 		});
