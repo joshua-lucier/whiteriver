@@ -11,11 +11,14 @@ function listtasks(){
 	});
 }
 
-$("body").ready(listtrucks());
-trucklistinterval = setInterval(listtrucks, 60000);
 
 $("body").ready(listtasks());
-tasklistinterval = setInterval(listtasks, 60000);
+tasklistinterval = setInterval(listtasks(), 60000);
+
+$("body").ready(setTimeout(listtrucks(),750));
+trucklistinterval = setInterval(setTimeout(listtrucks(),750), 60000);
+
+
 
 function togglemark(id){
 	$.get("/admin/togglemark?taskid="+id,function(data,status){
