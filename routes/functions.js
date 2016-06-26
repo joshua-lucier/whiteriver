@@ -16,6 +16,7 @@ var pg = require('pg');
 var Pool = pg.Pool;
 var Client = pg.Client;
 var pgescape = require('pg-escape');
+var NodeRSA = require('node-rsa');
 router.use(cookieParser(secret));
 router.use(cookieSession({
   name: 'whiteriver',
@@ -75,9 +76,10 @@ module.exports = {
 					console.log(result.results.authentication[0]['$'].message);
 					if(result.results.authentication[0]['$'].code==0) 
 					{
+						id = result.results.authentication[0].member[0]['$'].id;
 						res.cookie('username',username);
 						res.cookie('password',password);
-						callback(result,username);
+						callback(id,username);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
@@ -89,8 +91,7 @@ module.exports = {
 	},
 
 	AdminAuthorize: function(req,res,next,callback){
-		Authorize(req,res,next,function(auth,username){
-			id = auth.results.authentication[0].member[0]['$'].id;
+		Authorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			admin = false;
 			pg.connect(connectionString, function(err,client,done){
@@ -112,7 +113,7 @@ module.exports = {
 					done();
 					if(username == 'AppDev' || admin == true)
 					{
-						callback(auth,username);
+						callback(id,username);
 					}
 					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
 				});
@@ -122,7 +123,7 @@ module.exports = {
 
 	AppDevAuthorize: function(req,res,next,callback)
 	{
-		Authorize(req,res,next,function(auth,username){
+		Authorize(req,res,next,function(id,username){
 			if(auth.results.authentication[0]['$'].code==0 && username == 'AppDev'){
 				callback(auth,username);
 			}
@@ -131,7 +132,7 @@ module.exports = {
 	},
 
 	DatabaseInit: function(req,res,next,callback){
-		AppDevAuthorize(req,res,next,function(auth,username){
+		AppDevAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err,client,done){
 				if(err){
@@ -157,7 +158,7 @@ module.exports = {
 	},
 
 	DatabaseClear: function(req,res,next,callback){
-		AppDevAuthorize(req,res,next,function(auth,username){	
+		AppDevAuthorize(req,res,next,function(id,username){	
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err,client,done){
 				if(err){
@@ -183,7 +184,7 @@ module.exports = {
 	},
 
 	AddTruck: function(req,res,next,callback){
-		AdminAuthorize(req,res,next,function(auth,username){
+		AdminAuthorize(req,res,next,function(id,username){
 			//add the truck to the database
 			//first get the first and last name of the currently logged in user
 			var post2_data = querystring.stringify({
@@ -248,7 +249,7 @@ module.exports = {
 	},
 
 	GetTrucks: function(req,res,next){
-		AdminAuthorize(req,res,next,function(auth,username){
+		AdminAuthorize(req,res,next,function(id,username){
 			//Get trucks from database as an object
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err3,client2,done2){
@@ -281,30 +282,32 @@ module.exports = {
 	},
 
 	DeleteTruck: function(req,res,next,callback){
-		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
-		pg.connect(connectionString, function(err2,client2,done2){
-			if(err2){
-				return console.error('could not connect to postgres', err2);
-			}
-			var query2 = client2.query("delete from Trucks where truckid=$1;",[req.body.truckid]);
-			query2.on('row', function(row2){
-				console.log(row);
+		AdminAuthorize(req,res,next,function(id,username){
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+			pg.connect(connectionString, function(err2,client2,done2){
+				if(err2){
+					return console.error('could not connect to postgres', err2);
+				}
+				var query2 = client2.query("delete from Trucks where truckid=$1;",[req.body.truckid]);
+				query2.on('row', function(row2){
+					console.log(row);
 
-			});
-			query2.on('error', function(error2){
-				console.log(error2);
-				res.render('error', {title: 'Error'});
-			});
-			query2.on('end', function(results2){
-				done2();
-				message = "Deleted truck with id "+req.body.truckid;
-				callback(message);
+				});
+				query2.on('error', function(error2){
+					console.log(error2);
+					res.render('error', {title: 'Error'});
+				});
+				query2.on('end', function(results2){
+					done2();
+					message = "Deleted truck with id "+req.body.truckid;
+					callback(message);
+				});
 			});
 		});
 	},
 
 	EditTruck: function(req,res,next,callback){
-		AdminAuthorize(req,res,next,function(auth,username){
+		AdminAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err2,client2,done2){
 				if(err2){
@@ -328,7 +331,7 @@ module.exports = {
 	},
 
 	AddTask: function(req,res,next,callback){
-		AdminAuthorize(req,res,next,function(auth,username){
+		AdminAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err2,client2,done2){
 				if(err2){
@@ -355,7 +358,7 @@ module.exports = {
 	},
 
 	GetTasks: function(req,res,next){
-		AdminAuthorize(req,res,next,function(auth,username){
+		AdminAuthorize(req,res,next,function(id,username){
 			marked=false;
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err3,client2,done2){

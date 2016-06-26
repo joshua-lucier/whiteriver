@@ -71,7 +71,7 @@ router.post('/deletetruckprompt', function(req,res,next){
 		query.on('end', function(results){
 			done();
 			console.log(truck);
-			AdminAuthorize(req,res,next,function(auth,username){
+			AdminAuthorize(req,res,next,function(id,username){
 				res.render('deletetruck', {title: 'Remove Truck?',truck: truck, username: username});
 			});
 		});
@@ -105,7 +105,7 @@ router.get('/edittruckform', function(req,res,next){
 		query.on('end', function(results){
 			done();
 			console.log(truck);
-			AdminAuthorize(req,res,next,function(auth,username){
+			AdminAuthorize(req,res,next,function(id,username){
 				res.render('edittruck', {title: 'Edit Truck',truck: truck});
 			});
 		});
@@ -119,8 +119,7 @@ router.post('/edittruck', function(req,res,next){
 });
 
 router.get('/addtaskform', function(req,res,next){
-	AdminAuthorize(req,res,next,function(auth,username){
-		id = auth.results.authentication[0].member[0]['$'].id;
+	AdminAuthorize(req,res,next,function(id,username){
 		names = [];
 		ids = [];
 		var post2_data = querystring.stringify({
@@ -173,7 +172,7 @@ router.get('/gettasks',function(req,res,next){
 
 router.get('/togglemark',function(req,res,next){
 	taskid=req.query.taskid;
-	AdminAuthorize(req,res,next,function(auth,username){
+	AdminAuthorize(req,res,next,function(id,username){
 		marked = false;
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err,client,done){

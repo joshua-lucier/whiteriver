@@ -19,7 +19,8 @@
     "querystring": "~0.2.0",
     "sequence": "~3.0.0",
     "pg": "~5.1.0",
-    "pg-escape": "~0.2.0"
+    "pg-escape": "~0.2.0",
+    "node-rsa": "~0.3.3"
   },
   "engine": "node 6.2.1"
 }
