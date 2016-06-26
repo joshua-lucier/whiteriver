@@ -1,5 +1,6 @@
 function listtrucks(){
 	$.get("/admin/gettrucks", function(data,status){
+		console.log(data);
 		$("#trucklist").html(data);
 	});
 }

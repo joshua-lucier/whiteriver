@@ -121,15 +121,14 @@ module.exports = {
 		} else if (req.cookies.username && req.cookies.encrypted){//if coming from other but already authenticated
 			username = req.cookies.username;
 			encrypted = req.cookies.encrypted;
+			token = {};
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 			pg.connect(connectionString, function(err,client,done){
 				if(err){
 					return console.error('could not connect to postgres', err);
 				}
-				token = {};
 				var query = client.query("select * from Tokens where UserName=$1",[username]);
 				query.on('row', function(row){
-					//console.log(row);
 					token = row;
 				});
 				query.on('error', function(error){
@@ -139,8 +138,12 @@ module.exports = {
 				query.on('end', function(results){
 					done();
 					decrypted = decrypt(encrypted);
-					if(decrypted==token.token) callback(token.userid,username);
-					else res.render('invalid',{title: 'Invalid', message: "Token did not match encrypted token"});
+					if(decrypted==token.token) {
+						callback(token.userid,username);
+					}
+					else {
+						res.send('Failed on Authorize: Token did not match encrypted token');
+					}
 				});
 			});
 		} else {  //not authenticated or coming from /login need to redirect to login
@@ -309,39 +312,6 @@ module.exports = {
 			});
 			post2_req.write(post2_data);
 			post2_req.end();
-		});
-	},
-
-	GetTrucks: function(req,res,next){
-		AdminAuthorize(req,res,next,function(id,username){
-			//Get trucks from database as an object
-			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
-			pg.connect(connectionString, function(err3,client2,done2){
-				console.log('connection complete');
-				trucks = [];
-				if(err3){
-					console.error('could not connect to postgres', err);
-				}
-				var query2 = client2.query("select TruckName,TruckID from Trucks;");
-				query2.on('row', function(row2){
-					//console.log(row);
-					trucks.push(row2);
-				});
-				query2.on('error', function(error2){
-					console.log(error);
-					res.render('error', {title: 'Error', error: error});
-				});
-				query2.on('end', function(results2){
-					done2();
-					console.log(trucks);
-					finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
-					trucks.forEach(function(item){
-						finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+'"><a href="/admin/edittruckform?truckid='+item.truckid+'">' + item.truckname + '</a></input></div>';
-					});
-					finalhtml = finalhtml + '<input type="submit" value="Delete Truck"></input></form>';
-					res.send(finalhtml);
-				});
-			});
 		});
 	},
 

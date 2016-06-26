@@ -47,7 +47,36 @@ router.post('/finishtruck', function(req,res,next){
 });
 
 router.get('/gettrucks', function(req,res,next){
-	GetTrucks(req,res,next);
+	AdminAuthorize(req,res,next,function(id,username){
+		//Get trucks from database as an object
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			trucks = [];
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select TruckName,TruckID from Trucks;");
+			query2.on('row', function(row2){
+				//console.log(row);
+				trucks.push(row2);
+			});
+			query2.on('error', function(error2){
+				console.log(error);
+				res.render('error', {title: 'Error', error: error});
+			});
+			query2.on('end', function(results2){
+				done2();
+				console.log(trucks);
+				finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
+				trucks.forEach(function(item){
+					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+'"><a href="/admin/edittruckform?truckid='+item.truckid+'">' + item.truckname + '</a></input></div>';
+				});
+				finalhtml = finalhtml + '<input type="submit" value="Delete Truck"></input></form>';
+				res.send(finalhtml);
+			});
+		});
+	});
 });
 
 router.post('/deletetruckprompt', function(req,res,next){
