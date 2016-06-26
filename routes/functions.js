@@ -5,7 +5,7 @@ var querystring = require('querystring');
 var https = require('https');
 var secret = process.env.secret;
 var accid = process.env.accid;
-var key = process.env.key;
+var acckey = process.env.key;
 var pgusername = process.env.pgusername;
 var pgpassword = process.env.pgpassword;
 var pghost = process.env.pghost;
@@ -16,12 +16,29 @@ var pg = require('pg');
 var Pool = pg.Pool;
 var Client = pg.Client;
 var pgescape = require('pg-escape');
-var NodeRSA = require('node-rsa');
+var crypto = require('crypto');
+var algorithm = 'aes-256-ctr';
+var encpassword = process.env.encpassword;
+var randomstring = require('randomstring');
 router.use(cookieParser(secret));
 router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret],
 }));
+
+function encrypt(text){
+	var cipher = crypto.createCipher(algorithm,encpassword);
+	var crypted = cipher.update(text,'utf8','hex');
+	crypted += cipher.final('hex');
+	return crypted;
+}
+
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm,encpassword)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
 
 module.exports = {
 
@@ -29,65 +46,110 @@ module.exports = {
 		if(req.body.username && req.body.password){//if coming from /login
 			username = req.body.username;
 			password = req.body.password;
-		} else if (req.cookies.username && req.cookies.password){//if coming from other but already authenticated
+			var post_data = querystring.stringify({
+				accid: accid,
+				acckey: acckey,
+				cmd: 'authenticateMember',
+				memun: username,
+				mempw: password
+			});
+			var post_options = {
+				host: 'secure2.aladtec.com',
+				port: 443,
+				path: '/wrva/xmlapi.php',
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Content-Length': Buffer.byteLength(post_data)
+				}
+			}
+			var post_req = https.request(post_options, function(post_res){
+				post_res.setEncoding('utf8');
+				post_res.on('data',function (chunk){
+					/*console.log("username: " + username + " password: " + password);
+					console.log("statusCode: " + post_res.statusCode);
+					console.log("headers: " + post_res.headers);
+					console.log('Response: ' + chunk);
+					*/
+					parseString(chunk, function(err, result){
+						if(result.results.errors)
+						{
+							console.log(result.results.errors[0].error[0]);
+							error = {};
+							error.stack = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
+							error.status = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
+							res.render('error',{title: 'Error', error: error});
+							return;
+						}
+						console.log(result.results.authentication[0]['$'].message);
+						if(result.results.authentication[0]['$'].code==0) 
+						{
+							id = result.results.authentication[0].member[0]['$'].id;
+							//generate a token
+							token = randomstring.generate(15);
+							//encrypt the token
+							encrypted = encrypt(token);
+							//store the token
+							var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+							pg.connect(connectionString, function(err,client,done){
+								if(err){
+									return console.error('could not connect to postgres', err);
+								}
+								var query = client.query("insert into Tokens(UserName,UserID,Token) values($1,$2,$3);",[username,id,token]);
+								query.on('row', function(row){
+									//console.log(row);
+								});
+								query.on('error', function(error){
+									console.log(error);
+									res.render('error', {title: 'Error'});
+								});
+								query.on('end', function(results){
+									done();
+									res.cookie('username',username);
+									res.cookie('encrypted',encrypted);
+									callback(id,username);
+								});
+							});
+						}
+						else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+					});
+				});
+			});
+			
+			post_req.write(post_data);
+			post_req.end();
+		} else if (req.cookies.username && req.cookies.encrypted){//if coming from other but already authenticated
 			username = req.cookies.username;
-			password = req.cookies.password;
+			encrypted = req.cookies.encrypted;
+			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+			pg.connect(connectionString, function(err,client,done){
+				if(err){
+					return console.error('could not connect to postgres', err);
+				}
+				token = {};
+				var query = client.query("select * from Tokens where UserName=$1",[username]);
+				query.on('row', function(row){
+					//console.log(row);
+					token = row;
+				});
+				query.on('error', function(error){
+					console.log(error);
+					res.render('error', {title: 'Error'});
+				});
+				query.on('end', function(results){
+					done();
+					decrypted = decrypt(encrypted);
+					if(decrypted==token.token) callback(token.userid,username);
+					else res.render('invalid',{title: 'Invalid', message: "Token did not match encrypted token"});
+				});
+			});
 		} else {  //not authenticated or coming from /login need to redirect to login
 			res.cookie('url',req.originalUrl);
 			res.render('login',{title: 'Login'});
 			return;
 		}
 
-		var post_data = querystring.stringify({
-			accid: accid,
-			acckey: key,
-			cmd: 'authenticateMember',
-			memun: username,
-			mempw: password
-		});
-		var post_options = {
-			host: 'secure2.aladtec.com',
-			port: 443,
-			path: '/wrva/xmlapi.php',
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': Buffer.byteLength(post_data)
-			}
-		}
-		var post_req = https.request(post_options, function(post_res){
-			post_res.setEncoding('utf8');
-			post_res.on('data',function (chunk){
-				/*console.log("username: " + username + " password: " + password);
-				console.log("statusCode: " + post_res.statusCode);
-				console.log("headers: " + post_res.headers);
-				console.log('Response: ' + chunk);
-				*/
-				parseString(chunk, function(err, result){
-					if(result.results.errors)
-					{
-						console.log(result.results.errors[0].error[0]);
-						error = {};
-						error.stack = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
-						error.status = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
-						res.render('error',{title: 'Error', error: error});
-						return;
-					}
-					console.log(result.results.authentication[0]['$'].message);
-					if(result.results.authentication[0]['$'].code==0) 
-					{
-						id = result.results.authentication[0].member[0]['$'].id;
-						res.cookie('username',username);
-						res.cookie('password',password);
-						callback(id,username);
-					}
-					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
-				});
-			});
-		});
-		
-		post_req.write(post_data);
-		post_req.end();
+
 	},
 
 	AdminAuthorize: function(req,res,next,callback){
@@ -152,6 +214,7 @@ module.exports = {
 				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));").on('error', function(error2){message = error2;});
 				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
 				client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);").on('error', function(error2){message = error2;});
+				client.query("create table Tokens(TokenID serial primary key, UserName text, UserID text, Token text);");
 				done();
 			});
 		});
@@ -178,6 +241,7 @@ module.exports = {
 				client.query("drop table Tasks;").on('error', function(error2){message = error2;});
 				client.query("drop table Alerts;").on('error', function(error2){message = error2;});
 				client.query("drop table Administrators;").on('error', function(error2){message = error2;});
+				client.query("drop table Tokens;").on('error', function(error2){message = error2;});
 				done();
 			});
 		});
@@ -189,7 +253,7 @@ module.exports = {
 			//first get the first and last name of the currently logged in user
 			var post2_data = querystring.stringify({
 				accid: accid,
-				acckey: key,
+				acckey: acckey,
 				cmd: 'getMembers',
 			});
 			var post2_options = {
