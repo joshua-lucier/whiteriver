@@ -17,7 +17,7 @@ var Pool = pg.Pool;
 var Client = pg.Client;
 var pgescape = require('pg-escape');
 var crypto = require('crypto');
-var algorithm = 'aes-256-ctr';
+var algorithm = process.env.algorithm;
 var encpassword = process.env.encpassword;
 var randomstring = require('randomstring');
 router.use(cookieParser(secret));
@@ -412,7 +412,7 @@ module.exports = {
 				});
 				query2.on('end', function(results2){
 					done2();
-					finalhtml = '<form name="deleteTask" action="/admin/deltetaskprompt" method="post">';
+					finalhtml = '<form name="deleteTask" action="/admin/deletetaskprompt" method="post">';
 					tasks.forEach(function(item){
 						//check if marked no repeat
 						marked=false;
@@ -468,7 +468,7 @@ module.exports = {
 							else marked = false;
 						}
 						if(marked) finalhtml=finalhtml+"<s>";
-						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskgroup" value="'+item.taskid+'"><a href="#" onClick="togglemark('+item.taskid+');">' + item.title + '</a></input></div>';
+						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a href="#" onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></input></div>';
 						if(marked) finalhtml=finalhtml+"</s>";
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';

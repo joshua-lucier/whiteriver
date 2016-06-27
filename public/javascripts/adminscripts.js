@@ -3,7 +3,6 @@ sqldelay = 750;
 
 function listtrucks(){
 	$.get("/admin/gettrucks", function(data,status){
-		console.log(data);
 		$("#trucklist").html(data);
 	});
 }
@@ -22,9 +21,17 @@ $("body").ready(setTimeout(listtrucks(), sqldelay));
 trucklistinterval = setInterval(setTimeout(listtrucks(), sqldelay), 60000);
 
 
-
+console.log('input');
 function togglemark(id){
 	$.get("/admin/togglemark?taskid="+id,function(data,status){
 		listtasks();
 	});
 }
+
+$("body").ready(function(){
+	console.log('input');
+	if(!$("input").val()){
+		console.log('input');
+		$(this).parents('label').append('<span class="message">Empty!!</span>');
+	}
+});
