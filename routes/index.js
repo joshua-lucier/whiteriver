@@ -13,7 +13,6 @@ router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret]
 }));
-Authenticate = require('./functions').Authenticate;
 Authorize = require('./functions').Authorize;
 
 /* GET home page.  This page selects which app your in. */
