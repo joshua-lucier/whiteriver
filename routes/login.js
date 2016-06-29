@@ -25,7 +25,9 @@ router.post('/', function(req,res,next){
 });
 
 router.post('/appdev', function(req,res,next){
-	AppDevAuthenticate(req.cookies.page,req.cookies.data,req,res);
+	AppDevAuthorize(req,res,next,function(){
+		res.render('manage',{title: 'Manage Database'});
+	});
 });
 
 router.post('/admin', function(req,res,next){

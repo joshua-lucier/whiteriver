@@ -186,14 +186,71 @@ module.exports = {
 		});
 	},
 
-	AppDevAuthorize: function(req,res,next,callback)
-	{
-		Authorize(req,res,next,function(id,username){
-			if(auth.results.authentication[0]['$'].code==0 && username == 'AppDev'){
-				callback(auth,username);
-			}
-			else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+	AppDevAuthorize: function(req,res,next,callback){
+		if(req.body.username && req.body.password){//if coming from /login
+			username = req.body.username;
+			password = req.body.password;
+		} else if(req.cookies.username && req.cookies.password){ //if already authenticated
+			username = req.cookies.username;
+			password = req.cookies.password;
+		} else {  //not authenticated or coming from /login need to redirect to login
+			res.cookie('url',req.originalUrl);
+			res.render('appdevlogin',{title: 'Application Developer Login'});
+			return;
+		}
+		var post_data = querystring.stringify({
+			accid: accid,
+			acckey: acckey,
+			cmd: 'authenticateMember',
+			memun: username,
+			mempw: password
 		});
+		var post_options = {
+			host: 'secure2.aladtec.com',
+			port: 443,
+			path: '/wrva/xmlapi.php',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(post_data)
+			}
+		}
+		var post_req = https.request(post_options, function(post_res){
+			post_res.setEncoding('utf8');
+			post_res.on('data',function (chunk){
+				/*console.log("username: " + username + " password: " + password);
+				console.log("statusCode: " + post_res.statusCode);
+				console.log("headers: " + post_res.headers);
+				console.log('Response: ' + chunk);
+				*/
+				parseString(chunk, function(err, result){
+					if(result.results.errors)
+					{
+						console.log(result.results.errors[0].error[0]);
+						error = {};
+						error.stack = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
+						error.status = result.results.errors[0].error[0]['_'] + ' ID: ' + result.results.errors[0].error[0]['$'].id;
+						res.render('error',{title: 'Error', error: error});
+						return;
+					}
+					console.log(result.results.authentication[0]['$'].message);
+					if(result.results.authentication[0]['$'].code==0) 
+					{
+						id = result.results.authentication[0].member[0]['$'].id;
+						if(username == 'AppDev'){
+							res.cookie('username',username);
+							res.cookie('password',password);
+							callback(id,username);
+						}
+						else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+					}
+					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+				});
+			});
+		});
+		
+		post_req.write(post_data);
+		post_req.end();
 	},
 
 	DatabaseInit: function(req,res,next,callback){
@@ -212,12 +269,13 @@ module.exports = {
 				});
 				client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));").on('error', function(error2){message = error2;});
-				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(5), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = error2;});
+				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(10), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = error2;});
 				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID));").on('error', function(error2){message = error2;});
 				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
 				client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);").on('error', function(error2){message = error2;});
 				client.query("create table Tokens(TokenID serial primary key, UserName text, UserID text, Token text);");
+				client.query("INSERT INTO public.administrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
 				done();
 			});
 		});
@@ -401,7 +459,7 @@ module.exports = {
 				if(err3){
 					console.log('could not connect to postgres', err);
 				}
-				var query2 = client2.query("select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks;");
+				var query2 = client2.query("select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks order by Title;");
 				query2.on('row', function(row2){ 
 					//console.log(row);
 					tasks.push(row2);
@@ -414,6 +472,7 @@ module.exports = {
 					done2();
 					finalhtml = '<form name="deleteTask" action="/admin/deletetaskprompt" method="post">';
 					tasks.forEach(function(item){
+						day=24*60*60*1000;
 						//check if marked no repeat
 						marked=false;
 						milli=0;
@@ -435,12 +494,20 @@ module.exports = {
 						marktime = new Date(item.marktime);
 						//end date has passed
 						if(item.repeatperiod=="hourly" || item.repeatperiod=="daily" || item.repeatperiod=="weekly"){
-							if(end-current <= 0 && (item.marktime)) marked=true;
+							if(current-end >= 0 && !(item.marktime=="")) marked=true; //if current time is beyond repeat end time and item is marked
 							else {
-								totalbase=(current-start)/milli;
-								lastincrement = totalbase % item.repeatincrement;
-								lastincrement = totalbase - lastincrement;
-								if(marktime-lastincrement > 0) marked=true;
+								//increment time
+								//number of days since last increment = remainder number of days divided number of days between increments
+								//number of days from start to finish = (current-start)/milli  
+								numberofperiods=(current-start)/milli;
+								periodssincelastincrement = numberofperiods % item.repeatincrement;
+								numberofperiodstolastincrement = numberofperiods - periodssincelastincrement;
+								millisecondstolastincrement = numberofperiodstolastincrement*milli;
+								if(marktime-start > millisecondstolastincrement)  //if mark time is after last increment
+								{
+									console.log("false truth");
+									marked=true; //if marktime is after last increment then marked= true
+								}
 								else marked=false;
 							}
 						}
@@ -468,7 +535,7 @@ module.exports = {
 							else marked = false;
 						}
 						if(marked) finalhtml=finalhtml+"<s>";
-						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a href="#" onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></input></div>';
+						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></input></div>';
 						if(marked) finalhtml=finalhtml+"</s>";
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';

@@ -9,19 +9,19 @@ block content
 			div(class="span12")
 				form(name="edittruck",action="/admin/edittruck",method="post")
 					label Truck Label:
-						input(type="text", name="truckname", value="#{truck.truckname}")
+						input(type="text", name="truckname", value="#{truck.truckname}", class=".input")
 					br
 					label Truck Serial:
-						input(type="text", name="truckserial", value="#{truck.truckserial}")
+						input(type="text", name="truckserial", value="#{truck.truckserial}", class=".input")
 					br
 					label Truck Make:
-						input(type="text", name="truckmake", value="#{truck.truckmake}")
+						input(type="text", name="truckmake", value="#{truck.truckmake}", class=".input")
 					br
 					label Truck Model:
-						input(type="text", name="truckmodel", value="#{truck.truckmodel}")
+						input(type="text", name="truckmodel", value="#{truck.truckmodel}", class=".input")
 					br
 					label Truck Plate:
-						input(type="text", name="truckplate", value="#{truck.truckplate}")
+						input(type="text", name="truckplate", value="#{truck.truckplate}", class=".input")
 					br
 					input(type="hidden", name="truckid", value="#{truck.truckid}")
 					input(type="submit", value="Submit")
