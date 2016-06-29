@@ -1,0 +1,29 @@
+extends layout
+
+block content
+	div(class="container HomeContainer")
+		div(class="row")
+			div(class="span12 text-center") 
+				h1 Add an Alert
+		div(class="row")
+			form(action="/admin/addalert",method="post")
+				input(type="hidden", name="creatorid", value="#{id}")
+				div(class="row")
+					div(class="span3 text-right")
+						label Alert Text:
+					div(class="span6")
+						input(type="text", name="alerttext", class="input")
+				div(class="row")
+					div(class="span3 text-right")
+						label Alert Time:
+					div(class="span6")
+						input(type="datetime-local",name="alerttime", class="input")
+				div(class="row")
+					div(class="span3 text-right")
+						input(type="submit", value="Submit")
+						br
+						br
+						div(class='button')
+							a(href="/admin") Cancel
+
+			div(class="span3")
