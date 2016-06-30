@@ -624,4 +624,53 @@ router.post('/editalert',function(req,res,next){
 	});
 });
 
+router.post('/deletealertprompt',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			if(err){
+				return console.error('could not connect to postgres', err);
+			}
+			alert = {};
+			//console.log(JSON.stringify(req.body.truckgroup));
+			alertid = req.body.alertid;
+			console.log(JSON.stringify(taskid));
+			var query = client.query("select * from Alerts where AlertID = $1;", [alertid]);
+			query.on('row', function(row){
+				alert = row;
+			});
+			query.on('error', function(error){
+				console.log(error);
+				res.render('error', {title: 'Error'});
+			});
+			query.on('end', function(results){
+				done();
+				res.render('deletealert', {title: 'Remove Task?',task: alert, username: username});
+			});
+		});
+	});
+});
+
+router.post('/deletealert',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err2,client2,done2){
+			if(err2){
+				return console.error('could not connect to postgres', err2);
+			}
+			var query2 = client2.query("delete from Alerts where alertid=$1;",[req.body.alertid]);
+			query2.on('row', function(row2){
+			});
+			query2.on('error', function(error2){
+				console.log(error2);
+				res.render('error', {title: 'Error'});
+			});
+			query2.on('end', function(results2){
+				done2();
+				message = "Deleted alert with id "+req.body.alertid;
+				res.render('admin',{title: ' Admin', message: message, username: username});
+			});
+		});
+	});
+});
 module.exports = router;
