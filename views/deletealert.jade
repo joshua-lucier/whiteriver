@@ -9,6 +9,7 @@ block content
 			div(class="span12")
 				h2 Task Info 
 				ul
+					li Alert ID: #{alert.alertid}
 					li Creator ID: #{alert.alertcreator}
 					li Alert Text: #{task.alerttext}
 					li Alert Time: #{task.alerttime}
@@ -16,7 +17,7 @@ block content
 		div(class="row")
 			div(class="span3")
 				form(name="deletealertprompt" action="/admin/deletealert" method="post")
-					input(type="hidden", name="taskid", value="#{alert.alertid}")
+					input(type="hidden", name="alertid", value="#{alert.alertid}")
 					br
 					input(type="submit", name="submit", value="Delete")
 					br

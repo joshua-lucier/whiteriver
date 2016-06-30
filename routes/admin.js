@@ -559,7 +559,7 @@ router.get('/getalerts',function(req,res,next){
 			});
 			query2.on('end', function(results2){
 				done2();
-				finalhtml = '<form name="deleteAlert action="/admin/deletealertprompt" method="post">';
+				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
 					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></input></div>';
 				});
@@ -634,7 +634,6 @@ router.post('/deletealertprompt',function(req,res,next){
 			alert = {};
 			//console.log(JSON.stringify(req.body.truckgroup));
 			alertid = req.body.alertid;
-			console.log(JSON.stringify(taskid));
 			var query = client.query("select * from Alerts where AlertID = $1;", [alertid]);
 			query.on('row', function(row){
 				alert = row;
