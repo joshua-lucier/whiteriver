@@ -1,0 +1,25 @@
+extends layout
+
+block content
+	div(class="container HomeContainer")
+		div(class="row")
+			div(class="span12")
+				h1 Delete Alert #{alert.alerttext}?
+		div(class="row")
+			div(class="span12")
+				h2 Task Info 
+				ul
+					li Creator ID: #{alert.alertcreator}
+					li Alert Text: #{task.alerttext}
+					li Alert Time: #{task.alerttime}
+
+		div(class="row")
+			div(class="span3")
+				form(name="deletealertprompt" action="/admin/deletealert" method="post")
+					input(type="hidden", name="taskid", value="#{alert.alertid}")
+					br
+					input(type="submit", name="submit", value="Delete")
+					br
+					br
+					div(class='button')
+						a(href="/admin") Cancel
