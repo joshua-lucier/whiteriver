@@ -29,11 +29,20 @@ function todaystasks(callback){
 	});
 }
 
+function todaysaelerts(callback){
+	$.get("/admin/todaysalerts", function(data,status){
+		$("#todaysalerts").html(data);
+		callback();
+	});
+}
+
 function loadpage(callback){
 	listtasks(function(){
 		todaystasks(function(){
 			listtrucks(function(){
-				listalerts(function(){});
+				listalerts(function(){
+					todaysalerts(function(){});
+				});
 			});
 		});
 	});

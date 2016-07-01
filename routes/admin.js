@@ -672,4 +672,42 @@ router.post('/deletealert',function(req,res,next){
 		});
 	});
 });
+
+router.post('/todaysalerts', function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			alerts = [];
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select AlertID,AlertText,AlertTime from Alerts;");
+			query2.on('row', function(row2){
+				//console.log(row);
+				alertdate = new Date(row2.alerttime);
+				today = new Date();
+				if(alertdate.getDay()==today.getDay() && alertdate.getMonth()==today.getMonth() && alertdate.getYear()==today.getYear()){
+					alerts.push(row2);	
+				}
+				
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.render('error', {title: 'Error', error: error});
+			});
+			query2.on('end', function(results2){
+				done2();
+				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
+				alerts.forEach(function(item){
+					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></input></div>';
+				});
+				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
+				res.send(finalhtml);
+			});
+		});
+	});
+});
 module.exports = router;
