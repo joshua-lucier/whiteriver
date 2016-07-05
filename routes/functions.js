@@ -283,7 +283,7 @@ module.exports = {
 										query7.on('end',function(){
 											query8 = client.query("create table if not exists Tokens(TokenID serial primary key, UserName text, UserID text, Token text);");
 											query8.on('end',function(){
-												query9 = client.query("INSERT INTO public.administrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
+												query9 = client.query("INSERT INTO Administrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
 												query9.on('end',function(){
 													done();
 													callback(message);
