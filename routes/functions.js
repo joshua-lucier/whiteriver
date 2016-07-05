@@ -313,15 +313,32 @@ module.exports = {
 				client.on('end',function(){
 					callback(message);
 				});
-				client.query("drop table if exists CallEntries;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists TruckStatusEntries;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Runs;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Trucks;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Tasks;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Alerts;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Administrators;").on('error', function(error2){message = error2;});
-				client.query("drop table if exists Tokens;").on('error', function(error2){message = error2;});
-				done();
+				query1 = client.query("drop table if exists CallEntries;").on('error', function(error2){message = error2;});
+				query1.on('end',function(){
+					query2 = client.query("drop table if exists TruckStatusEntries;").on('error', function(error2){message = error2;});
+					query2.on('end',function(){
+						query3 = client.query("drop table if exists Runs;").on('error', function(error2){message = error2;});
+						query3.on('end', function(){
+							query4 = client.query("drop table if exists Trucks;").on('error', function(error2){message = error2;});
+							query4.on('end', function(){
+								query5 = client.query("drop table if exists Tasks;").on('error', function(error2){message = error2;});
+								query5.on('end',function(){
+									query6 = client.query("drop table if exists Alerts;").on('error', function(error2){message = error2;});
+									query6.on('end',function(){
+										query7 = client.query("drop table if exists Administrators;").on('error', function(error2){message = error2;});
+										query7.on('end',function(){
+											query8 = client.query("drop table if exists Tokens;").on('error', function(error2){message = error2;});
+											query8.on('end',function(){
+												done();
+												callback(message);
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});		
 			});
 		});
 	},
