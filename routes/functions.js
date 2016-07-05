@@ -265,18 +265,36 @@ module.exports = {
 					message = error;
 				});
 				client.on('end',function(){
-					callback(message);
 				});
-				client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = error2;});
-				client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));").on('error', function(error2){message = error2;});
-				client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(10), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = error2;});
-				client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = error2;});
-				client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID)), Status bool;").on('error', function(error2){message = error2;});
-				client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
-				client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);").on('error', function(error2){message = error2;});
-				client.query("create table Tokens(TokenID serial primary key, UserName text, UserID text, Token text);");
-				client.query("INSERT INTO public.administrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
-				done();
+				query1 = client.query("create table Administrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = error2;});
+				query1.on('end',function(){
+					query2 = client.query("create table Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references Administrators(MemberID));").on('error', function(error2){message = error2;});
+					query2.on('end',function(){
+						query3 = client.query("create table Tasks(TaskID serial primary key, CreatorID int references Administrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(10), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = error2;});
+						query3.on('end',function(){
+							query4 = client.query("create table Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = error2;});
+							query4.on('end',function(){
+								query5 = client.query("create table Runs(RunID serial primary key, TruckID int references Trucks(TruckID)), Status bool;").on('error', function(error2){message = error2;});
+								query5.on('end',function(){
+									query6 = client.query("create table TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = error2;});
+									query6.on('end',function(){
+										query7 = client.query("create table CallEntries(CallEntryID serial primary key, RunID int references Runs(RunID), CallType text, CallLocation text, CallDestination text, DriverName text, AdditionalNames text, RunNumber text);").on('error', function(error2){message = error2;});
+										query7.on('end',function(){
+											query8 = client.query("create table Tokens(TokenID serial primary key, UserName text, UserID text, Token text);");
+											query8.on('end',function(){
+												query9 = client.query("INSERT INTO public.administrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
+												query9.on('end',function(){
+													done();
+													callback(message);
+												});
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});
 			});
 		});
 	},
