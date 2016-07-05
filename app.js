@@ -18,7 +18,7 @@ var database = require('./routes/database');
 
 var app = express();
 
-var port = process.env.$port || 3000
+var port = PORT || 3000
 var secret = process.env.secret
 
 // view engine setup
