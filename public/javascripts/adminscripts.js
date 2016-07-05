@@ -29,9 +29,16 @@ function todaystasks(callback){
 	});
 }
 
-function todaysaelerts(callback){
+function todaysalerts(callback){
 	$.get("/admin/todaysalerts", function(data,status){
 		$("#todaysalerts").html(data);
+		callback();
+	});
+}
+
+function listadmins(callback){
+	$.get("/admin/getadmins", function(data,status){
+		$("#adminlist").html(data);
 		callback();
 	});
 }
@@ -41,7 +48,9 @@ function loadpage(callback){
 		todaystasks(function(){
 			listtrucks(function(){
 				listalerts(function(){
-					todaysalerts(function(){});
+					todaysalerts(function(){
+						listadmins(function(){});
+					});
 				});
 			});
 		});
@@ -61,4 +70,10 @@ function togglemark(id){
 			todaystasks(function(){});
 		});
 	});
+}
+
+function toggleadmin(id){
+	$.get("/admin/toggleadmin?memberid="+id,function(data,status){
+		listadmins(function(){});
+	})
 }

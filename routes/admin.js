@@ -673,7 +673,7 @@ router.post('/deletealert',function(req,res,next){
 	});
 });
 
-router.post('/todaysalerts', function(req,res,next){
+router.get('/todaysalerts', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err3,client2,done2){
@@ -700,12 +700,113 @@ router.post('/todaysalerts', function(req,res,next){
 			});
 			query2.on('end', function(results2){
 				done2();
-				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
+				finalhtml = '<form name="deleteTopAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
 					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></input></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
 				res.send(finalhtml);
+			});
+		});
+	});
+});
+
+router.get('/getadmins',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			adminids = [];
+			ids = [];
+			names = [];
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Administrators;");
+			query2.on('row', function(row2){
+				adminids.push(row2.memberid);
+				
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				var post2_data = querystring.stringify({
+					accid: accid,
+					acckey: acckey,
+					cmd: 'getMembers',
+				});
+				var post2_options = {
+					host: 'secure2.aladtec.com',
+					port: 443,
+					path: '/wrva/xmlapi.php',
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Content-Length': Buffer.byteLength(post2_data)
+					}
+				}
+				var post2_req = https.request(post2_options, function(post2_res){
+					post2_res.setEncoding('utf8');
+					post2_res.on('data',function (chunk2){
+						parseString(chunk2, function(err2, result2){
+							result2.results.members[0].member.forEach(function(item){
+								ids.push(item['$'].id);
+								names.push(item.name[0]);
+							});
+							finalhtml = "";
+							ids.forEach(function(item,index){
+								admin = false;
+								adminids.forEach(function(adminitem){
+									if(item==adminitem){
+										admin = true;
+									}
+								});
+								if(admin) finalhtml = finalhtml + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' [ADMIN]</a></div>';
+								else finalhtml = finalhtml  + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' </a></div>';
+							});
+							res.send(finalhtml);
+						});
+					});
+				});
+				post2_req.write(post2_data);
+				post2_req.end();		
+			});
+		});
+	});
+});
+
+router.get('/toggleadmin',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		memberid = req.query.memberid;
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			wasadmin = false;
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Administrators where MemberID=$1;",[memberid]);
+			query2.on('row', function(row2){
+				query3 = client2.query("delete from Administrators where MemberID=$1;",[memberid]);
+				wasadmin = true;		
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				if(!wasadmin){
+					query4 = client2.query("insert into Administrators(MemberID, AddedById) values($1,$2);",[memberid,id]);
+				}
+				res.send('finished admin toggle');
 			});
 		});
 	});

@@ -6,10 +6,6 @@ block content
 			div(class="span8 offset2 text-center")
 				h1 Mobile Unit
 		div(class="row-fluid")
-			div(class="span2 offset2 text-left")
-				h2 <a href="/mobile">Truck1</a>
-			div(class="span4 text-center")
-				h2 <a href="/main">Truck2</a>
-			div(class="span2 text-right")
-				h2 <a hre="/admin">Truck3</a>
-			div(class="span2")
+			each truck in trucks
+				div(class="span2 offset2 text-left")
+					h2 <a href="/truck?truckid=#{truck.truckid}">#{truck.truckname}</a>

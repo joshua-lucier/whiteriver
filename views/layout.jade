@@ -12,6 +12,9 @@ html(lang="en")
 		script tinymce.init({ selector:'textarea' });
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
 	body
-		div.logout
-			a(href="/logout") Logout
+		div(class="row")
+			div(class="span5")
+				img(src="/images/hf_wrva.png")
+			div.logout
+				a(href="/logout") Logout
 		block content

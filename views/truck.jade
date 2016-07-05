@@ -1,4 +1,9 @@
 extends layout
 
 block content
-p truck
+	div(class="container HomeContainer")
+		div(class="row")
+			div(class="span12")
+				h1 #{truck.truckname}
+				div(class="button" id="truckstatus")
+	script(src="/javascripts/truckscripts.js", type="text/javascript") getstatus(#{truck.truckid},function(){});
