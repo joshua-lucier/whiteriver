@@ -263,6 +263,7 @@ module.exports = {
 				message = 'Created Tables';
 				client.on('error', function(error){
 					message = error;
+					callback(error);
 				});
 				client.on('end',function(){
 				});
@@ -309,9 +310,9 @@ module.exports = {
 				message = 'Dropped Tables';
 				client.on('error', function(error){
 					message = error;
+					callback(error);
 				});
 				client.on('end',function(){
-					callback(message);
 				});
 				query1 = client.query("drop table if exists CallEntries;").on('error', function(error2){message = error2;});
 				query1.on('end',function(){
