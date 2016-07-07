@@ -7,6 +7,11 @@ var router = express.Router();
 var secret = process.env.secret;
 var accid = process.env.accid;
 var key = process.env.key;
+var pgusername = process.env.pgusername;
+var pgpassword = process.env.pgpassword;
+var pghost = process.env.pghost;
+var pgdatabase = process.env.pgdatabase;
+var pg = require('pg');
 var parseString = require('xml2js').parseString;
 router.use(cookieParser(secret));
 router.use(cookieSession({
@@ -23,6 +28,7 @@ router.get('/', function(req,res,next){
 });
 
 router.get('/test', function(req,res,next){
+	/*
 	var post_data = querystring.stringify({
 		accid: accid,
 		acckey: key,
@@ -51,6 +57,31 @@ router.get('/test', function(req,res,next){
 	});
 	post_req.write(post_data);
 	post_req.end();
+	*/
+	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			entries = [];
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Runs;");
+			query2.on('row', function(row2){
+				//console.log(row);
+				entries.push(row2);
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.render('error', {title: 'Error', error: error});
+			});
+			query2.on('end', function(results2){
+				done2();
+				console.log(entries);
+				res.send(entries);
+			});
+		});
 });
 
 module.exports = router;

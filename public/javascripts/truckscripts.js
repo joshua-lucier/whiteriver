@@ -1,7 +1,14 @@
 function getstatus(truckid,callback){
-	console.log('status');
-	$.get("/truck/getstatus?truckid="+id, function(data,status){
+	$.get("/truck/getstatus?truckid="+truckid, function(data,status){
 		$("#truckstatus").html(data);
+		callback();
+	});
+}
+
+function responding(truckid, callback){
+	$.get("/truck/responding?truckid="+truckid, function(data,status){
+		console.log(data);
+		getstatus(truckid, function(){});
 		callback();
 	});
 }
