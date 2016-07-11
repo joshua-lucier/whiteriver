@@ -166,7 +166,7 @@ router.get('/getstatus', function(req,res,next){
 				if(status) {
 					finalhtml ="<div>";
 					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><b><u>Responding</u></b></a> ";
-					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'>Responding</a>";
+					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'>Responding</a> ";
 					if(status.status=='onscene') finalhtml = finalhtml + " <b><u><a onClick='onscene("+truckid+",function(){})'>On Scene</a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'>On Scene</a> ";
 					if(status.status=='transport') finalhtml = finalhtml + " <b><u><a onClick='transporting("+truckid+",function(){})'>Transporting</a></u></b> ";
@@ -179,7 +179,7 @@ router.get('/getstatus', function(req,res,next){
 					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'>In Service</a> ";
 					res.send(finalhtml);
 				} else {
-					finalhtml ="Responding  On Scene  Transporting  At Destination  Clear  In Service";
+					finalhtml =" <a onClick='responding("+truckid+",function(){})'>Responding</a>  <a onClick='onscene("+truckid+",function(){})'>On Scene</a>  <a onClick='transporting("+truckid+",function(){})'>Transporting</a>  <a onClick='arrived("+truckid+",function(){})'>At Destination</a>  <a onClick='clearrun("+truckid+",function(){})'>Clear</a>  <a onClick='service("+truckid+",function(){})'>In Service</a>";
 					res.send(finalhtml + ' No previous status entry');
 				}
 			});
