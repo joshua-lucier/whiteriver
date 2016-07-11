@@ -46,9 +46,61 @@ router.get('/', function(req,res,next){
 	});
 });
 
+router.get('/gettidyruns', function(req,res,next){
+	truckid = req.query.truckid;
+	entriesneeded = [];
+	runstatuses = [];
+	Authorize(req,res,next,function(id,username){
+		//find last status posted
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select Runs.RunID from Runs left join CallEntries on Runs.RunID = CallEntries.RunID where Runs.TruckID=$1 and CallEntries.RunID is null;",[truckid]);
+			query2.on('row', function(row2){
+				//console.log(row);
+				entriesneeded.push(row2);
+			});
+			query2.on('error', function(error2){
+				console.log(error2);
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				finalhtml="";
+				query3 = client2.query("select * from TruckStatusEntries;");
+				query3.on('row', function(row3){
+					runstatuses.push(row3);
+				});
+				query3.on('error', function(error){
+					res.send('Error on truckstatusentries'+error);
+				});
+				query3.on('end', function(results3){
+					entriesneeded.forEach(function(item){
+						runstatus = false;
+						runstatuses.forEach(function(status){
+							if(status.runid==item.runid && status.status=='responding') {
+								runstatus = status;
+							}
+						});
+						if(runstatus){
+							finalhtml = finalhtml+"<div><a href='/truck/callentry?runid="+item.runid+"'>Make Call Entry for run " + item.runid + " which began on "+runstatus.statustime+"</a></div>";
+						} else {
+							finalhtml = finalhtml+"<div>Error No status on run " + item.runid+"</div>";
+						}
+					});
+					res.send(finalhtml);
+				});
+			});
+		});
+	});
+});
+
 router.get('/getstatus', function(req,res,next){
 	truckid = req.query.truckid;
-	status = {};
+	status = false;
 	Authorize(req,res,next,function(id,username){
 		//find last status posted
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
