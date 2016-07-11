@@ -74,14 +74,14 @@ router.get('/getstatus', function(req,res,next){
 					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'>Responding</a>";
 					if(status.status=='onscene') finalhtml = finalhtml + " <b><u><a onClick='onscene("+truckid+",function(){})'>On Scene</a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'>On Scene</a> ";
-					if(status.status=='transporting') finalhtml = finalhtml + " <b><u>Transporting</u></b> ";
-					else finalhtml = finalhtml + " Transporting ";
-					if(status.status=='atdestination') finalhtml = finalhtml + " <b><u>At Destination</u></b> ";
-					else finalhtml = finalhtml + " At Destination ";
-					if(status.status=='clear') finalhtml = finalhtml + " <b><u>Clear</u></b> ";
-					else finalhtml = finalhtml + " Clear ";
-					if(status.status=='inservice') finalhtml = finalhtml + " <br><u>In Service</u></b> ";
-					else finalhtml = finalhtml + " In Service ";
+					if(status.status=='transport') finalhtml = finalhtml + " <b><u><a onClick='transporting("+truckid+",function(){})'>Transporting</a></u></b> ";
+					else finalhtml = finalhtml + " <a onClick='transporting("+truckid+",function(){})'>Transporting</a> ";
+					if(status.status=='arrived') finalhtml = finalhtml + " <b><u><a onClick='arrived("+truckid+",function(){})'>At Destination</a></u></b> ";
+					else finalhtml = finalhtml + " <a onClick='arrived("+truckid+",function(){})'>At Destination</a> ";
+					if(status.status=='clear') finalhtml = finalhtml + " <b><u><a onClick='clear("+truckid+",function(){})'>Clear</a></u></b> ";
+					else finalhtml = finalhtml + " <a onClick='clear("+truckid+",function(){})'>Clear</a> ";
+					if(status.status=='service') finalhtml = finalhtml + " <b><u><a onClick='service("+truckid+",function(){})'>In Service</a></u></b> ";
+					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'>In Service</a> ";
 					res.send(finalhtml);
 				} else {
 					finalhtml ="Responding  On Scene  Transporting  At Destination  Clear  In Service";
@@ -209,6 +209,216 @@ router.get('/onscene',function(req,res,next){
 });
 
 router.get('/transporting',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		truckid = req.query.truckid;
+		openrun = false;
+		statusentry = false;		
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Runs where TruckID=$1 and Status=true;",[truckid]); //if there is an open run
+			query2.on('row', function(row2){
+				//console.log(row);
+				openrun = row2;
+			});
+			query2.on('error', function(error2){
+				res.send("Could not get runs" + error2);
+			});
+			query2.on('end', function(results2){
+				if(openrun){ //there is an open run
+					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1 and Status = 'transport';",[openrun.runid])
+					query3.on('row', function(row3){
+						statusentry = row3;
+					});
+					query3.on('error', function(error2){
+						res.send("Could not get Truckstatusentries" + error2);
+					});
+					query3.on('end', function(results3){
+						if(statusentry){
+							res.send('Already transported once this call');
+							done2();
+						} else {
+							var query4 = client2.query("insert into TruckStatusEntries(RunID,Status,MemberName) values($1,$2,$3);",[openrun.runid,'transport',username]);
+							query4.on('error',function(error2){
+								res.send("Could not insert into truckstatusentries" + error2);
+							});
+							query4.on('end',function(results){
+								res.send("Added truck status entry");
+							});
+						}
+					});
+				} else {
+					res.send('Please begin a run first');
+					done2();
+				}
+			});
+		});
 
+	});
+});
+
+router.get('/arrived',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		truckid = req.query.truckid;
+		openrun = false;
+		statusentry = false;		
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Runs where TruckID=$1 and Status=true;",[truckid]); //if there is an open run
+			query2.on('row', function(row2){
+				//console.log(row);
+				openrun = row2;
+			});
+			query2.on('error', function(error2){
+				res.send("Could not get runs" + error2);
+			});
+			query2.on('end', function(results2){
+				if(openrun){ //there is an open run
+					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1 and Status = 'arrived';",[openrun.runid])
+					query3.on('row', function(row3){
+						statusentry = row3;
+					});
+					query3.on('error', function(error2){
+						res.send("Could not get Truckstatusentries" + error2);
+					});
+					query3.on('end', function(results3){
+						if(statusentry){
+							res.send('Already arrived once this call');
+							done2();
+						} else {
+							var query4 = client2.query("insert into TruckStatusEntries(RunID,Status,MemberName) values($1,$2,$3);",[openrun.runid,'arrived',username]);
+							query4.on('error',function(error2){
+								res.send("Could not insert into truckstatusentries" + error2);
+							});
+							query4.on('end',function(results){
+								res.send("Added truck status entry");
+							});
+						}
+					});
+				} else {
+					res.send('Please begin a run first');
+					done2();
+				}
+			});
+		});
+
+	});
+});
+
+router.get('/clear',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		truckid = req.query.truckid;
+		openrun = false;
+		statusentry = false;		
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Runs where TruckID=$1 and Status=true;",[truckid]); //if there is an open run
+			query2.on('row', function(row2){
+				//console.log(row);
+				openrun = row2;
+			});
+			query2.on('error', function(error2){
+				res.send("Could not get runs" + error2);
+			});
+			query2.on('end', function(results2){
+				if(openrun){ //there is an open run
+					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1 and Status = 'clear';",[openrun.runid])
+					query3.on('row', function(row3){
+						statusentry = row3;
+					});
+					query3.on('error', function(error2){
+						res.send("Could not get Truckstatusentries" + error2);
+					});
+					query3.on('end', function(results3){
+						if(statusentry){
+							res.send('Already cleared once this call');
+							done2();
+						} else {
+							var query4 = client2.query("insert into TruckStatusEntries(RunID,Status,MemberName) values($1,$2,$3);",[openrun.runid,'clear',username]);
+							query4.on('error',function(error2){
+								res.send("Could not insert into truckstatusentries" + error2);
+							});
+							query4.on('end',function(results){
+								res.send("Added truck status entry");
+							});
+						}
+					});
+				} else {
+					res.send('Please begin a run first');
+					done2();
+				}
+			});
+		});
+
+	});
+});
+
+router.get('/service',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		truckid = req.query.truckid;
+		openrun = false;
+		statusentry = false;		
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Runs where TruckID=$1 and Status=true;",[truckid]); //if there is an open run
+			query2.on('row', function(row2){
+				//console.log(row);
+				openrun = row2;
+			});
+			query2.on('error', function(error2){
+				res.send("Could not get runs" + error2);
+			});
+			query2.on('end', function(results2){
+				if(openrun){ //there is an open run
+					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1 and Status = 'service';",[openrun.runid])
+					query3.on('row', function(row3){
+						statusentry = row3;
+					});
+					query3.on('error', function(error2){
+						res.send("Could not get Truckstatusentries" + error2);
+					});
+					query3.on('end', function(results3){
+						if(statusentry){
+							res.send('Call already closed');
+							done2();
+						} else {
+							var query4 = client2.query("insert into TruckStatusEntries(RunID,Status,MemberName) values($1,$2,$3);",[openrun.runid,'service',username]);
+							query4.on('error',function(error2){
+								res.send("Could not insert into truckstatusentries" + error2);
+							});
+							query4.on('end',function(results){
+								var query5 = client2.query("update Runs set Status=false where RunID=$1;",[openrun.runid]);
+								query5.on('error', function(error2){
+									res.send("Could not update Runs" + error2);
+								});
+								query5.on('end', function(results4){
+									res.send("Closed out Run");
+								});
+							});
+						}
+					});
+				} else {
+					res.send('Please begin a run first');
+					done2();
+				}
+			});
+		});
+
+	});
 });
 module.exports = router;

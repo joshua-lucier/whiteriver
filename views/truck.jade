@@ -8,5 +8,7 @@ block content
 					h1 #{truck.truckname}
 				div(class="span8")
 					div(id="truckstatus")
+			div(class="row")
+				div(class="span4 text-left", id="Message")
 	script(src="/javascripts/truckscripts.js", type="text/javascript")
 	script(sync) getstatus(#{truck.truckid},function(){});
