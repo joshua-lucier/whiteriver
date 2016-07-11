@@ -1,5 +1,7 @@
 body {
 	padding: 0px;
+	padding-top: 3em;
+	padding-bottom: 3em;
 	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 	background-size: cover;
@@ -19,9 +21,9 @@ a {
 	width: 100%;
 	left: 0;
 	right: 0;
-	min-height: 600px;
+	min-height: 20em;
 	padding-bottom: 5em;
-	padding-top: 20px;
+	padding-top: 5em;
 	padding-left: 1em;
 	padding-right: 1em;
 }
@@ -131,4 +133,8 @@ a {
 	position: relative;
 	top: 15px;
 	left: -600px;
+}
+
+.logo {
+	padding-left: 5em;
 }
