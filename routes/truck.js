@@ -180,7 +180,7 @@ router.get('/getstatus', function(req,res,next){
 					res.send(finalhtml);
 				} else {
 					finalhtml =" <a onClick='responding("+truckid+",function(){})'>Responding</a>  <a onClick='onscene("+truckid+",function(){})'>On Scene</a>  <a onClick='transporting("+truckid+",function(){})'>Transporting</a>  <a onClick='arrived("+truckid+",function(){})'>At Destination</a>  <a onClick='clearrun("+truckid+",function(){})'>Clear</a>  <a onClick='service("+truckid+",function(){})'>In Service</a>";
-					res.send(finalhtml + ' No previous status entry');
+					res.send(finalhtml + '<br> No previous status entry');
 				}
 			});
 		});
