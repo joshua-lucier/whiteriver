@@ -65,7 +65,7 @@ router.get('/test', function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from Runs;");
+			var query2 = client2.query("select * from TruckStatusEntries;");
 			query2.on('row', function(row2){
 				//console.log(row);
 				entries.push(row2);

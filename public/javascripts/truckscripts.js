@@ -13,3 +13,11 @@ function responding(truckid, callback){
 	});
 }
 
+function onscene(truckid, callback){
+	$.get("/truck/onscene?truckid="+truckid, function(data,status){
+		console.log(data);
+		getstatus(truckid, function(){});
+		callback();
+	})
+}
+

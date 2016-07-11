@@ -72,8 +72,8 @@ router.get('/getstatus', function(req,res,next){
 					finalhtml ="<div>";
 					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><b>Responding</b></a> ";
 					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'>Responding</a>";
-					if(status.status=='onscene') finalhtml = finalhtml + " <b>On Scene</b> ";
-					else finalhtml = finalhtml + " On Scene ";
+					if(status.status=='onscene') finalhtml = finalhtml + " <b><a onClick='onscene("+truckid+",function(){})'>On Scene</a></b> ";
+					else finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'>On Scene</a> ";
 					if(status.status=='transporting') finalhtml = finalhtml + " <br>Transporting</b> ";
 					else finalhtml = finalhtml + " Transporting ";
 					if(status.status=='atdestination') finalhtml = finalhtml + " <b>At Destination</b> ";
@@ -93,7 +93,7 @@ router.get('/getstatus', function(req,res,next){
 });
 
 router.get('/responding',function(req,res,next){
-	truckid = req.query.status;
+	truckid = req.query.truckid;
 	openrun = false;
 	run = false;
 	Authorize(req,res,next,function(id,username){
@@ -113,6 +113,7 @@ router.get('/responding',function(req,res,next){
 				res.send(error2);
 			});
 			query2.on('end', function(results2){
+				console.log(truckid);
 				if(openrun){
 					console.log(openrun);
 					done2();
@@ -135,16 +136,19 @@ router.get('/responding',function(req,res,next){
 							res.send(error);
 						});
 						query4.on('end', function(results4){
-							query5 = client2.query("insert into TruckStatusEntries(RunID, Status, MemberName) values ($1,$2,$3)",[run.runid,'responding',username]);
-							query5.on('error', function(error){
-								console.log('Error on TruckStatusEntries Insert');
-								console.log(error);
-								res.send(error);
-							});
-							query5.on('end', function(results5){
-								done2();
-								res.send('New Call Initiated.')
-							});
+							if(run){
+								query5 = client2.query("insert into TruckStatusEntries(RunID, Status, MemberName) values ($1,$2,$3)",[run.runid,'responding',username]);
+								query5.on('error', function(error){
+									console.log('Error on TruckStatusEntries Insert');
+									console.log(error);
+									res.send(error);
+								});
+								query5.on('end', function(results5){
+									done2();
+									res.send('New Call Initiated.')
+								});
+							}
+
 						});
 					});
 				}
@@ -156,35 +160,43 @@ router.get('/responding',function(req,res,next){
 router.get('/onscene',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		truckid = req.query.truckid;
+		openrun = false;
+		statusentry = false;
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err3,client2,done2){
 			console.log('connection complete');
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from Runs where TruckID=$1, Status=true;",[truckid]); //if there is an open run
+			var query2 = client2.query("select * from Runs where TruckID=$1 and Status=true;",[truckid]); //if there is an open run
 			query2.on('row', function(row2){
 				//console.log(row);
 				openrun = row2;
 			});
 			query2.on('error', function(error2){
-				res.send(error2);
+				res.send("Could not get runs" + error2);
 			});
 			query2.on('end', function(results2){
 				if(openrun){ //there is an open run
-					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1, Status = 'onscene';",[openrun.runid])
+					var query3 = client2.query("select * from TruckStatusEntries where RunID = $1 and Status = 'onscene';",[openrun.runid])
 					query3.on('row', function(row3){
 						statusentry = row3;
 					});
 					query3.on('error', function(error2){
-						res.send(error2);
+						res.send("Could not get Truckstatusentries" + error2);
 					});
-					query3.on('end', function(results2){
+					query3.on('end', function(results3){
 						if(statusentry){
 							res.send('Already went on scene once this call');
 							done2();
 						} else {
 							var query4 = client2.query("insert into TruckStatusEntries(RunID,Status,MemberName) values($1,$2,$3);",[openrun.runid,'onscene',username]);
+							query4.on('error',function(error2){
+								res.send("Could not insert into truckstatusentries" + error2);
+							});
+							query4.on('end',function(results){
+								res.send("Added truck status entry");
+							});
 						}
 					});
 				} else {
