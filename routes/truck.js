@@ -140,6 +140,7 @@ router.get('/makecallentry', function(req,res,next){
 	});
 });
 
+
 router.get('/getstatus', function(req,res,next){
 	truckid = req.query.truckid;
 	status = false;
