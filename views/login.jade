@@ -1,12 +1,13 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		form(action="/login",method="post")
-			label Username:
-			input(type="text", name="username")
-			br
-			label password: 
-			input(type="password", name="password")
-			br
-			input(type="submit", value="Submit")
+	div(class="HomeContainer")
+		div(class="Inner")
+			form(action="/login",method="post")
+				label Username:
+				input(type="text", name="username")
+				br
+				label password: 
+				input(type="password", name="password")
+				br
+				input(type="submit", value="Submit")

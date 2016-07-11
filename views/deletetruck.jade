@@ -1,30 +1,31 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		div(class="row")
-			div(class="span12")
-				h1 Delete Truck #{truck.truckname}?
-		div(class="row")
-			div(class="span12")
-				h2 Truck Info 
-				ul
-					li Truck Creator: #{truck.truckcreatorname}
-					li Truck Name: #{truck.truckname}
-					li Truck Plate: #{truck.truckplate}
-					li Truck Serial: #{truck.truckserial}
-					li Truck Make: #{truck.truckmake}
-					li Truck Model: #{truck.truckmodel}
-					li Truck DBID: #{truck.truckid}
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row")
+				div(class="span12")
+					h1 Delete Truck #{truck.truckname}?
+			div(class="row")
+				div(class="span12")
+					h2 Truck Info 
+					ul
+						li Truck Creator: #{truck.truckcreatorname}
+						li Truck Name: #{truck.truckname}
+						li Truck Plate: #{truck.truckplate}
+						li Truck Serial: #{truck.truckserial}
+						li Truck Make: #{truck.truckmake}
+						li Truck Model: #{truck.truckmodel}
+						li Truck DBID: #{truck.truckid}
 
-		div(class="row")
-			div(class="span3")
-				form(name="deletetruckprompt" action="/admin/deletetruck" method="post")
-					input(type="hidden", name="truckid", value="#{truck.truckid}")
-					br
-					input(type="submit", name="submit", value="Delete")
-					br
-					br
-					div(class='button')
-						a(href="/admin") Cancel
+			div(class="row")
+				div(class="span3")
+					form(name="deletetruckprompt" action="/admin/deletetruck" method="post")
+						input(type="hidden", name="truckid", value="#{truck.truckid}")
+						br
+						input(type="submit", name="submit", value="Delete")
+						br
+						br
+						div(class='button')
+							a(href="/admin") Cancel
 

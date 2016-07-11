@@ -1,11 +1,12 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		div(class="row-fluid")
-			div(class="span8 offset2 text-center")
-				h1 Mobile Unit
-		div(class="row-fluid")
-			each truck in trucks
-				div(class="span2 offset2 text-left")
-					h2 <a href="/truck?truckid=#{truck.truckid}">#{truck.truckname}</a>
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row-fluid")
+				div(class="span8 offset2 text-center")
+					h1 Mobile Unit
+			div(class="row-fluid")
+				each truck in trucks
+					div(class="span2 offset2 text-left")
+						h2 <a href="/truck?truckid=#{truck.truckid}">#{truck.truckname}</a>

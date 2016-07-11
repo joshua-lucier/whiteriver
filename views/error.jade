@@ -1,7 +1,8 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		h1= message
-		h2= error.status
-		pre #{error.stack}
+	div(class="HomeContainer")
+		div(class="Inner")
+			h1= message
+			h2= error.status
+			pre #{error.stack}

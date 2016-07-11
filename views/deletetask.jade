@@ -1,32 +1,33 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		div(class="row")
-			div(class="span12")
-				h1 Delete Task #{task.title}?
-		div(class="row")
-			div(class="span12")
-				h2 Task Info 
-				ul
-					li Creator ID: #{task.creatorid}
-					li Assigned to ID: #{task.chargedid}
-					li Title: #{task.title}
-					li Description: #{task.description}
-					li Time Created: #{task.timecreated}
-					li Time Due: #{task.timedue}
-					li Repeat Period: #{task.repeatperiod}
-					li Repeat Increment: #{task.repeatincrement}
-					li Repeat End: #{task.repeatend}
-					li Last completed: #{task.marktime}
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row")
+				div(class="span12")
+					h1 Delete Task #{task.title}?
+			div(class="row")
+				div(class="span12")
+					h2 Task Info 
+					ul
+						li Creator ID: #{task.creatorid}
+						li Assigned to ID: #{task.chargedid}
+						li Title: #{task.title}
+						li Description: #{task.description}
+						li Time Created: #{task.timecreated}
+						li Time Due: #{task.timedue}
+						li Repeat Period: #{task.repeatperiod}
+						li Repeat Increment: #{task.repeatincrement}
+						li Repeat End: #{task.repeatend}
+						li Last completed: #{task.marktime}
 
-		div(class="row")
-			div(class="span3")
-				form(name="deletetaskprompt" action="/admin/deletetask" method="post")
-					input(type="hidden", name="taskid", value="#{task.taskid}")
-					br
-					input(type="submit", name="submit", value="Delete")
-					br
-					br
-					div(class='button')
-						a(href="/admin") Cancel
+			div(class="row")
+				div(class="span3")
+					form(name="deletetaskprompt" action="/admin/deletetask" method="post")
+						input(type="hidden", name="taskid", value="#{task.taskid}")
+						br
+						input(type="submit", name="submit", value="Delete")
+						br
+						br
+						div(class='button')
+							a(href="/admin") Cancel

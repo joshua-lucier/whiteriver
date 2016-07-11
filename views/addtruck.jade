@@ -1,32 +1,33 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		div(class="row")
-			div(class="span12 text-center") 
-				h1 Add a Truck
-		div(class="row")
-			div(class="span6 offset3")
-				form(action="/admin/finishtruck",method="post")
-					label Truck Label:
-						input(type="text", name="truckname", class=".input")
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row")
+				div(class="span12 text-center") 
+					h1 Add a Truck
+			div(class="row")
+				div(class="span6 offset3")
+					form(action="/admin/finishtruck",method="post")
+						label Truck Label:
+							input(type="text", name="truckname", class=".input")
+						br
+						label Truck Serial:
+							input(type="text", name="truckserial", class=".input")
+						br
+						label Truck Make:
+							input(type="text", name="truckmake", class=".input")
+						br
+						label Truck Model:
+							input(type="text", name="truckmodel", class=".input")
+						br
+						label Truck Plate:
+							input(type="text", name="truckplate", class=".input")
+						br
+						input(type="submit", value="Submit")
 					br
-					label Truck Serial:
-						input(type="text", name="truckserial", class=".input")
 					br
-					label Truck Make:
-						input(type="text", name="truckmake", class=".input")
-					br
-					label Truck Model:
-						input(type="text", name="truckmodel", class=".input")
-					br
-					label Truck Plate:
-						input(type="text", name="truckplate", class=".input")
-					br
-					input(type="submit", value="Submit")
-				br
-				br
-				div(class='button')
-					a(href="/admin") Cancel
+					div(class='button')
+						a(href="/admin") Cancel
 
-			div(class="span3")
+				div(class="span3")

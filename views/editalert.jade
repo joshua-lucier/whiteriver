@@ -1,31 +1,32 @@
 extends layout
 
 block content
-	div(class="container HomeContainer")
-		div(class="row")
-			div(class="span12 text-center") 
-				h1 Add an Alert
-		div(class="row")
-			form(action="/admin/editalert",method="post")
-				input(type="hidden", name="alertid", value="#{alert.alertid}")
-				input(type="hidden", name="creatorid", value="#{alert.creatorid}")
-				div(class="row")
-					div(class="span3 text-right")
-						label Alert Text:
-					div(class="span6")
-						input(type="text", name="alerttext", class="input" value="#{alert.alerttext}")
-				div(class="row")
-					div(class="span3 text-right")
-						label Alert Time:
-					div(class="span6")
-						input(id="alerttime",type="datetime-local",name="alerttime", class="input")
-				div(class="row")
-					div(class="span3 text-right")
-						input(type="submit", value="Submit")
-						br
-						br
-						div(class='button')
-							a(href="/admin") Cancel
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row")
+				div(class="span12 text-center") 
+					h1 Add an Alert
+			div(class="row")
+				form(action="/admin/editalert",method="post")
+					input(type="hidden", name="alertid", value="#{alert.alertid}")
+					input(type="hidden", name="creatorid", value="#{alert.creatorid}")
+					div(class="row")
+						div(class="span3 text-right")
+							label Alert Text:
+						div(class="span6")
+							input(type="text", name="alerttext", class="input" value="#{alert.alerttext}")
+					div(class="row")
+						div(class="span3 text-right")
+							label Alert Time:
+						div(class="span6")
+							input(id="alerttime",type="datetime-local",name="alerttime", class="input")
+					div(class="row")
+						div(class="span3 text-right")
+							input(type="submit", value="Submit")
+							br
+							br
+							div(class='button')
+								a(href="/admin") Cancel
 
-			div(class="span3")
-	script alerttime = "#{alerttime}".replace(/&quot;/g,'').replace(/Z/g,'');$("#alerttime").val(alerttime);
+				div(class="span3")
+		script alerttime = "#{alerttime}".replace(/&quot;/g,'').replace(/Z/g,'');$("#alerttime").val(alerttime);
