@@ -180,7 +180,7 @@ module.exports = {
 					{
 						callback(id,username);
 					}
-					else res.render('invalid',{title: 'title', message: result.results.authentication[0]['$'].message});
+					else res.render('invalid',{title: 'Invalid', message: "Not an Admin...."});
 				});
 			});
 		});
