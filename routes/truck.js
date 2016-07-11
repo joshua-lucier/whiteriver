@@ -78,8 +78,8 @@ router.get('/getstatus', function(req,res,next){
 					else finalhtml = finalhtml + " <a onClick='transporting("+truckid+",function(){})'>Transporting</a> ";
 					if(status.status=='arrived') finalhtml = finalhtml + " <b><u><a onClick='arrived("+truckid+",function(){})'>At Destination</a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='arrived("+truckid+",function(){})'>At Destination</a> ";
-					if(status.status=='clear') finalhtml = finalhtml + " <b><u><a onClick='clear("+truckid+",function(){})'>Clear</a></u></b> ";
-					else finalhtml = finalhtml + " <a onClick='clear("+truckid+",function(){})'>Clear</a> ";
+					if(status.status=='clear') finalhtml = finalhtml + " <b><u><a onClick='clearrun("+truckid+",function(){})'>Clear</a></u></b> ";
+					else finalhtml = finalhtml + " <a onClick='clearrun("+truckid+",function(){})'>Clear</a> ";
 					if(status.status=='service') finalhtml = finalhtml + " <b><u><a onClick='service("+truckid+",function(){})'>In Service</a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'>In Service</a> ";
 					res.send(finalhtml);

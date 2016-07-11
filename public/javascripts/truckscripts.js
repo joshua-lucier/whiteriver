@@ -37,7 +37,7 @@ function arrived(truckid, callback){
 	})
 }
 
-function clear(truckid, callback){
+function clearrun(truckid, callback){	
 	$.get("/truck/clear?truckid="+truckid, function(data,status){
 		$("#Message").html(data);
 		getstatus(truckid, function(){});
