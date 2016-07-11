@@ -70,17 +70,17 @@ router.get('/getstatus', function(req,res,next){
 				done2();
 				if(status) {
 					finalhtml ="<div>";
-					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><b>Responding</b></a> ";
+					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><b><u>Responding</u></b></a> ";
 					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'>Responding</a>";
-					if(status.status=='onscene') finalhtml = finalhtml + " <b><a onClick='onscene("+truckid+",function(){})'>On Scene</a></b> ";
+					if(status.status=='onscene') finalhtml = finalhtml + " <b><u><a onClick='onscene("+truckid+",function(){})'>On Scene</a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'>On Scene</a> ";
-					if(status.status=='transporting') finalhtml = finalhtml + " <br>Transporting</b> ";
+					if(status.status=='transporting') finalhtml = finalhtml + " <b><u>Transporting</u></b> ";
 					else finalhtml = finalhtml + " Transporting ";
-					if(status.status=='atdestination') finalhtml = finalhtml + " <b>At Destination</b> ";
+					if(status.status=='atdestination') finalhtml = finalhtml + " <b><u>At Destination</u></b> ";
 					else finalhtml = finalhtml + " At Destination ";
-					if(status.status=='clear') finalhtml = finalhtml + " <b>Clear</b> ";
+					if(status.status=='clear') finalhtml = finalhtml + " <b><u>Clear</u></b> ";
 					else finalhtml = finalhtml + " Clear ";
-					if(status.status=='inservice') finalhtml = finalhtml + " <br>In Service</b> ";
+					if(status.status=='inservice') finalhtml = finalhtml + " <br><u>In Service</u></b> ";
 					else finalhtml = finalhtml + " In Service ";
 					res.send(finalhtml);
 				} else {
@@ -206,5 +206,9 @@ router.get('/onscene',function(req,res,next){
 			});
 		});
 	});
+});
+
+router.get('/transporting',function(req,res,next){
+
 });
 module.exports = router;
