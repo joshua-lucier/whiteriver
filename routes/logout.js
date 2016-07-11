@@ -35,7 +35,7 @@ router.get('/', function(req,res,next){
 		});
 		query.on('error', function(error){
 			console.log(error);
-			res.render('invalid', {title: 'Error'});
+			res.render('invalid', {title: 'Error', message: error});
 		});
 		query.on('end', function(results){
 			done();
