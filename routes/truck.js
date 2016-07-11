@@ -86,7 +86,7 @@ router.get('/gettidyruns', function(req,res,next){
 							}
 						});
 						if(runstatus){
-							finalhtml = finalhtml+"<div><a href='/truck/callentry?runid="+item.runid+"'>Make Call Entry for run " + item.runid + " which began on "+runstatus.statustime+"</a></div>";
+							finalhtml = finalhtml+"<div><a href='/truck/makecallentry?runid="+item.runid+"'>Make Call Entry for run " + item.runid + " which began on "+runstatus.statustime+"</a></div>";
 						} else {
 							finalhtml = finalhtml+"<div>Error No status on run " + item.runid+"</div>";
 						}
@@ -95,6 +95,48 @@ router.get('/gettidyruns', function(req,res,next){
 				});
 			});
 		});
+	});
+});
+
+router.get('/makecallentry', function(req,res,next){
+	runid = req.query.runid;
+	Authorize(req,res,next,function(id,username){
+		names = [];
+		ids = [];
+		var post2_data = querystring.stringify({
+				accid: accid,
+				acckey: acckey,
+				cmd: 'getMembers',
+			});
+		var post2_options = {
+			host: 'secure2.aladtec.com',
+			port: 443,
+			path: '/wrva/xmlapi.php',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': Buffer.byteLength(post2_data)
+			}
+		}
+		var post2_req = https.request(post2_options, function(post2_res){
+			post2_res.setEncoding('utf8');
+			post2_res.on('data',function (chunk2){
+				
+				parseString(chunk2, function(err2, result2){
+					creatorname = '';
+					//console.log(result2.results.members[0].member[0]['$'].id);
+					//console.log(result2.results.members[0].member[0].name[0]);
+					//extract the name of the user from result2
+					result2.results.members[0].member.forEach(function(item){
+						ids.push(item['$'].id);
+						names.push(item.name[0]);
+					});
+					res.render('makecallentry',{title: 'New Call Entry',runid: runid,ids: ids, names: names});
+				});
+			});
+		});
+		post2_req.write(post2_data);
+		post2_req.end();
 	});
 });
 
