@@ -111,7 +111,7 @@
 			"file": "views/layout.jade",
 			"settings":
 			{
-				"buffer_size": 730,
+				"buffer_size": 731,
 				"line_ending": "Windows"
 			}
 		},
@@ -156,10 +156,7 @@
 			}
 		},
 		{
-			"contents": "extends layout\n\nblock content\n	div(class=\"HomeContainer\")\n		div(class=\"Inner\")\n			div(class=\"row\")\n				div(class=\"span4 text-right\")\n					h1 #{truck.truckname}\n				div(class=\"span8\")\n					div(id=\"truckstatus\")\n			div(class=\"row\")\n				div(class=\"span4 text-left\", id=\"Message\")\n				div(class=\"span8 text-left\", id=\"TidyRuns\")\n	script(src=\"/javascripts/truckscripts.js\", type=\"text/javascript\")\n	script(sync) getstatus(#{truck.truckid},function(){});",
 			"file": "views/truck.jade",
-			"file_size": 462,
-			"file_write_time": 131127191349154869,
 			"settings":
 			{
 				"buffer_size": 448,
@@ -210,7 +207,7 @@
 			"file": "routes/logout.js",
 			"settings":
 			{
-				"buffer_size": 1762,
+				"buffer_size": 1780,
 				"line_ending": "Windows"
 			}
 		},
@@ -234,7 +231,15 @@
 			"file": "routes/truck.js",
 			"settings":
 			{
-				"buffer_size": 17126,
+				"buffer_size": 18685,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/makecallentry.jade",
+			"settings":
+			{
+				"buffer_size": 78,
 				"line_ending": "Windows"
 			}
 		},
@@ -510,10 +515,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 714.0,
-						"translation.y": 4645.0,
+						"translation.y": 5161.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -541,7 +546,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -571,7 +576,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 36,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -600,7 +605,7 @@
 						"translation.y": 23.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -628,7 +633,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -656,7 +661,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -684,7 +689,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -711,10 +716,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1242.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -742,7 +747,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -751,15 +756,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 730,
+						"buffer_size": 731,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								584,
-								584
+								65,
+								65
 							]
 						],
 						"settings":
@@ -770,7 +775,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -799,7 +804,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
@@ -827,7 +832,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -856,7 +861,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -884,7 +889,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -913,7 +918,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -941,7 +946,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -970,7 +975,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -999,7 +1004,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
@@ -1027,7 +1032,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -1053,10 +1058,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 772.0,
+						"translation.y": 736.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1082,10 +1087,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1836.0,
+						"translation.y": 2040.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -1094,15 +1099,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1762,
+						"buffer_size": 1780,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								789,
-								1362
+								1091,
+								1091
 							]
 						],
 						"settings":
@@ -1111,10 +1116,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 88.0,
+						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1142,7 +1147,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -1171,7 +1176,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
@@ -1180,15 +1185,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 17126,
+						"buffer_size": 18685,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2817,
-								2817
+								7472,
+								7472
 							]
 						],
 						"settings":
@@ -1196,7 +1201,7 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1161.0,
+						"translation.y": 3166.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1204,6 +1209,35 @@
 				},
 				{
 					"buffer": 25,
+					"file": "views/makecallentry.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 78,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								59,
+								59
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 26,
 					"file": "public/javascripts/truckscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -1227,11 +1261,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 27,
 					"file": "views/editalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -1256,11 +1290,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 28,
 					"file": "views/deletetruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -1285,11 +1319,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 29,
 					"file": "views/deletetask.jade",
 					"semi_transient": false,
 					"settings":
@@ -1314,11 +1348,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 30,
 					"file": "routes/admin.js",
 					"semi_transient": false,
 					"settings":
@@ -1330,8 +1364,8 @@
 						"selection":
 						[
 							[
-								478,
-								229
+								6192,
+								5121
 							]
 						],
 						"settings":
@@ -1340,14 +1374,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1188.0,
+						"translation.y": 2700.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 31,
 					"file": "public/javascripts/adminscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -1369,14 +1403,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 35.0,
+						"translation.y": 37.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 32,
 					"file": "views/admin.jade",
 					"semi_transient": false,
 					"settings":
@@ -1401,11 +1435,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 33,
 					"file": "views/addtruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -1430,11 +1464,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 34,
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
@@ -1456,14 +1490,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 304.0,
+						"translation.y": 334.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 35,
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -1487,11 +1521,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 35,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 36,
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -1512,14 +1546,14 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 108.0,
+						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 37,
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -1544,11 +1578,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 38,
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -1560,8 +1594,8 @@
 						"selection":
 						[
 							[
-								295,
-								295
+								78,
+								0
 							]
 						],
 						"settings":
@@ -1573,7 +1607,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]

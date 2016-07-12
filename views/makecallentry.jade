@@ -3,3 +3,38 @@ extends layout
 block content
 	div(class="HomeContainer")
 		div(class="Inner")
+			div(class="row")
+				div(class="span12 text-center") 
+					h1 Make Call Entry
+			div(class="row")
+				div(class="span6 offset3")
+					form(action="/truck/newcallentry",method="post")
+						input(type="hidden", name="runid", value=runid)
+						label Call Type:
+							select(name="calltype",id="calltype")
+								option(value="emergency") Emergency		
+						br
+						label Call Location:
+							input(type="text", name="calllocation", class=".input", id="calllocation")
+						br
+						label Call Destination:
+							input(type="text", name="calldestination", class=".input", id="calldestination")
+						br
+						label Driver Name:
+							select(name="drivername",id="drivername")
+								each name, index in names
+									option(value=name)= name
+						br
+						label Additional Names:
+							input(type="additionalnames", name="additionalnames", class=".input")
+						br
+						label Run Number:
+							input(type="runnumber", name="runnumber", class=".input", value=runid)
+						br
+						input(type="submit", value="Submit")
+					br
+					br
+					div(class='button')
+						a(href="/admin") Cancel
+
+				div(class="span3")
