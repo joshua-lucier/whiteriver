@@ -25,6 +25,11 @@ block content
 								each name, index in names
 									option(value=name)= name
 						br
+						label Primary Care:
+							select(name="primarycare",id="primarycare")
+								each name, index in names
+									option(value=name)= name
+						br
 						label Additional Names:
 							input(type="additionalnames", name="additionalnames", class=".input")
 						br

@@ -140,6 +140,28 @@ router.get('/makecallentry', function(req,res,next){
 	});
 });
 
+router.post('/newcallentry',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("insert into CallEntries(RunID,CallType,CallLocation,CallDestination,DriverName,PrimaryCare,AdditionalNames,RunNumber) values ($1,$2,$3,$4,$5,$6,$7,$8);",[req.body.runid,req.body.calltype,req.body.calllocation,req.body.calldestination,req.body.drivername,req.body.primarycare,req.body.additionalnames,req.body.runnumber]);
+			query2.on('end', function(results){
+				done2();
+				message = TruckCreatorName + " created truck " + TruckName;
+				res.render('truck', {title: 'Truck', message: message});
+			});
+			query2.on('error', function(error2){
+				console.log(error2);
+				res.render('invalid', {title: 'Error', message: error2});
+			});
+		});
+	});
+});
+
 
 router.get('/getstatus', function(req,res,next){
 	truckid = req.query.truckid;
