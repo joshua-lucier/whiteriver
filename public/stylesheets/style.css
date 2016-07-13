@@ -173,7 +173,7 @@ a {
 	text-align: center;
 }
 
-.unselectstatus:hover {
+.unselectstatus:active {
 	background-color: grey;
 }
 
@@ -190,6 +190,6 @@ a {
 	vertical-align: middle;
 }
 
-.callentry:hover {
+.callentry:active {
 	background-color: grey;
 }
