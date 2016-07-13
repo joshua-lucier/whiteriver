@@ -269,9 +269,9 @@ module.exports = {
 				});
 				query1 = client.query("create table if not exists myAdministrators(MemberID int PRIMARY KEY, AddedById int, DateTimeAdded timestamp not null default current_timestamp);").on('error', function(error2){message = 'myAdministrators '+error2; console.log(message);});
 				query1.on('end',function(){
-					query2 = client.query("create table if not exists Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int references myAdministrators(MemberID));").on('error', function(error2){message = 'Alerts '+error2; console.log(message);});
+					query2 = client.query("create table if not exists Alerts(AlertID serial primary key, AlertText text, AlertTime timestamp, AlertCreator int);").on('error', function(error2){message = 'Alerts '+error2; console.log(message);});
 					query2.on('end',function(){
-						query3 = client.query("create table if not exists Tasks(TaskID serial primary key, CreatorID int references myAdministrators(MemberID), ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(10), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = 'Tasks '+error2; console.log(message);});
+						query3 = client.query("create table if not exists Tasks(TaskID serial primary key, CreatorID int, ChargedID int, Title text, Description text, TimeCreated timestamp not null default current_timestamp, TimeDue timestamp, RepeatPeriod varchar(10), RepeatIncrement int, RepeatEnd timestamp, MarkTime timestamp);").on('error', function(error2){message = 'Tasks '+error2; console.log(message);});
 						query3.on('end',function(){
 							query4 = client.query("create table if not exists Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = 'Trucks '+error2; console.log(message);});
 							query4.on('end',function(){
