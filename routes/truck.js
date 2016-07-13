@@ -86,7 +86,7 @@ router.get('/gettidyruns', function(req,res,next){
 							}
 						});
 						if(runstatus){
-							finalhtml = finalhtml+"<div><a href='/truck/makecallentry?runid="+item.runid+"'>Make Call Entry for run " + item.runid + " which began on "+runstatus.statustime+"</a></div>";
+							finalhtml = finalhtml+"<a href='/truck/makecallentry?runid="+item.runid+"'><div class='callentry'>Make Call Entry for run " + item.runid + " which began on "+runstatus.statustime+"</div></a>";
 						} else {
 							finalhtml = finalhtml+"<div>Error No status on run " + item.runid+"</div>";
 						}

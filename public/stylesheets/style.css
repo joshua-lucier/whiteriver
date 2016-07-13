@@ -176,3 +176,20 @@ a {
 .unselectstatus:hover {
 	background-color: grey;
 }
+
+.callentry {
+	display: table-cell;
+	width: 50em;
+	border: 3px solid;
+	border-color: #304770;
+	height: 3em;
+	padding-left: 2em;
+	position: relative;
+	background-color: white;
+	color: black;
+	vertical-align: middle;
+}
+
+.callentry:hover {
+	background-color: grey;
+}
