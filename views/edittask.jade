@@ -23,12 +23,12 @@ block content
 							div(class="span3 text-right")
 								label Title:
 							div(class="span6")
-								input(type="text", name="title", class="input", value="#{task.title}")
+								input(type="text", name="title", class="input", value="#{task.title}", required)
 						div(class="row")
 							div(class="span3 text-right")
 								label Description:
 							div(class="span6")
-								textarea(id="description",name="description",rows="5",cols="20", class="input") #{task.description}
+								textarea(id="description",name="description",rows="5",cols="20", class="input", required) #{task.description}
 						div(class="row")
 							div(class="span12")
 								br
@@ -36,7 +36,7 @@ block content
 							div(class="span3 text-right")
 								label Time and Date due:
 							div(class="span6")
-								input(type="datetime-local",name="timedue", class="input", id="timedue")
+								input(type="datetime-local",name="timedue", class="input", id="timedue", required)
 						div(class="row")
 							div(class="span3 text-right")
 								label Repeat period:
@@ -52,12 +52,12 @@ block content
 							div(class="span3 text-right")
 								label Repeat interval:
 							div(class="span6")
-								input(type="number",name="repeatincrement", class="input", value="#{task.repeatincrement}")
+								input(type="number",name="repeatincrement", class="input", value="#{task.repeatincrement}", required)
 						div(class="row")
 							div(class="span3 text-right")
 								label Repeat end date:
 							div(class="span6")
-								input(id="repeatend",type='datetime-local',name="repeatend", class="input")
+								input(id="repeatend",type='datetime-local',name="repeatend", class="input", required)
 						div(class="row")
 							div(class="span3 text-right")
 								input(type="submit", value="Submit")

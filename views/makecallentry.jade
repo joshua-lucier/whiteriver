@@ -15,10 +15,10 @@ block content
 								option(value="emergency") Emergency		
 						br
 						label Call Location:
-							input(type="text", name="calllocation", class=".input", id="calllocation")
+							input(type="text", name="calllocation", class=".input", id="calllocation", required)
 						br
 						label Call Destination:
-							input(type="text", name="calldestination", class=".input", id="calldestination")
+							input(type="text", name="calldestination", class=".input", id="calldestination", required)
 						br
 						label Driver Name:
 							select(name="drivername",id="drivername")
@@ -31,10 +31,10 @@ block content
 									option(value=name)= name
 						br
 						label Additional Names:
-							input(type="additionalnames", name="additionalnames", class=".input")
+							input(type="additionalnames", name="additionalnames", class=".input", required)
 						br
 						label Run Number:
-							input(type="runnumber", name="runnumber", class=".input", value=runid)
+							input(type="runnumber", name="runnumber", class=".input", value=runnumber, required)
 						br
 						input(type="submit", value="Submit")
 					br

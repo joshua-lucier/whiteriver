@@ -14,12 +14,12 @@ block content
 						div(class="span3 text-right")
 							label Alert Text:
 						div(class="span6")
-							input(type="text", name="alerttext", class="input" value="#{alert.alerttext}")
+							input(type="text", name="alerttext", class="input" value="#{alert.alerttext}", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Alert Time:
 						div(class="span6")
-							input(id="alerttime",type="datetime-local",name="alerttime", class="input")
+							input(id="alerttime",type="datetime-local",name="alerttime", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							input(type="submit", value="Submit")

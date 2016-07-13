@@ -5,9 +5,9 @@ block content
 		div(class="Inner")
 			form(action="/login",method="post")
 				label Username:
-				input(type="text", name="username")
+				input(type="text", name="username", required)
 				br
 				label password: 
-				input(type="password", name="password")
+				input(type="password", name="password", required)
 				br
 				input(type="submit", value="Submit")

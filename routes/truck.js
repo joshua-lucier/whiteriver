@@ -131,7 +131,24 @@ router.get('/makecallentry', function(req,res,next){
 						ids.push(item['$'].id);
 						names.push(item.name[0]);
 					});
-					res.render('makecallentry',{title: 'New Call Entry',runid: runid,ids: ids, names: names});
+					runnumber = false;
+					call = {};
+					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+					pg.connect(connectionString, function(err3,client2,done2){
+						if(err3) console.log('could not connect to postgres',err);
+						var query2 = client2.query("select RunNumber from CallEntries order by RunNumber desc limit 1;");
+						query2.on('row',function(row){
+							runnumber = row;
+						});
+						query2.on('end', function(results){
+							done2();
+							if(runnumber) call = runnumber;
+							else call.runnumber = undefined;
+							console.log(runnumber);
+							res.render('makecallentry',{title: 'New Call Entry',runid: runid,ids: ids, names: names, runnumber: Number(call.runnumber)+1});
+						});
+
+					});
 				});
 			});
 		});

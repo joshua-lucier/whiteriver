@@ -21,12 +21,12 @@ block content
 						div(class="span3 text-right")
 							label Title:
 						div(class="span6")
-							input(type="text", name="title", class="input")
+							input(type="text", name="title", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Description:
 						div(class="span6")
-							textarea(name="description",rows="5",cols="20", class="input")
+							textarea(name="description",rows="5",cols="20", class="input", required)
 					div(class="row")
 						div(class="span12")
 							br
@@ -34,7 +34,7 @@ block content
 						div(class="span3 text-right")
 							label Time and Date due:
 						div(class="span6")
-							input(type="datetime-local",name="timedue", class="input")
+							input(type="datetime-local",name="timedue", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Repeat period:
@@ -50,12 +50,12 @@ block content
 						div(class="span3 text-right")
 							label Repeat interval:
 						div(class="span6")
-							input(type="number",name="repeatincrement",value=1, class="input")
+							input(type="number",name="repeatincrement",value=1, class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Repeat end date:
 						div(class="span6")
-							input(type='datetime-local',name="repeatend", class="input")
+							input(type='datetime-local',name="repeatend", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							input(type="submit", value="Submit")

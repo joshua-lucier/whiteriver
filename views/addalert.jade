@@ -8,17 +8,17 @@ block content
 					h1 Add an Alert
 			div(class="row")
 				form(action="/admin/addalert",method="post")
-					input(type="hidden", name="creatorid", value="#{id}")
+					input(type="hidden", name="creatorid", value="#{id}", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Alert Text:
 						div(class="span6")
-							input(type="text", name="alerttext", class="input")
+							input(type="text", name="alerttext", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							label Alert Time:
 						div(class="span6")
-							input(type="datetime-local",name="alerttime", class="input")
+							input(type="datetime-local",name="alerttime", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							input(type="submit", value="Submit")
