@@ -138,3 +138,39 @@ a {
 .logo {
 	padding-left: 5em;
 }
+
+.selectstatus {
+	display: inline-block;
+	width: 5em;
+	height: 3em;
+	border: 2px solid;
+	border-radius: 1px;
+	border-color: blue;
+	padding: 1em;
+	position: relative;
+	background-color: white;
+	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: black;
+}
+
+.selectstatus :hover {
+	background-color: grey;
+}
+
+.unselectstatus {
+	display: inline-block;
+	width: 5em;
+	height: 3em;
+	border: 2px solid;
+	border-radius: 1px;
+	border-color: blue;
+	padding: 1em;
+	position: relative;
+	background-color: black;
+	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: white;
+}
+
+.unselectstatus :hover {
+	background-color: grey;
+}
