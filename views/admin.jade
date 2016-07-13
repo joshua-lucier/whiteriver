@@ -32,5 +32,7 @@ block content
 					div(id="alertlist",class="span3",class="list")
 				div(class="span3")
 					h2 Admins
-					div(id="adminlist",class="span3",class="list")
+					div.button
+						a(onClick="toggleadminlist(function(){});") Admins
+					div(id="adminlist",class="span3",class="list",style="color: black;") +
 		script(src="/javascripts/adminscripts.js")

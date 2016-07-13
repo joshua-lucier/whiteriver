@@ -1,6 +1,3 @@
-sqldelay = 500;
-
-
 function listtrucks(callback){
 	$.get("/admin/gettrucks", function(data,status){
 		$("#trucklist").html(data);
@@ -43,13 +40,42 @@ function listadmins(callback){
 	});
 }
 
+function clearadmins(callback){
+	$("#adminlist").html('+');
+	callback();
+}
+
+function toggleadminlist(callback){
+	if($("#adminlist").html() == '+'){
+		listadmins(function(){
+			callback();
+		});
+	} else {
+		clearadmins(function(){
+			callback();
+		});
+	}
+}
+
+function displayadmin(callback){
+	if($("#adminlist").html()=='+'){
+		clearadmins(function(){
+			callback();
+		});
+	} else {
+		listadmins(function(){
+			callback();
+		});
+	}
+}
+
 function loadpage(callback){
 	listtasks(function(){
 		todaystasks(function(){
 			listtrucks(function(){
 				listalerts(function(){
 					todaysalerts(function(){
-						listadmins(function(){});
+						displayadmin(function(){});
 					});
 				});
 			});
@@ -74,6 +100,6 @@ function togglemark(id){
 
 function toggleadmin(id){
 	$.get("/admin/toggleadmin?memberid="+id,function(data,status){
-		listadmins(function(){});
+		displayadmin(function(){});
 	})
 }
