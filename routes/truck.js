@@ -215,7 +215,7 @@ router.get('/getstatus', function(req,res,next){
 					if(status.status=='clear') finalhtml = finalhtml + " <b><u><a onClick='clearrun("+truckid+",function(){})'><div class='selectstatus'>Clear</div></a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a> ";
 					if(status.status=='service') finalhtml = finalhtml + " <b><u><a onClick='service("+truckid+",function(){})'><div class='selectstatus'>In Service</div></a></u></b> ";
-					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'><div class='selectstatus'>In Service</div></a> ";
+					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a> ";
 					res.send(finalhtml);
 				} else {
 					finalhtml =" <a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a>  <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a>  <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a>  <a onClick='arrived("+truckid+",function(){})'><div class='unselectstatus'>At Destination</div></a>  <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a>  <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a>";

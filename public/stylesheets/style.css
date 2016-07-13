@@ -141,8 +141,8 @@ a {
 
 .selectstatus {
 	display: inline-block;
-	width: 5em;
-	height: 3em;
+	width: 7em;
+	height: 1.5em;
 	border: 2px solid;
 	border-radius: 1px;
 	border-color: blue;
@@ -153,14 +153,14 @@ a {
 	color: black;
 }
 
-.selectstatus :hover {
+.selectstatus:hover {
 	background-color: grey;
 }
 
 .unselectstatus {
 	display: inline-block;
-	width: 5em;
-	height: 3em;
+	width: 7em;
+	height: 1.5em;
 	border: 2px solid;
 	border-radius: 1px;
 	border-color: blue;
@@ -171,6 +171,6 @@ a {
 	color: white;
 }
 
-.unselectstatus :hover {
+.unselectstatus:hover {
 	background-color: grey;
 }
