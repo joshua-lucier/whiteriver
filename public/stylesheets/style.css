@@ -64,7 +64,7 @@ a {
 	background-color: white;
 	border: 2px solid;
 	border-radius: 25px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 5px;
 	display: inline;
 	position: relative;
@@ -81,7 +81,7 @@ a {
 	background-color: white;
 	border: 2px solid;
 	border-radius: 25px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 10px;
 }
 
@@ -91,7 +91,7 @@ a {
 	background-color: white;
 	border: 2px solid;
 	border-radius: 25px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 5px;
 	display: inline;
 }
@@ -103,7 +103,7 @@ a {
 	background-color: white;
 	border: 2px solid;
 	border-radius: 2px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 5px;
 }
 
@@ -117,7 +117,7 @@ a {
 
 .checkmark:hover {
 	border: 1px solid;
-	border-color: blue;
+	border-color: #304770;
 }
 
 .title {
@@ -126,7 +126,7 @@ a {
 	background-color: white;
 	border: 2px solid;
 	border-radius: 25px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 5px;
 	display: inline-block;
 	height: 75px;
@@ -145,12 +145,13 @@ a {
 	height: 1.5em;
 	border: 2px solid;
 	border-radius: 1px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 1em;
 	position: relative;
 	background-color: white;
 	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: black;
+	text-align: center;
 }
 
 .selectstatus:hover {
@@ -163,12 +164,13 @@ a {
 	height: 1.5em;
 	border: 2px solid;
 	border-radius: 1px;
-	border-color: blue;
+	border-color: #304770;
 	padding: 1em;
 	position: relative;
 	background-color: black;
 	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
+	text-align: center;
 }
 
 .unselectstatus:hover {
