@@ -275,7 +275,7 @@ module.exports = {
 						query3.on('end',function(){
 							query4 = client.query("create table if not exists Trucks(TruckID serial primary key, TruckCreatorName text, TruckSerial text, TruckModel text, TruckMake text, TruckName text unique, TruckPlate text, DateCreated timestamp  not null default current_timestamp);").on('error', function(error2){message = 'Trucks '+error2; console.log(message);});
 							query4.on('end',function(){
-								query5 = client.query("create table if not exists Runs(RunID serial primary key, TruckID int references Trucks(TruckID), Status bool);").on('error', function(error2){message = 'Runs ' + error2;});
+								query5 = client.query("create table if not exists Runs(RunID serial primary key, TruckID int, Status bool);").on('error', function(error2){message = 'Runs ' + error2;});
 								query5.on('end',function(){
 									query6 = client.query("create table if not exists TruckStatusEntries(StatusEntryID serial primary key, RunID int references Runs(RunID), Status varchar(10), StatusTime timestamp not null default current_timestamp, MemberName text);").on('error', function(error2){message = 'TruckStatusEntries '+error2; console.log(message);});
 									query6.on('end',function(){

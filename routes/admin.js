@@ -722,7 +722,7 @@ router.get('/getadmins',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from Administrators;");
+			var query2 = client2.query("select * from myAdministrators;");
 			query2.on('row', function(row2){
 				adminids.push(row2.memberid);
 				
@@ -790,9 +790,9 @@ router.get('/toggleadmin',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from Administrators where MemberID=$1;",[memberid]);
+			var query2 = client2.query("select * from myAdministrators where MemberID=$1;",[memberid]);
 			query2.on('row', function(row2){
-				query3 = client2.query("delete from Administrators where MemberID=$1;",[memberid]);
+				query3 = client2.query("delete from myAdministrators where MemberID=$1;",[memberid]);
 				wasadmin = true;		
 			});
 			query2.on('error', function(error2){
@@ -804,7 +804,7 @@ router.get('/toggleadmin',function(req,res,next){
 			query2.on('end', function(results2){
 				done2();
 				if(!wasadmin){
-					query4 = client2.query("insert into Administrators(MemberID, AddedById) values($1,$2);",[memberid,id]);
+					query4 = client2.query("insert into myAdministrators(MemberID, AddedById) values($1,$2);",[memberid,id]);
 				}
 				res.send('finished admin toggle');
 			});
