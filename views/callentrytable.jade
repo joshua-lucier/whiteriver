@@ -1,0 +1,30 @@
+extends layout
+
+block content
+	div(class="HomeContainer")
+		div(class="Inner")
+			div(class="row")
+				div(class="span8 offset2")
+					h1 Call Entry Log
+			div(class="row")
+				div(class="span8 offset2")
+					table(id="callentrylog")
+						tr
+							th Run ID
+							th Call Type
+							th Call Location
+							th Call Destination
+							th Driver Name
+							th Primary Care
+							th Additional Names
+							th Run Number
+						each callentry in callentries
+							tr
+								td=callentry.runid
+								td=callentry.calltype
+								td=callentry.calllocation
+								td=callentry.calldestination
+								td=callentry.drivername
+								td=callentry.primarycare
+								td=callentry.additionalnames
+								td=callentry.runnumber
