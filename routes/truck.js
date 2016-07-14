@@ -168,8 +168,8 @@ router.post('/newcallentry',function(req,res,next){
 			var query2 = client2.query("insert into CallEntries(RunID,CallType,CallLocation,CallDestination,DriverName,PrimaryCare,AdditionalNames,RunNumber) values ($1,$2,$3,$4,$5,$6,$7,$8);",[req.body.runid,req.body.calltype,req.body.calllocation,req.body.calldestination,req.body.drivername,req.body.primarycare,req.body.additionalnames,req.body.runnumber]);
 			query2.on('end', function(results){
 				done2();
-				message = TruckCreatorName + " created truck " + TruckName;
-				res.render('truck', {title: 'Truck', message: message});
+				message = username + " made call entry for run: " + req.body.runid;
+				res.redirect('/mobile');
 			});
 			query2.on('error', function(error2){
 				console.log(error2);

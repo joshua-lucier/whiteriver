@@ -1,8 +1,14 @@
+@font-face{
+	font-family: Lato;
+	src: url("/Lato-Black.woff");
+}
+
 body {
 	padding: 0px;
 	padding-top: 3em;
 	padding-bottom: 3em;
-	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: Lato;
+	font: 14px  Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 	background-size: cover;
 }
@@ -149,7 +155,7 @@ a {
 	padding: 1em;
 	position: relative;
 	background-color: white;
-	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 14px  Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: black;
 	text-align: center;
 }
@@ -168,7 +174,7 @@ a {
 	padding: 1em;
 	position: relative;
 	background-color: black;
-	font: 14px  "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 14px Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 	text-align: center;
 }
@@ -199,9 +205,43 @@ a {
 	border: 1px solid #304770;
 }
 #callentrylog {
-	width: 80em;
+	width: 90em;
 }
 #callentrylog th, #callentrylog td {
-	width: 10em;
 	text-align: center;
+	color: black;
+	border-bottom: 1px solid black;
+	padding: .5em;
+}
+
+#callentrylog td:nth-child(1) {
+	width: 2em;
+}
+
+#callentrylog td:nth-child(2) {
+	width: 5em;
+}
+
+#callentrylog td:nth-child(3) {
+	width: 25em;
+}
+
+#callentrylog td:nth-child(4) {
+	width: 25em;
+}
+
+#callentrylog td:nth-child(5) {
+	width: 10em;
+}
+
+#callentrylog td:nth-child(6) {
+	width: 10em;
+}
+
+#callentrylog td:nth-child(7) {
+	width: 10em;
+}
+
+#callentrylog td:nth-child(8) {
+	width: 3em;
 }

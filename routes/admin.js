@@ -13,6 +13,9 @@ var pghost = process.env.pghost;
 var pgdatabase = process.env.pgdatabase;
 var parseString = require('xml2js').parseString;
 var pg = require('pg');
+var fs = require('fs');
+var csv = require('express-csv');
+var copyTo = require('pg-copy-streams').to;
 router.use(cookieParser(secret));
 router.use(cookieSession({
   name: 'whiteriver',
@@ -838,7 +841,37 @@ router.get('/callentrytable',function(req,res,next){
 			});
 		});		
 	});
-})
+});
+
+router.get('/callentries.csv', function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		var columns = ['CallEntryID','RunID','CallType','CallLocation','CallDestination','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
+		outcsv = [columns];
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			var query = client.query('SELECT '+columns.join(', ')+' FROM CallEntries;');
+			query.on('row', function(row) {
+				// process column values; if you need to do special formatting (i.e. dates) don't loop and instead handle each one specially
+				values = [];
+				values.push(row.callentryid);
+				values.push(row.runid);
+				values.push(row.calltype);
+				values.push(row.calllocation);
+				values.push(row.calldestination);
+				values.push(row.drivername);
+				values.push(row.primarycare);
+				values.push(row.additionalnames);
+				values.push(row.runnumber);
+				outcsv.push(values);
+			});
+
+			query.on('end', function(result) {
+				done();
+				res.csv(outcsv);
+			});
+		});
+	});
+});
 
 
 module.exports = router;
