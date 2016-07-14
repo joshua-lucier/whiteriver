@@ -811,4 +811,34 @@ router.get('/toggleadmin',function(req,res,next){
 		});
 	});
 });
+
+router.get('/callentrytable',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		callentries = [];
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			wasadmin = false;
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from CallEntries order by RunNumber;");
+			query2.on('row', function(row2){
+				callentries.push(row2);
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				res.render('callentrytable',{title: 'CallEntries',callentries: callentries});
+			});
+		});		
+	});
+})
+
+
 module.exports = router;

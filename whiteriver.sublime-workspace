@@ -39,7 +39,7 @@
 			"file": "routes/functions.js",
 			"settings":
 			{
-				"buffer_size": 23390,
+				"buffer_size": 23319,
 				"line_ending": "Windows"
 			}
 		},
@@ -71,7 +71,7 @@
 			"file": "views/appdevlogin.jade",
 			"settings":
 			{
-				"buffer_size": 297,
+				"buffer_size": 317,
 				"line_ending": "Windows"
 			}
 		},
@@ -79,7 +79,7 @@
 			"file": "views/adminlogin.jade",
 			"settings":
 			{
-				"buffer_size": 296,
+				"buffer_size": 316,
 				"line_ending": "Windows"
 			}
 		},
@@ -103,7 +103,7 @@
 			"file": "views/login.jade",
 			"settings":
 			{
-				"buffer_size": 298,
+				"buffer_size": 318,
 				"line_ending": "Windows"
 			}
 		},
@@ -151,7 +151,7 @@
 			"file": "views/mobile.jade",
 			"settings":
 			{
-				"buffer_size": 335,
+				"buffer_size": 350,
 				"line_ending": "Windows"
 			}
 		},
@@ -159,7 +159,7 @@
 			"file": "views/truck.jade",
 			"settings":
 			{
-				"buffer_size": 448,
+				"buffer_size": 458,
 				"line_ending": "Windows"
 			}
 		},
@@ -167,7 +167,7 @@
 			"file": "views/edittruck.jade",
 			"settings":
 			{
-				"buffer_size": 1090,
+				"buffer_size": 1140,
 				"line_ending": "Windows"
 			}
 		},
@@ -175,7 +175,7 @@
 			"file": "views/edittask.jade",
 			"settings":
 			{
-				"buffer_size": 2721,
+				"buffer_size": 2771,
 				"line_ending": "Windows"
 			}
 		},
@@ -191,7 +191,7 @@
 			"file": "routes/index.js",
 			"settings":
 			{
-				"buffer_size": 2478,
+				"buffer_size": 2511,
 				"line_ending": "Windows"
 			}
 		},
@@ -199,7 +199,7 @@
 			"file": "public/stylesheets/style.css",
 			"settings":
 			{
-				"buffer_size": 2074,
+				"buffer_size": 3076,
 				"line_ending": "Windows"
 			}
 		},
@@ -208,14 +208,6 @@
 			"settings":
 			{
 				"buffer_size": 1780,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "routes/main.js",
-			"settings":
-			{
-				"buffer_size": 684,
 				"line_ending": "Windows"
 			}
 		},
@@ -231,7 +223,7 @@
 			"file": "routes/truck.js",
 			"settings":
 			{
-				"buffer_size": 18685,
+				"buffer_size": 21044,
 				"line_ending": "Windows"
 			}
 		},
@@ -239,8 +231,17 @@
 			"file": "views/makecallentry.jade",
 			"settings":
 			{
-				"buffer_size": 78,
+				"buffer_size": 1400,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "public/javascripts/locationpicker.jquery.min.js",
+			"settings":
+			{
+				"buffer_size": 6902,
+				"line_ending": "Windows",
+				"name": "/*! jquery-locationpicker - v0.1.13 - 2016-03-11 *"
 			}
 		},
 		{
@@ -255,7 +256,7 @@
 			"file": "views/editalert.jade",
 			"settings":
 			{
-				"buffer_size": 1063,
+				"buffer_size": 1083,
 				"line_ending": "Windows"
 			}
 		},
@@ -268,6 +269,14 @@
 			}
 		},
 		{
+			"file": "routes/admin.js",
+			"settings":
+			{
+				"buffer_size": 28412,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "views/deletetask.jade",
 			"settings":
 			{
@@ -276,10 +285,10 @@
 			}
 		},
 		{
-			"file": "routes/admin.js",
+			"file": "routes/main.js",
 			"settings":
 			{
-				"buffer_size": 28404,
+				"buffer_size": 684,
 				"line_ending": "Windows"
 			}
 		},
@@ -287,7 +296,7 @@
 			"file": "public/javascripts/adminscripts.js",
 			"settings":
 			{
-				"buffer_size": 1472,
+				"buffer_size": 1891,
 				"line_ending": "Windows"
 			}
 		},
@@ -295,7 +304,7 @@
 			"file": "views/admin.jade",
 			"settings":
 			{
-				"buffer_size": 1016,
+				"buffer_size": 1113,
 				"line_ending": "Windows"
 			}
 		},
@@ -303,7 +312,7 @@
 			"file": "views/addtruck.jade",
 			"settings":
 			{
-				"buffer_size": 871,
+				"buffer_size": 921,
 				"line_ending": "Windows"
 			}
 		},
@@ -311,7 +320,7 @@
 			"file": "views/addtask.jade",
 			"settings":
 			{
-				"buffer_size": 2052,
+				"buffer_size": 2102,
 				"line_ending": "Windows"
 			}
 		},
@@ -343,7 +352,7 @@
 			"file": "views/addalert.jade",
 			"settings":
 			{
-				"buffer_size": 832,
+				"buffer_size": 862,
 				"line_ending": "Windows"
 			}
 		}
@@ -472,6 +481,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Administrators"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -479,6 +489,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"myAdministrators"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -489,7 +500,7 @@
 	"groups":
 	[
 		{
-			"selected": 24,
+			"selected": 20,
 			"sheets":
 			[
 				{
@@ -498,15 +509,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 23390,
+						"buffer_size": 23319,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5434,
-								5434
+								11455,
+								11455
 							]
 						],
 						"settings":
@@ -514,11 +525,11 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 714.0,
-						"translation.y": 5161.0,
+						"translation.x": 170.0,
+						"translation.y": 5280.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -546,7 +557,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -576,7 +587,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -592,8 +603,8 @@
 						"selection":
 						[
 							[
-								82,
-								725
+								346,
+								346
 							]
 						],
 						"settings":
@@ -605,7 +616,7 @@
 						"translation.y": 23.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -614,15 +625,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 297,
+						"buffer_size": 317,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								297
+								275,
+								275
 							]
 						],
 						"settings":
@@ -633,7 +644,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -642,15 +653,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 296,
+						"buffer_size": 316,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								296
+								274,
+								274
 							]
 						],
 						"settings":
@@ -661,7 +672,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -689,7 +700,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
@@ -719,7 +730,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -728,15 +739,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 298,
+						"buffer_size": 318,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								298
+								268,
+								268
 							]
 						],
 						"settings":
@@ -747,7 +758,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -763,8 +774,8 @@
 						"selection":
 						[
 							[
-								65,
-								65
+								494,
+								494
 							]
 						],
 						"settings":
@@ -775,7 +786,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -804,7 +815,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -820,8 +831,8 @@
 						"selection":
 						[
 							[
-								82,
-								321
+								243,
+								243
 							]
 						],
 						"settings":
@@ -832,7 +843,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -848,8 +859,8 @@
 						"selection":
 						[
 							[
-								82,
-								433
+								222,
+								192
 							]
 						],
 						"settings":
@@ -861,7 +872,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -877,8 +888,8 @@
 						"selection":
 						[
 							[
-								82,
-								185
+								133,
+								133
 							]
 						],
 						"settings":
@@ -889,7 +900,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -898,15 +909,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 335,
+						"buffer_size": 350,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								335
+								350,
+								350
 							]
 						],
 						"settings":
@@ -918,7 +929,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -927,15 +938,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 448,
+						"buffer_size": 458,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								448,
-								448
+								458,
+								458
 							]
 						],
 						"settings":
@@ -946,7 +957,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -955,15 +966,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1090,
+						"buffer_size": 1140,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								1090
+								942,
+								942
 							]
 						],
 						"settings":
@@ -975,7 +986,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -984,15 +995,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2721,
+						"buffer_size": 2771,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								2721
+								2285,
+								2285
 							]
 						],
 						"settings":
@@ -1001,10 +1012,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 840.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -1032,7 +1043,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
@@ -1041,15 +1052,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2478,
+						"buffer_size": 2511,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2106,
-								2106
+								2094,
+								2094
 							]
 						],
 						"settings":
@@ -1058,10 +1069,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 736.0,
+						"translation.y": 1156.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -1070,15 +1081,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2074,
+						"buffer_size": 3076,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2071,
-								2071
+								2836,
+								2834
 							]
 						],
 						"settings":
@@ -1087,10 +1098,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2040.0,
+						"translation.y": 3324.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1119,39 +1130,11 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
 					"buffer": 22,
-					"file": "routes/main.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 684,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 21,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
 					"file": "routes/login.js",
 					"semi_transient": false,
 					"settings":
@@ -1176,24 +1159,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 23,
 					"file": "routes/truck.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18685,
+						"buffer_size": 21044,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7472,
-								7472
+								2980,
+								2980
 							]
 						],
 						"settings":
@@ -1201,27 +1184,27 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3166.0,
+						"translation.y": 1440.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 24,
 					"file": "views/makecallentry.jade",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 78,
+						"buffer_size": 1400,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								59,
-								59
+								1367,
+								1367
 							]
 						],
 						"settings":
@@ -1230,10 +1213,39 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
+						"translation.y": 360.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 25,
+					"file": "public/javascripts/locationpicker.jquery.min.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6902,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6902,
+								6902
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/*! jquery-locationpicker - v0.1.13 - 2016-03-11 *",
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1257,11 +1269,11 @@
 						{
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1270,15 +1282,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1063,
+						"buffer_size": 1083,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								1063
+								365,
+								365
 							]
 						],
 						"settings":
@@ -1287,10 +1299,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 60.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -1306,8 +1318,181 @@
 						"selection":
 						[
 							[
-								82,
-								866
+								203,
+								203
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 120.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 29,
+					"file": "routes/admin.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								27183,
+								27183
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6840.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "views/deletetask.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								78,
+								78
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "routes/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 684,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"file": "public/javascripts/adminscripts.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1891,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1891,
+								1891
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1500.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "views/admin.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1113,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1068,
+								1068
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 240.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 34,
+					"file": "views/addtruck.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 921,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								773,
+								773
 							]
 						],
 						"settings":
@@ -1323,165 +1508,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 29,
-					"file": "views/deletetask.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 966,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								82,
-								966
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 30,
-					"file": "routes/admin.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 28404,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6192,
-								5121
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2700.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 31,
-					"file": "public/javascripts/adminscripts.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1472,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								131,
-								131
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 37.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 35,
-					"type": "text"
-				},
-				{
-					"buffer": 32,
-					"file": "views/admin.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1016,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								82,
-								1016
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 33,
-					"file": "views/addtruck.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 871,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								82,
-								871
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 34,
+					"buffer": 35,
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2052,
+						"buffer_size": 2102,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								82,
-								2052
+								1896,
+								1896
 							]
 						],
 						"settings":
@@ -1490,14 +1530,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 334.0,
+						"translation.y": 734.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 36,
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -1525,7 +1565,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 37,
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -1549,11 +1589,11 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 38,
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -1575,27 +1615,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 360.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 39,
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 832,
+						"buffer_size": 862,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								78,
-								0
+								656,
+								656
 							]
 						],
 						"settings":
@@ -1607,7 +1647,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 31,
 					"type": "text"
 				}
 			]
@@ -1615,7 +1655,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 28.0
 	},
 	"input":
 	{
@@ -1656,7 +1696,7 @@
 	"project": "whiteriver.sublime-project",
 	"replace":
 	{
-		"height": 50.0
+		"height": 80.0
 	},
 	"save_all_on_build": true,
 	"select_file":

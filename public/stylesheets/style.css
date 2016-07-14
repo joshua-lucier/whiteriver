@@ -194,3 +194,14 @@ a {
 .callentry:active {
 	background-color: grey;
 }
+
+#callentrylog, #callentrylog th, #callentrylog td {
+	border: 1px solid #304770;
+}
+#callentrylog {
+	width: 80em;
+}
+#callentrylog th, #callentrylog td {
+	width: 10em;
+	text-align: center;
+}
