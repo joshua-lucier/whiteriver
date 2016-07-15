@@ -203,10 +203,10 @@ router.get('/getstatus', function(req,res,next){
 			query2.on('end', function(results2){
 				done2();
 				if(status) {
-					finalhtml ="<div>";
+					finalhtml ="<div class='statuscontainer'>";
 					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><div class='selectstatus'><b><u>Responding</u></b></div></a> ";
 					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a> ";
-					if(status.status=='onscene') finalhtml = finalhtml + " <b><u><a onClick='onscene("+truckid+",function(){})'<div class='selectstatus'>On Scene</div></a></u></b> ";
+					if(status.status=='onscene') finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'><div class='selectstatus'><b><u>On Scene</u></b></div></a> ";
 					else finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a> ";
 					if(status.status=='transport') finalhtml = finalhtml + " <b><u><a onClick='transporting("+truckid+",function(){})'><div class='selectstatus'>Transporting</div></a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a> ";
@@ -216,9 +216,10 @@ router.get('/getstatus', function(req,res,next){
 					else finalhtml = finalhtml + " <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a> ";
 					if(status.status=='service') finalhtml = finalhtml + " <b><u><a onClick='service("+truckid+",function(){})'><div class='selectstatus'>In Service</div></a></u></b> ";
 					else finalhtml = finalhtml + " <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a> ";
+					finalhtml = finalhtml + "</div>"
 					res.send(finalhtml);
 				} else {
-					finalhtml =" <a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a>  <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a>  <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a>  <a onClick='arrived("+truckid+",function(){})'><div class='unselectstatus'>At Destination</div></a>  <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a>  <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a>";
+					finalhtml =" <div class='statuscontainer'><a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a>  <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a>  <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a>  <a onClick='arrived("+truckid+",function(){})'><div class='unselectstatus'>At Destination</div></a>  <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a>  <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a></div>";
 					res.send(finalhtml + '<br> No previous status entry');
 				}
 			});
