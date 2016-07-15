@@ -6,7 +6,6 @@
 body {
 	padding: 0px;
 	padding-top: 1em;
-	padding-bottom: 1em;
 	font-family: Lato;
 	font: 14px  Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
@@ -27,7 +26,7 @@ a {
 	width: 100%;
 	left: 0;
 	right: 0;
-	min-height: 50em;
+	min-height: 45em;
 	padding-bottom: 5em;
 	padding-top: 5em;
 	padding-left: 1em;
