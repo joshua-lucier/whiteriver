@@ -203,7 +203,7 @@ router.get('/getstatus', function(req,res,next){
 			query2.on('end', function(results2){
 				done2();
 				if(status) {
-					finalhtml ="<div class='statuscontainer'>";
+					finalhtml ="<div>";
 					if(status.status=='responding') finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><div class='selectstatus'><b><u>Responding</u></b></div></a> ";
 					else finalhtml = finalhtml + " <a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a> ";
 					if(status.status=='onscene') finalhtml = finalhtml + " <a onClick='onscene("+truckid+",function(){})'><div class='selectstatus'><b><u>On Scene</u></b></div></a> ";
@@ -219,7 +219,7 @@ router.get('/getstatus', function(req,res,next){
 					finalhtml = finalhtml + "</div>"
 					res.send(finalhtml);
 				} else {
-					finalhtml =" <div class='statuscontainer'><a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a>  <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a>  <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a>  <a onClick='arrived("+truckid+",function(){})'><div class='unselectstatus'>At Destination</div></a>  <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a>  <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a></div>";
+					finalhtml =" <div><a onClick='responding("+truckid+",function(){})'><div class='unselectstatus'>Responding</div></a>  <a onClick='onscene("+truckid+",function(){})'><div class='unselectstatus'>On Scene</div></a>  <a onClick='transporting("+truckid+",function(){})'><div class='unselectstatus'>Transporting</div></a>  <a onClick='arrived("+truckid+",function(){})'><div class='unselectstatus'>At Destination</div></a>  <a onClick='clearrun("+truckid+",function(){})'><div class='unselectstatus'>Clear</div></a>  <a onClick='service("+truckid+",function(){})'><div class='unselectstatus'>In Service</div></a></div>";
 					res.send(finalhtml + '<br> No previous status entry');
 				}
 			});
