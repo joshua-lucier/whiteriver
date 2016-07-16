@@ -26,9 +26,15 @@ a {
 	background-color: #e5e5e5;
 	width: 100%;
 	height: 100%;
-	float: bottom;
 }
 
+.mainfooter img {
+	width: 100%;
+	height: 100%;
+	bottom: 0px;
+	margin-top: auto;
+	margin-bottom: 0px;
+}
 .HomeContainer {
 	margin-left: 0px;
 	margin-right: 0px;
