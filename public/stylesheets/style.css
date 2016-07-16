@@ -80,6 +80,7 @@ a {
 	display: inline;
 	position: fixed;
 	top:5%;
+	right:5em;
 }
 
 .logout:active {
