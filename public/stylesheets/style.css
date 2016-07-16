@@ -6,14 +6,26 @@
 body {
 	color: black;
 	padding: 0px;
-	padding-top: 1em;
 	font-family: Lato;
 	font: 14px  Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-size: cover;
+	background-color: #e5e5e5;
 }
 
 a {
 	color: black;
+}
+
+.mainheader {
+	background-color: #e5e5e5;
+	width: 100%;
+	height: 100%;
+}
+
+.mainfooter {
+	background-color: #e5e5e5;
+	width: 100%;
+	height: 100%;
 }
 
 .HomeContainer {
@@ -25,8 +37,6 @@ a {
 	left: 0;
 	right: 0;
 	min-height: 47em;
-	padding-bottom: 5em;
-	padding-top: 5em;
 	padding-left: 1em;
 	padding-right: 1em;
 }
@@ -60,16 +70,16 @@ a {
 }
 */
 .logout {
-	margin-left: auto;
+	float: right;
+	margin-left: 90%;
 	margin-right: auto;
 	background-color: white;
 	border: 2px solid;
-	border-radius: 25px;
 	border-color: #304770;
 	padding: 5px;
 	display: inline;
-	position: relative;
-	top: 15px;
+	position: fixed;
+	top:10%;
 }
 
 .logout:active {
@@ -92,7 +102,7 @@ a {
 .button {
 	margin-left: auto;
 	margin-right: auto;
-	background-color: white;
+	background-color: #1e73be;
 	border: 2px solid;
 	border-color: #006abc;
 	padding: 5px;
@@ -244,4 +254,8 @@ a {
 
 #callentrylog td:nth-child(8) {
 	width: 3em;
+}
+
+.button a {
+	color: white !important;
 }
