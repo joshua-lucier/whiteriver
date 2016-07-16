@@ -76,6 +76,10 @@ a {
 	top: 15px;
 }
 
+.logout:active {
+	background-color: gray;
+}
+
 .message {
 	color: red;
 }
@@ -99,6 +103,10 @@ a {
 	border-color: #304770;
 	padding: 5px;
 	display: inline;
+}
+
+.button:active {
+	background-color: gray;
 }
 
 .li
@@ -160,7 +168,7 @@ a {
 }
 
 .selectstatus:hover {
-	background-color: grey;
+	background-color: gray;
 }
 
 .unselectstatus {
@@ -179,7 +187,7 @@ a {
 }
 
 .unselectstatus:active {
-	background-color: grey;
+	background-color: gray;
 }
 
 .callentry {
@@ -197,7 +205,7 @@ a {
 }
 
 .callentry:active {
-	background-color: grey;
+	background-color: gray;
 }
 
 #callentrylog, #callentrylog th, #callentrylog td {

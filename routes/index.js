@@ -28,12 +28,10 @@ router.get('/', function(req,res,next){
 });
 
 router.get('/test', function(req,res,next){
-	/*
 	var post_data = querystring.stringify({
 		accid: accid,
 		acckey: key,
-		cmd: 'getSchedules',
-		isp: 1
+		cmd: 'getMembers'
 	});
 	var post_options = {
 		host: 'secure2.aladtec.com',
@@ -49,15 +47,14 @@ router.get('/test', function(req,res,next){
 		post_res.setEncoding('utf8');
 		post_res.on('data',function (chunk){
 			parseString(chunk, function(err, result){
-				console.log(result.results.schedules[0].schedule[0]);
-				console.log(result.results.schedules[0].schedule[1]);
-				console.log(result.results.schedules[0].schedule[2]);
+				console.log(chunk);
 			});
 		});
 	});
 	post_req.write(post_data);
 	post_req.end();
-	*/
+});
+	/*
 	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err3,client2,done2){
 			console.log('connection complete');
@@ -83,5 +80,6 @@ router.get('/test', function(req,res,next){
 			});
 		});
 });
+*/
 
 module.exports = router;
