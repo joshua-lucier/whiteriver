@@ -4,29 +4,27 @@
 }
 
 body {
+	color: black;
 	padding: 0px;
 	padding-top: 1em;
 	font-family: Lato;
 	font: 14px  Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: white;
 	background-size: cover;
 }
 
 a {
-	color: #00B7FF;
+	color: black;
 }
 
 .HomeContainer {
 	margin-left: 0px;
 	margin-right: 0px;
-	background-color: #304770;
-	transform: skewY(-2deg);
-	transform-origin: 100%;
+	background-color: #e5e5e5;
 	z-index: 0;
 	width: 100%;
 	left: 0;
 	right: 0;
-	min-height: 45em;
+	min-height: 47em;
 	padding-bottom: 5em;
 	padding-top: 5em;
 	padding-left: 1em;
@@ -36,13 +34,11 @@ a {
 .Inner {
 	margin-left: 0px;
 	margin-right: 0px;
-	background-color: #304770;
+	background-color: #e5e5e5;
 	z-index: 1;
 	width:100%
 	left: 0;
 	right: 0;
-	transform: skewY(2deg);
-	transform-origin: 100%;
 	position: relative;
 	top: 5em;
 	bottom: 5em;
@@ -87,10 +83,9 @@ a {
 .list {
 	margin-left: auto;
 	margin-right: auto;
-	background-color: white;
+	background-color: #e5e5e5;
 	border: 2px solid;
-	border-radius: 25px;
-	border-color: #304770;
+	border-color: #006abc;
 	padding: 10px;
 }
 
@@ -99,10 +94,11 @@ a {
 	margin-right: auto;
 	background-color: white;
 	border: 2px solid;
-	border-radius: 25px;
-	border-color: #304770;
+	border-color: #006abc;
 	padding: 5px;
 	display: inline;
+	position: relative;
+	left: 13em;
 }
 
 .button:active {
@@ -113,10 +109,7 @@ a {
 {
 	margin-left: auto;
 	margin-right: auto;
-	background-color: white;
-	border: 2px solid;
-	border-radius: 2px;
-	border-color: #304770;
+	background-color: #e5e5e5;
 	padding: 5px;
 }
 
