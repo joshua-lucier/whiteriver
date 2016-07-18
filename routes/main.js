@@ -18,30 +18,145 @@ Authorize = require('./functions').Authorize;
 /*Main Page of the main display app*/
 router.get('/', function(req,res,next){
 	Authorize(req,res,next,function(id,username){
-		var post2_data = querystring.stringify({
+		res.render('main', {title: 'Main Dashboard'});
+	});
+});
+
+router.get('/getschedules', function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var post_data = querystring.stringify({
 				accid: accid,
 				acckey: acckey,
-				cmd: 'getMembers',
+				cmd: 'getSchedules',
+				isp: 1
 			});
-		var post2_options = {
+		var post_options = {
 			host: 'secure2.aladtec.com',
 			port: 443,
 			path: '/wrva/xmlapi.php',
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': Buffer.byteLength(post2_data)
+				'Content-Length': Buffer.byteLength(post_data)
 			}
 		}
-		var post2_req = https.request(post2_options, function(post2_res){
-			post2_res.setEncoding('utf8');
-			post2_res.on('data',function (chunk2){
-				console.log('setup parse2');
-				parseString(chunk2, function(err2, result2){
-					res.render('main',{title: 'Main Dashboard'});
+		var post_req = https.request(post_options, function(post_res){
+			post_res.setEncoding('utf8');
+			post_res.on('data',function (chunk){
+				parseString(chunk, function(err, result){
+					post2_data = querystring.stringify({
+						accid: accid,
+						acckey: acckey,
+						cmd: 'getScheduledTimeNow',
+						isp: 1
+					});
+					post2_options = {
+						host: 'secure2.aladtec.com',
+						port: 443,
+						path: '/wrva/xmlapi.php',
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+							'Content-Length': Buffer.byteLength(post2_data)
+						}						
+					}
+					var post2_req = https.request(post2_options, function(post2_res){
+						post2_res.setEncoding('utf8');
+						post2_res.on('data',function(chunk2){
+							parseString(chunk2, function(err2, result2){
+								post3_data = querystring.stringify({
+									accid: accid,
+									acckey: acckey,
+									cmd: 'getMembers'
+								});
+								post3_options = {
+									host: 'secure2.aladtec.com',
+									port: 443,
+									path: '/wrva/xmlapi.php',
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded',
+										'Content-Length': Buffer.byteLength(post3_data)
+									}						
+								}
+								var post3_req = https.request(post3_options, function(post3_res){
+									post3_res.setEncoding('utf8');
+									post3_res.on('data', function(chunk3){
+										parseString(chunk3, function(err3, result3){
+											crews = [];
+											positions = [];
+											members = [];
+											schedules = []
+											//chunk = schedule id's
+											//chunk3 = member id's
+											//chunk2 = schedule with id's
+											//extract crews and positions
+											result.results.schedules[0].schedule.forEach(function(schedule,index){
+												crews.push({id: schedule['$'].id,name: schedule.name[0]});
+												schedule.positions[0].position.forEach(function(position, index2){
+													positions.push({id: position['$'].id, name: position.name[0]});
+												});
+											});
+											//extract members and id's
+											result3.results.members[0].member.forEach(function(member,index){
+												members.push({id: member['$'].id, name: member.name[0]});
+											});
+											//extract schedule and assign names to crews
+											result2.results.schedules[0].schedule.forEach(function(schedule,index){
+												//get crew members and positions
+												mems = [];
+												schedule.positions[0].position.forEach(function(position){
+													name = '';
+													positions.forEach(function(pos){
+														if(pos.id==position['$'].id) name = pos.name;
+													});
+													membername = '';
+													if(position.member){
+														members.forEach(function(member){
+															if(member.id==position.member[0]['$'].id) membername = member.name;
+														});
+													}
+													mems.push({position: name, member: membername});
+												});
+
+												//get crew name
+												name = '';
+												crews.forEach(function(crew){
+													if(crew.id==schedule['$'].id) name = crew.name;
+												});
+												schedules.push({name: name, members: mems});
+											});
+											//testing
+											schedules.forEach(function(schedule){
+												console.log(schedule.name);
+												console.log(schedule.members);
+											});
+											//build html
+											finalhtml = '';
+											schedules.forEach(function(schedule){
+												finalhtml = finalhtml + '<h4>' + schedule.name + '</h4>';
+												finalhtml = finalhtml + '<ul>';
+												schedule.members.forEach(function(member){
+													finalhtml = finalhtml + '<li><b>' + member.position + '</b>: ' + member.member+'</li>';
+												});
+												finalhtml = finalhtml + '</ul>';
+											});
+											res.send(finalhtml);
+										});
+									});
+								});
+								post3_req.write(post3_data);
+								post3_req.end();
+							});
+						});
+					});
+					post2_req.write(post2_data);
+					post2_req.end();
 				});
 			});
 		});
+		post_req.write(post_data);
+		post_req.end();
 	});
 });
 
