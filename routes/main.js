@@ -96,42 +96,47 @@ router.get('/getschedules', function(req,res,next){
 											//chunk3 = member id's
 											//chunk2 = schedule with id's
 											//extract crews and positions
-											result.results.schedules[0].schedule.forEach(function(schedule,index){
-												crews.push({id: schedule['$'].id,name: schedule.name[0]});
-												schedule.positions[0].position.forEach(function(position, index2){
-													positions.push({id: position['$'].id, name: position.name[0]});
-												});
-											});
-											//extract members and id's
-											console.log(result3);
-											result3.results.members[0].member.forEach(function(member,index){
-												members.push({id: member['$'].id, name: member.name[0]});
-											});
-											//extract schedule and assign names to crews
-											result2.results.schedules[0].schedule.forEach(function(schedule,index){
-												//get crew members and positions
-												mems = [];
-												schedule.positions[0].position.forEach(function(position){
-													name = '';
-													positions.forEach(function(pos){
-														if(pos.id==position['$'].id) name = pos.name;
+											if(result.results.hasOwnProperty("schedules")){
+												result.results.schedules[0].schedule.forEach(function(schedule,index){
+													crews.push({id: schedule['$'].id,name: schedule.name[0]});
+													schedule.positions[0].position.forEach(function(position, index2){
+														positions.push({id: position['$'].id, name: position.name[0]});
 													});
-													membername = '';
-													if(position.member){
-														members.forEach(function(member){
-															if(member.id==position.member[0]['$'].id) membername = member.name;
+												});
+											}
+											//extract members and id's
+											if(result3.results.hasOwnProperty("members")){
+												result3.results.members[0].member.forEach(function(member,index){
+													members.push({id: member['$'].id, name: member.name[0]});
+												});
+											}	
+											//extract schedule and assign names to crews
+											if(result2.results.hasOwnProperty("schedules")){
+												result2.results.schedules[0].schedule.forEach(function(schedule,index){
+													//get crew members and positions
+													mems = [];
+													schedule.positions[0].position.forEach(function(position){
+														name = '';
+														positions.forEach(function(pos){
+															if(pos.id==position['$'].id) name = pos.name;
 														});
-													}
-													mems.push({position: name, member: membername});
-												});
+														membername = '';
+														if(position.member){
+															members.forEach(function(member){
+																if(member.id==position.member[0]['$'].id) membername = member.name;
+															});
+														}
+														mems.push({position: name, member: membername});
+													});
 
-												//get crew name
-												name = '';
-												crews.forEach(function(crew){
-													if(crew.id==schedule['$'].id) name = crew.name;
+													//get crew name
+													name = '';
+													crews.forEach(function(crew){
+														if(crew.id==schedule['$'].id) name = crew.name;
+													});
+													schedules.push({name: name, members: mems});
 												});
-												schedules.push({name: name, members: mems});
-											});
+											}
 											//build html
 											finalhtml = '';
 											schedules.forEach(function(schedule){
@@ -306,7 +311,7 @@ router.get('/gettrucks',function(req,res,next){
 			if(err){
 				console.error('could not connect to postgres', err);
 			}
-			var query = client.query("select Trucks.TruckName,Trucks.TruckID,TruckStatusEntries.Status,TruckStatusEntries.StatusTime from Trucks,TruckStatusEntries,Runs where Trucks.TruckID = Runs.TruckID and TruckStatusEntries.RunID = Runs.RunID order by StatusTime asc;");
+			var query = client.query("select Trucks.TruckName,Trucks.TruckID,TruckStatusEntries.Status,TruckStatusEntries.StatusTime from Trucks,TruckStatusEntries,Runs where Trucks.TruckID = Runs.TruckID and TruckStatusEntries.RunID = Runs.RunID order by StatusTime desc;");
 			query.on('row', function(row2){
 				//console.log(row);
 				statusentries.push(row2);
@@ -323,12 +328,12 @@ router.get('/gettrucks',function(req,res,next){
 					//check if truck is already in trucks
 					//if not add
 					trucks.forEach(function(truck){
-						if(truck.id == status.id) {
+						if(truck.id == status.truckid) {
 							present = true;
 						}
 					});
 					//if truck 
-					if(!present){
+					if(present==false){
 						trucks.push({id: status.truckid, name: status.truckname, status: status.status});
 					}
 				});
