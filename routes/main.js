@@ -340,7 +340,7 @@ router.get('/gettrucks',function(req,res,next){
 					if(truck.status=='transport') status = 'Transporting';
 					if(truck.status=='onscene') status = 'On Scene';
 					if(truck.status=='responding') status = 'Responding';
-					finalhtml = '<div>' + truck.name +'<div class="mainstatus">'+status+'</div></div>';
+					finalhtml = finalhtml + '<div>' + truck.name +'<div class="mainstatus">'+status+'</div></div>';
 				});
 				console.log(finalhtml);
 				res.send(finalhtml);
