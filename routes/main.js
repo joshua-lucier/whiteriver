@@ -103,6 +103,7 @@ router.get('/getschedules', function(req,res,next){
 												});
 											});
 											//extract members and id's
+											console.log(result3);
 											result3.results.members[0].member.forEach(function(member,index){
 												members.push({id: member['$'].id, name: member.name[0]});
 											});
@@ -335,7 +336,7 @@ router.get('/gettrucks',function(req,res,next){
 					status = ''
 					if(truck.status=='service') status = 'In Service';
 					if(truck.status=='clear') status = 'Cleared';
-					if(truck.status=='arrived') status = 'Arrived';
+					if(truck.status=='arrived') status = 'At Destination';
 					if(truck.status=='transport') status = 'Transporting';
 					if(truck.status=='onscene') status = 'On Scene';
 					if(truck.status=='responding') status = 'Responding';
