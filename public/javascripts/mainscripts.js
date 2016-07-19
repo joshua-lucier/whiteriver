@@ -5,9 +5,18 @@ function currentcrew(callback){
 	});
 }
 
+function currentalerts(callback){
+	$.get("/main/getalerts", function(data,status){
+		$("#currentalerts").html(data);
+		callback();
+	});
+}
+
 
 function loadmainpage(callback){
-	currentcrew(function(){});
+	currentcrew(function(){
+		currentalerts(function(){});
+	});
 }
 
 $("body").ready(function(){
