@@ -102,6 +102,24 @@ a {
 	right:5em;
 }
 
+.mainhome {
+	display: inline;
+	float: right;
+	margin-left: 90%;
+	margin-right: auto;
+	background-color: white;
+	border: 2px solid;
+	border-color: #304770;
+	padding: 5px;
+	position: fixed;
+	top: 5%;
+	right: 9em;
+}
+
+.mainhome:active {
+	background-color: gray;
+}
+
 .logout:active {
 	background-color: gray;
 }
@@ -278,4 +296,11 @@ a {
 
 .button a {
 	color: white !important;
+}
+
+.mainstatus {
+	display: inline-block;
+	padding: 1em;
+	background: white;
+	margin-left: 2em;
 }

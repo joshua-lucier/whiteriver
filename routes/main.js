@@ -197,4 +197,155 @@ router.get('/getalerts',function(req,res,next){
 	});
 });
 
+router.get('/gettasks', function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		marked=false;
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			tasks = [];
+			if(err3){
+				console.log('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks order by Title;");
+			query2.on('row', function(row2){
+				current = new Date();
+				timedue = new Date(row2.timedue);
+				//if due before or on today
+				if((current - timedue) >= 0) 
+				{
+					tasks.push(row2);
+				}
+			});
+			query2.on('error', function(error2){
+				console.log(error);
+				res.send(error);
+			});
+			query2.on('end', function(results2){
+				done2();
+				finalhtml = '';
+				tasks.forEach(function(item){
+					//check if marked no repeat
+					marked=false;
+					milli=0;
+					if(item.repeatperiod=="none"){
+						if(item.marktime) marked=true;
+						else marked=false;
+					}
+					//If hourly,daily or weekly use same base
+					if(item.repeatperiod=="hourly"){
+						milli=60*60*1000;
+					} else if (item.repeatperiod=="daily"){
+						milli=24*60*60*1000;
+					} else if (item.repeatperiod=="weekly"){
+						milli=7*24*60*60*1000;
+					}
+					current = new Date();
+					start = new Date(item.timedue);
+					end = new Date(item.repeatend);
+					marktime = new Date(item.marktime);
+					//end date has passed
+					if(item.repeatperiod=="hourly" || item.repeatperiod=="daily" || item.repeatperiod=="weekly"){
+						if(current-end >= 0 && !(item.marktime=="")) marked=true; //if current time is beyond repeat end time and item is marked
+						else {
+							//increment time
+							//number of days since last increment = remainder number of days divided number of days between increments
+							//number of days from start to finish = (current-start)/milli  
+							numberofperiods=(current-start)/milli;
+							periodssincelastincrement = numberofperiods % item.repeatincrement;
+							numberofperiodstolastincrement = numberofperiods - periodssincelastincrement;
+							millisecondstolastincrement = numberofperiodstolastincrement*milli;
+							if(marktime-start > millisecondstolastincrement)  //if mark time is after last increment
+							{
+								marked=true; //if marktime is after last increment then marked= true
+							}
+							else marked=false;
+						}
+					}
+					//if monthly
+					if(item.repeatperiod=="monthly"){
+						totalyears = current.getYear() - start.getYear();
+						totalmonths = (current.getMonth() - start.getMonth())+(totalyears*12);
+						lastincrement = totalmonths % item.repeatincrement;
+						lastincrement = totalmonths - lastincrement;
+						lastmonth = lastincrement%12;
+						lastyear = floor(lastincrement/12);
+						lasttime = start;
+						lasttime.setYear(start.getYear() + lastyear);
+						lasttime.setMonth(start.getMonth() + lastmonth);
+						if(marktime-lasttime >= 0) marked = true;
+						else marked = false;
+					}
+					if(item.repeatperiod=="yearly"){
+						totalyears = current.getYear() - start.getYear();
+						lastincrement = totalyears % item.repeatincrement;
+						lastincrement = totalmonths - lastincrement;
+						lasttime = start;
+						lasttime.setYear(start.getYear + lastincrement);
+						if(marktime-lasttime >= 0) marked = true;
+						else marked = false;
+					}
+					if(marked==false){
+						finalhtml = finalhtml + '<div class="currenttask"><b>' + item.title + '</b></div>';
+					}
+				});
+				res.send(finalhtml);
+			});
+		});
+	});
+});
+
+router.get('/gettrucks',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			console.log('connection complete');
+			statusentries = [];
+			trucks = [];
+			if(err){
+				console.error('could not connect to postgres', err);
+			}
+			var query = client.query("select Trucks.TruckName,Trucks.TruckID,TruckStatusEntries.Status,TruckStatusEntries.StatusTime from Trucks,TruckStatusEntries,Runs where Trucks.TruckID = Runs.TruckID and TruckStatusEntries.RunID = Runs.RunID order by StatusTime asc;");
+			query.on('row', function(row2){
+				//console.log(row);
+				statusentries.push(row2);
+			});
+			query.on('error', function(error){
+				console.log(error);
+				res.render('invalid', {title: 'Error', message: error});
+			});
+			query.on('end', function(results2){
+				done();
+				finalhtml="";
+				statusentries.forEach(function(status){
+					present = false;
+					//check if truck is already in trucks
+					//if not add
+					trucks.forEach(function(truck){
+						if(truck.id == status.id) {
+							present = true;
+						}
+					});
+					//if truck 
+					if(!present){
+						trucks.push({id: status.truckid, name: status.truckname, status: status.status});
+					}
+				});
+				trucks.forEach(function(truck){
+					status = ''
+					if(truck.status=='service') status = 'In Service';
+					if(truck.status=='clear') status = 'Cleared';
+					if(truck.status=='arrived') status = 'Arrived';
+					if(truck.status=='transport') status = 'Transporting';
+					if(truck.status=='onscene') status = 'On Scene';
+					if(truck.status=='responding') status = 'Responding';
+					finalhtml = '<div>' + truck.name +'<div class="mainstatus">'+status+'</div></div>';
+				});
+				console.log(finalhtml);
+				res.send(finalhtml);
+			});
+		});
+	});
+});
+
 module.exports = router;
