@@ -115,7 +115,7 @@
 			"file": "views/layout.jade",
 			"settings":
 			{
-				"buffer_size": 751,
+				"buffer_size": 786,
 				"line_ending": "Windows"
 			}
 		},
@@ -139,7 +139,7 @@
 			"file": "views/main.jade",
 			"settings":
 			{
-				"buffer_size": 501,
+				"buffer_size": 504,
 				"line_ending": "Windows"
 			}
 		},
@@ -289,13 +289,10 @@
 			}
 		},
 		{
-			"contents": "var cookieParser = require('cookie-parser');\nvar cookieSession = require('cookie-session');\nvar express = require('express');\nvar querystring = require('querystring');\nvar https = require('https');\nvar router = express.Router();\nvar secret = process.env.secret;\nvar accid = process.env.accid;\nvar acckey = process.env.key;\nvar pgusername = process.env.pgusername;\nvar pgpassword = process.env.pgpassword;\nvar pghost = process.env.pghost;\nvar pgdatabase = process.env.pgdatabase;\nvar pg = require('pg');\nvar parseString = require('xml2js').parseString;\nrouter.use(cookieParser(secret));\nrouter.use(cookieSession({\n  name: 'whiteriver',\n  keys: [secret]\n}));\nAuthorize = require('./functions').Authorize;\n\n/*Main Page of the main display app*/\nrouter.get('/', function(req,res,next){\n	Authorize(req,res,next,function(id,username){\n		res.render('main', {title: 'Main Dashboard'});\n	});\n});\n\nrouter.get('/getschedules', function(req,res,next){\n	Authorize(req,res,next,function(id,username){\n		var post_data = querystring.stringify({\n				accid: accid,\n				acckey: acckey,\n				cmd: 'getSchedules',\n				isp: 1\n			});\n		var post_options = {\n			host: 'secure2.aladtec.com',\n			port: 443,\n			path: '/wrva/xmlapi.php',\n			method: 'POST',\n			headers: {\n				'Content-Type': 'application/x-www-form-urlencoded',\n				'Content-Length': Buffer.byteLength(post_data)\n			}\n		}\n		var post_req = https.request(post_options, function(post_res){\n			post_res.setEncoding('utf8');\n			post_res.on('data',function (chunk){\n				parseString(chunk, function(err, result){\n					post2_data = querystring.stringify({\n						accid: accid,\n						acckey: acckey,\n						cmd: 'getScheduledTimeNow',\n						isp: 1\n					});\n					post2_options = {\n						host: 'secure2.aladtec.com',\n						port: 443,\n						path: '/wrva/xmlapi.php',\n						method: 'POST',\n						headers: {\n							'Content-Type': 'application/x-www-form-urlencoded',\n							'Content-Length': Buffer.byteLength(post2_data)\n						}						\n					}\n					var post2_req = https.request(post2_options, function(post2_res){\n						post2_res.setEncoding('utf8');\n						post2_res.on('data',function(chunk2){\n							parseString(chunk2, function(err2, result2){\n								post3_data = querystring.stringify({\n									accid: accid,\n									acckey: acckey,\n									cmd: 'getMembers'\n								});\n								post3_options = {\n									host: 'secure2.aladtec.com',\n									port: 443,\n									path: '/wrva/xmlapi.php',\n									method: 'POST',\n									headers: {\n										'Content-Type': 'application/x-www-form-urlencoded',\n										'Content-Length': Buffer.byteLength(post3_data)\n									}						\n								}\n								var post3_req = https.request(post3_options, function(post3_res){\n									post3_res.setEncoding('utf8');\n									post3_res.on('data', function(chunk3){\n										parseString(chunk3, function(err3, result3){\n											crews = [];\n											positions = [];\n											members = [];\n											schedules = []\n											//chunk = schedule id's\n											//chunk3 = member id's\n											//chunk2 = schedule with id's\n											//extract crews and positions\n											result.results.schedules[0].schedule.forEach(function(schedule,index){\n												crews.push({id: schedule['$'].id,name: schedule.name[0]});\n												schedule.positions[0].position.forEach(function(position, index2){\n													positions.push({id: position['$'].id, name: position.name[0]});\n												});\n											});\n											//extract members and id's\n											result3.results.members[0].member.forEach(function(member,index){\n												members.push({id: member['$'].id, name: member.name[0]});\n											});\n											//extract schedule and assign names to crews\n											result2.results.schedules[0].schedule.forEach(function(schedule,index){\n												//get crew members and positions\n												mems = [];\n												schedule.positions[0].position.forEach(function(position){\n													name = '';\n													positions.forEach(function(pos){\n														if(pos.id==position['$'].id) name = pos.name;\n													});\n													membername = '';\n													if(position.member){\n														members.forEach(function(member){\n															if(member.id==position.member[0]['$'].id) membername = member.name;\n														});\n													}\n													mems.push({position: name, member: membername});\n												});\n\n												//get crew name\n												name = '';\n												crews.forEach(function(crew){\n													if(crew.id==schedule['$'].id) name = crew.name;\n												});\n												schedules.push({name: name, members: mems});\n											});\n											//build html\n											finalhtml = '';\n											schedules.forEach(function(schedule){\n												finalhtml = finalhtml + '<h4>' + schedule.name + '</h4>';\n												finalhtml = finalhtml + '<ul>';\n												schedule.members.forEach(function(member){\n													finalhtml = finalhtml + '<li><b>' + member.position + '</b>: ' + member.member+'</li>';\n												});\n												finalhtml = finalhtml + '</ul>';\n											});\n											res.send(finalhtml);\n										});\n									});\n								});\n								post3_req.write(post3_data);\n								post3_req.end();\n							});\n						});\n					});\n					post2_req.write(post2_data);\n					post2_req.end();\n				});\n			});\n		});\n		post_req.write(post_data);\n		post_req.end();\n	});\n});\n\nrouter.get('/getalerts',function(req,res,next){\n	Authorize(req,res,next,function(id,username){\n		var connectionString = \"postgres:\" + pgusername +\":\" + pgpassword + \"@\" + pghost +\"/\" + pgdatabase;\n		pg.connect(connectionString, function(err3,client2,done2){\n			console.log('connection complete');\n			alerts = [];\n			if(err3){\n				console.error('could not connect to postgres', err);\n			}\n			var query2 = client2.query(\"select AlertID,AlertText,AlertTime from Alerts;\");\n			query2.on('row', function(row2){\n				//console.log(row);\n				alertdate = new Date(row2.alerttime);\n				today = new Date();\n				if(alertdate.getDay()==today.getDay() && alertdate.getMonth()==today.getMonth() && alertdate.getYear()==today.getYear()){\n					alerts.push(row2);	\n				}\n				\n			});\n			query2.on('error', function(error2){\n				error={};\n				error.status = error2;\n				error.stack = error2;\n				res.render('error', {title: 'Error', error: error});\n			});\n			query2.on('end', function(results2){\n				done2();\n				finalhtml = '';\n				alerts.forEach(function(item){\n					finalhtml = finalhtml + '<div class=\"alert\"><b>' + item.alerttext + '</b></div>';\n				});\n				res.send(finalhtml);\n			});\n		});\n	});\n});\n\nrouter.get('/gettasks', function(req,res,next){\n	Authorize(req,res,next,function(id,username){\n		marked=false;\n		var connectionString = \"postgres:\" + pgusername +\":\" + pgpassword + \"@\" + pghost +\"/\" + pgdatabase;\n		pg.connect(connectionString, function(err3,client2,done2){\n			console.log('connection complete');\n			tasks = [];\n			if(err3){\n				console.log('could not connect to postgres', err);\n			}\n			var query2 = client2.query(\"select Title,TaskID,TimeDue,RepeatPeriod,RepeatIncrement,RepeatEnd,MarkTime from Tasks order by Title;\");\n			query2.on('row', function(row2){\n				current = new Date();\n				timedue = new Date(row2.timedue);\n				//if due before or on today\n				if((current - timedue) >= 0) \n				{\n					tasks.push(row2);\n				}\n			});\n			query2.on('error', function(error2){\n				console.log(error);\n				res.send(error);\n			});\n			query2.on('end', function(results2){\n				done2();\n				finalhtml = '';\n				tasks.forEach(function(item){\n					//check if marked no repeat\n					marked=false;\n					milli=0;\n					if(item.repeatperiod==\"none\"){\n						if(item.marktime) marked=true;\n						else marked=false;\n					}\n					//If hourly,daily or weekly use same base\n					if(item.repeatperiod==\"hourly\"){\n						milli=60*60*1000;\n					} else if (item.repeatperiod==\"daily\"){\n						milli=24*60*60*1000;\n					} else if (item.repeatperiod==\"weekly\"){\n						milli=7*24*60*60*1000;\n					}\n					current = new Date();\n					start = new Date(item.timedue);\n					end = new Date(item.repeatend);\n					marktime = new Date(item.marktime);\n					//end date has passed\n					if(item.repeatperiod==\"hourly\" || item.repeatperiod==\"daily\" || item.repeatperiod==\"weekly\"){\n						if(current-end >= 0 && !(item.marktime==\"\")) marked=true; //if current time is beyond repeat end time and item is marked\n						else {\n							//increment time\n							//number of days since last increment = remainder number of days divided number of days between increments\n							//number of days from start to finish = (current-start)/milli  \n							numberofperiods=(current-start)/milli;\n							periodssincelastincrement = numberofperiods % item.repeatincrement;\n							numberofperiodstolastincrement = numberofperiods - periodssincelastincrement;\n							millisecondstolastincrement = numberofperiodstolastincrement*milli;\n							if(marktime-start > millisecondstolastincrement)  //if mark time is after last increment\n							{\n								marked=true; //if marktime is after last increment then marked= true\n							}\n							else marked=false;\n						}\n					}\n					//if monthly\n					if(item.repeatperiod==\"monthly\"){\n						totalyears = current.getYear() - start.getYear();\n						totalmonths = (current.getMonth() - start.getMonth())+(totalyears*12);\n						lastincrement = totalmonths % item.repeatincrement;\n						lastincrement = totalmonths - lastincrement;\n						lastmonth = lastincrement%12;\n						lastyear = floor(lastincrement/12);\n						lasttime = start;\n						lasttime.setYear(start.getYear() + lastyear);\n						lasttime.setMonth(start.getMonth() + lastmonth);\n						if(marktime-lasttime >= 0) marked = true;\n						else marked = false;\n					}\n					if(item.repeatperiod==\"yearly\"){\n						totalyears = current.getYear() - start.getYear();\n						lastincrement = totalyears % item.repeatincrement;\n						lastincrement = totalmonths - lastincrement;\n						lasttime = start;\n						lasttime.setYear(start.getYear + lastincrement);\n						if(marktime-lasttime >= 0) marked = true;\n						else marked = false;\n					}\n					if(marked==false){\n						finalhtml = finalhtml + '<div class=\"currenttask\"><b>' + item.title + '</b></div>';\n					}\n				});\n				res.send(finalhtml);\n			});\n		});\n	});\n});\n\nrouter.get('/gettrucks',function(req,res,next){\n	Authorize(req,res,next,function(id,username){\n		var connectionString = \"postgres:\" + pgusername +\":\" + pgpassword + \"@\" + pghost +\"/\" + pgdatabase;\n		pg.connect(connectionString, function(err,client,done){\n			console.log('connection complete');\n			statusentries = [];\n			trucks = [];\n			if(err){\n				console.error('could not connect to postgres', err);\n			}\n			var query = client.query(\"select TruckName,TruckID,Status,StatusTime from Trucks,CallStatusEntries where Trucks.TruckID = CallStatusEntries.TruckID order by StatusTime desc;\");\n			query.on('row', function(row2){\n				//console.log(row);\n				statusentries.push(row2);\n			});\n			query.on('error', function(error2){\n				console.log(error);\n				res.render('error', {title: 'Error', error: error});\n			});\n			query.on('end', function(results2){\n				done();\n				finalhtml=\"\";\n				statusentries.forEach(function(status){\n					present = false;\n					//check if truck is already in trucks\n					//if not add\n					trucks.forEach(function(truck){\n						if(truck.id == status.id) {\n							present = true;\n							break;\n						}\n					});\n					if(!present){\n						trucks.push({id: status.truckid, name: status.truckname, status: status.status});\n					}\n				});\n				res.send(finalhtml);\n			});\n		});\n	});\n});\n\nmodule.exports = router;",
 			"file": "routes/main.js",
-			"file_size": 11830,
-			"file_write_time": 131134168421561435,
 			"settings":
 			{
-				"buffer_size": 11489,
+				"buffer_size": 12372,
 				"line_ending": "Windows"
 			}
 		},
@@ -303,7 +300,7 @@
 			"file": "public/javascripts/mainscripts.js",
 			"settings":
 			{
-				"buffer_size": 605,
+				"buffer_size": 887,
 				"line_ending": "Windows"
 			}
 		},
@@ -316,10 +313,18 @@
 			}
 		},
 		{
+			"file": "public/javascripts/scripts.js",
+			"settings":
+			{
+				"buffer_size": 388,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "public/stylesheets/style.css",
 			"settings":
 			{
-				"buffer_size": 4147,
+				"buffer_size": 4498,
 				"line_ending": "Windows"
 			}
 		},
@@ -524,7 +529,7 @@
 	"groups":
 	[
 		{
-			"selected": 32,
+			"selected": 35,
 			"sheets":
 			[
 				{
@@ -553,7 +558,7 @@
 						"translation.y": 5295.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -581,7 +586,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
@@ -611,7 +616,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -640,7 +645,7 @@
 						"translation.y": 23.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 36,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
@@ -668,7 +673,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 37,
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
@@ -696,7 +701,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
@@ -724,7 +729,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 42,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -754,7 +759,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 41,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -783,7 +788,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -792,15 +797,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 751,
+						"buffer_size": 786,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								563,
-								563
+								648,
+								648
 							]
 						],
 						"settings":
@@ -812,14 +817,8 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 5,
 					"type": "text"
-				},
-				{
-					"file": "public/images/footer.png",
-					"semi_transient": true,
-					"stack_index": 14,
-					"type": "image"
 				},
 				{
 					"buffer": 10,
@@ -847,7 +846,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
@@ -876,7 +875,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
@@ -885,15 +884,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 501,
+						"buffer_size": 504,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								397,
-								397
+								299,
+								299
 							]
 						],
 						"settings":
@@ -905,7 +904,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -933,7 +932,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
@@ -962,7 +961,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -991,7 +990,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -1021,7 +1020,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
@@ -1050,7 +1049,7 @@
 						"translation.y": 840.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -1078,7 +1077,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
@@ -1107,7 +1106,7 @@
 						"translation.y": 500.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1136,7 +1135,7 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1165,7 +1164,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 39,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1181,8 +1180,8 @@
 						"selection":
 						[
 							[
-								551,
-								479
+								7280,
+								7280
 							]
 						],
 						"settings":
@@ -1191,10 +1190,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3872.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1223,7 +1222,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -1252,7 +1251,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
@@ -1278,10 +1277,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 180.0,
+						"translation.y": 304.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1310,7 +1309,7 @@
 						"translation.y": 60.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 35,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -1339,7 +1338,7 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -1368,7 +1367,7 @@
 						"translation.y": 1007.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1397,7 +1396,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -1426,7 +1425,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -1435,15 +1434,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11489,
+						"buffer_size": 12372,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11416,
-								11416
+								12271,
+								12271
 							]
 						],
 						"settings":
@@ -1451,10 +1450,10 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6168.0,
+						"translation.y": 6529.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1463,15 +1462,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 605,
+						"buffer_size": 887,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								530,
-								530
+								585,
+								585
 							]
 						],
 						"settings":
@@ -1479,7 +1478,7 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 344.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 6,
@@ -1498,8 +1497,8 @@
 						"selection":
 						[
 							[
-								1530,
-								1474
+								1609,
+								1531
 							]
 						],
 						"settings":
@@ -1508,27 +1507,56 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1320.0,
+						"translation.y": 1627.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
 					"buffer": 34,
-					"file": "public/stylesheets/style.css",
-					"semi_transient": false,
+					"file": "public/javascripts/scripts.js",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 4147,
+						"buffer_size": 388,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								435,
-								435
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": "public/stylesheets/style.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4498,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4496,
+								4496
 							]
 						],
 						"settings":
@@ -1540,11 +1568,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 36,
 					"file": "views/admin.jade",
 					"semi_transient": false,
 					"settings":
@@ -1569,11 +1597,11 @@
 						"translation.y": 420.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 37,
 					"file": "views/addtruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -1598,11 +1626,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 38,
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
@@ -1624,14 +1652,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 276.0,
+						"translation.y": 306.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 39,
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -1655,11 +1683,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 40,
+					"stack_index": 42,
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 40,
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -1681,14 +1709,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 360.0,
+						"translation.y": 388.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 41,
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -1713,11 +1741,11 @@
 						"translation.y": 171.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 42,
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -1742,7 +1770,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 19,
 					"type": "text"
 				}
 			]
