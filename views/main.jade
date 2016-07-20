@@ -6,17 +6,21 @@ block content
 			div(class="row")
 				div(class="span6") 
 					h1 Main Dashboard
-				div(class="span6") 
-					h2 Alerts
-					div(id="currentalerts")
+				div(class="span6")
+					div(class="blockitem") 
+						h2 Alerts
+						div(id="currentalerts")
 			div(class="row")
 				div(class="span4") 
-					h3 Trucks
-					div(id="currenttrucks")
+					div(class="blockitem")
+						h3 Trucks
+						div(id="currenttrucks")
 				div(class="span4")
-					h3 Tasks for today
-					div(id="currenttasks")
+					div(class="blockitem")
+						h3 Tasks for today
+						div(id="currenttasks")
 				div(class="span4") 
-					h3 Scheduled crew for today
-					div(id="currentcrew")
+					div(class="blockitem")
+						h3 Scheduled crew for today
+						div(id="currentcrew")
 	script(src="/javascripts/mainscripts.js")

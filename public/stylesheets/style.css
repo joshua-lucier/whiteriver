@@ -314,3 +314,9 @@ a {
 	background: white;
 	margin: 1em;
 }
+
+.blockitem {
+	border: 2px solid;
+	border-color: #006abc;
+	padding: 1em;
+}
