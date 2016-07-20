@@ -14,6 +14,7 @@ block content
 					table(id="callentrylog")
 						tr
 							th Run ID
+							th Call Time/Date
 							th Call Type
 							th Call Location
 							th Call Destination
@@ -24,6 +25,7 @@ block content
 						each callentry in callentries
 							tr
 								td=callentry.runid
+								td=callentry.statustime
 								td=callentry.calltype
 								td=callentry.calllocation
 								td=callentry.calldestination
