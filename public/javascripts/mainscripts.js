@@ -45,4 +45,4 @@ $("body").ready(function(){
 
 tasklistinterval = setInterval(function(){
 	loadmainpage(function(){});
-}, 10000);
+}, 30000);

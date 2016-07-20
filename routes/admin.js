@@ -825,7 +825,7 @@ router.get('/callentrytable',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from CallEntries order by RunNumber;");
+			var query2 = client2.query("select * from CallEntries,TruckStatusEntry where CallEntries.RunID = TruckStatusEntry.RunID and TruckStatusEntry.Status = 'responding' order by RunNumber;");
 			query2.on('row', function(row2){
 				callentries.push(row2);
 			});
