@@ -229,7 +229,7 @@ router.get('/gettasks', function(req,res,next){
 			});
 			query2.on('end', function(results2){
 				done2();
-				finalhtml = '';
+				finalhtml = '<ol>';
 				tasks.forEach(function(item){
 					//check if marked no repeat
 					marked=false;
@@ -292,9 +292,10 @@ router.get('/gettasks', function(req,res,next){
 						else marked = false;
 					}
 					if(marked==false){
-						finalhtml = finalhtml + '<div class="currenttask"><b>' + item.title + '</b></div>';
+						finalhtml = finalhtml + '<li><b>' + item.title + '</b></li>';
 					}
 				});
+				finalhtml = finalhtml + '</ol>';
 				res.send(finalhtml);
 			});
 		});
