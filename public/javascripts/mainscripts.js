@@ -28,7 +28,6 @@ function currenttrucks(callback){
 
 
 function loadmainpage(callback){
-	currentcrew(function(){
 		currentalerts(function(){
 			currenttasks(function(){
 				currenttrucks(function(){
@@ -36,13 +35,18 @@ function loadmainpage(callback){
 				});
 			});
 		});
-	});
 }
 
 $("body").ready(function(){
-	loadmainpage(function(){});
+	loadmainpage(function(){
+		currentcrew(function(){});
+	});
 });
 
-tasklistinterval = setInterval(function(){
+listinterval = setInterval(function(){
 	loadmainpage(function(){});
-}, 30000);
+}, 10000);
+
+crewinterval = setInterval(function(){
+	currentcrew(function(){});
+},63000);
