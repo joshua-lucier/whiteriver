@@ -825,7 +825,7 @@ router.get('/callentrytable',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select * from CallEntries,TruckStatusEntries where CallEntries.RunID = TruckStatusEntries.RunID and TruckStatusEntries.Status = 'responding' order by RunNumber;");
+			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, CallEntries.RunID, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber;");
 			query2.on('row', function(row2){
 				callentries.push(row2);
 			});
@@ -846,20 +846,23 @@ router.get('/callentrytable',function(req,res,next){
 
 router.get('/callentries.csv', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
-		var columns = ['CallEntryID','StatusTime','CallEntries.RunID','CallType','CallLocation','CallDestination','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
-		outcsv = [columns];
+		var columns = ['CallEntryID','s2.StatusTime timeofcall','s1.StatusTime timeinservice','CallEntries.RunID','CallType','CallLocation','CallDestination','TruckName','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
+		var labels = ['Call Entry ID', 'Time of Call', 'Time in Service', 'Run ID', 'Call Type', 'Call Location', 'Call Destination', 'Truck', 'Driver Name', 'Primary Care', 'Additional Names', 'Run Number'];
+		outcsv = [labels];
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err,client,done){
-			var query = client.query("SELECT "+columns.join(', ')+" FROM CallEntries,TruckStatusEntries where CallEntries.RunID = TruckStatusEntries.RunID and TruckStatusEntries.Status = 'responding';");
+			var query = client.query("SELECT "+columns.join(', ')+" FROM CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1, (select TruckName, Runs.RunID from Trucks, Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber;");
 			query.on('row', function(row) {
 				// process column values; if you need to do special formatting (i.e. dates) don't loop and instead handle each one specially
 				values = [];
 				values.push(row.callentryid);
-				values.push(row.statustime);
+				values.push(row.timeofcall);
+				values.push(row.timeinservice);
 				values.push(row.runid);
 				values.push(row.calltype);
 				values.push(row.calllocation);
 				values.push(row.calldestination);
+				values.push(row.truckname);
 				values.push(row.drivername);
 				values.push(row.primarycare);
 				values.push(row.additionalnames);

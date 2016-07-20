@@ -253,7 +253,7 @@ a {
 	border: 1px solid #304770;
 }
 #callentrylog {
-	width: 105em;
+	width: 120em;
 }
 #callentrylog th, #callentrylog td {
 	text-align: center;
@@ -271,11 +271,11 @@ a {
 }
 
 #callentrylog td:nth-child(3) {
-	width: 5em;
+	width: 15em;
 }
 
 #callentrylog td:nth-child(4) {
-	width: 25em;
+	width: 5em;
 }
 
 #callentrylog td:nth-child(5) {
@@ -283,7 +283,7 @@ a {
 }
 
 #callentrylog td:nth-child(6) {
-	width: 10em;
+	width: 25em;
 }
 
 #callentrylog td:nth-child(7) {
@@ -295,6 +295,10 @@ a {
 }
 
 #callentrylog td:nth-child(9) {
+	width: 10em;
+}
+
+#callentrylog td:nth-child(10) {
 	width: 3em;
 }
 
