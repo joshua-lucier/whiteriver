@@ -49,4 +49,4 @@ listinterval = setInterval(function(){
 
 crewinterval = setInterval(function(){
 	currentcrew(function(){});
-},63000);
+},300000);
