@@ -273,7 +273,7 @@ a {
 	border: 1px solid #304770;
 }
 #callentrylog {
-	width: 120em;
+	width: 100%;
 }
 #callentrylog th, #callentrylog td {
 	text-align: center;
@@ -283,43 +283,43 @@ a {
 }
 
 #callentrylog td:nth-child(1) {
-	width: 2em;
+	width: 2%;
 }
 
 #callentrylog td:nth-child(2) {
-	width: 15em;
+	width: 13%;
 }
 
 #callentrylog td:nth-child(3) {
-	width: 15em;
+	width: 13%;
 }
 
 #callentrylog td:nth-child(4) {
-	width: 5em;
+	width: 5%;
 }
 
 #callentrylog td:nth-child(5) {
-	width: 25em;
+	width: 21%;
 }
 
 #callentrylog td:nth-child(6) {
-	width: 25em;
+	width: 21%;
 }
 
 #callentrylog td:nth-child(7) {
-	width: 10em;
+	width: 8%;
 }
 
 #callentrylog td:nth-child(8) {
-	width: 10em;
+	width: 7%;
 }
 
 #callentrylog td:nth-child(9) {
-	width: 10em;
+	width: 7%;
 }
 
 #callentrylog td:nth-child(10) {
-	width: 3em;
+	width: 3%;
 }
 
 .button a {
