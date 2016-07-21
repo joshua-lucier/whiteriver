@@ -5,6 +5,7 @@
 
 html {
 width: 100%;
+overflow-x:hidden;
 }
 
 @media
@@ -28,6 +29,7 @@ body {
 	background-size: cover;
 	background-color: #e5e5e5;
 	margin: 0px;
+	overflow-x:hidden;
 }
 
 a {
