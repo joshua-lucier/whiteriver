@@ -153,6 +153,7 @@ router.get('/addtaskform', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		names = [];
 		ids = [];
+		exclusions = [];
 		var post2_data = querystring.stringify({
 				accid: accid,
 				acckey: acckey,
@@ -171,17 +172,31 @@ router.get('/addtaskform', function(req,res,next){
 		var post2_req = https.request(post2_options, function(post2_res){
 			post2_res.setEncoding('utf8');
 			post2_res.on('data',function (chunk2){
-				
-				parseString(chunk2, function(err2, result2){
-					creatorname = '';
-					//console.log(result2.results.members[0].member[0]['$'].id);
-					//console.log(result2.results.members[0].member[0].name[0]);
-					//extract the name of the user from result2
-					result2.results.members[0].member.forEach(function(item){
-						ids.push(item['$'].id);
-						names.push(item.name[0]);
+				var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+				pg.connect(connectionString, function(err,client,done){
+					var query2 = client.query("select * from Exclusions;");
+					query2.on('row', function(row){
+						exclusions.push(row.memberid);
 					});
-					res.render('addtask',{title: 'Add Task',id: id,ids: ids, names: names});
+					query2.on('end', function(results2){
+						parseString(chunk2, function(err2, result2){
+							creatorname = '';
+							//console.log(result2.results.members[0].member[0]['$'].id);
+							//console.log(result2.results.members[0].member[0].name[0]);
+							//extract the name of the user from result2
+							result2.results.members[0].member.forEach(function(item){
+								exclusion = false;
+								exclusions.forEach(function(exclusionitem){
+									if(item['$'].id == exclusionitem) exclusion = true;
+								});
+								if(!exclusion){
+									ids.push(item['$'].id);
+									names.push(item.name[0]);
+								}
+							});
+							res.render('addtask',{title: 'Add Task',id: id,ids: ids, names: names});
+						});
+					});
 				});
 			});
 		});
@@ -335,6 +350,7 @@ router.get('/edittaskform', function(req,res,next){
 				done();
 				names = [];
 				ids = [];
+				exclusions = [];
 				var post2_data = querystring.stringify({
 						accid: accid,
 						acckey: acckey,
@@ -353,20 +369,31 @@ router.get('/edittaskform', function(req,res,next){
 				var post2_req = https.request(post2_options, function(post2_res){
 					post2_res.setEncoding('utf8');
 					post2_res.on('data',function (chunk2){
-						
-						parseString(chunk2, function(err2, result2){
-							creatorname = '';
-							//console.log(result2.results.members[0].member[0]['$'].id);
-							//console.log(result2.results.members[0].member[0].name[0]);
-							//extract the name of the user from result2
-							result2.results.members[0].member.forEach(function(item){
-								ids.push(item['$'].id);
-								names.push(item.name[0]);
+						var query2 = client.query("select * from Exclusions;");
+						query2.on('row', function(row){
+							exclusions.push(row.memberid);
+						});
+						query2.on('end', function(results2){
+							parseString(chunk2, function(err2, result2){
+								creatorname = '';
+								//console.log(result2.results.members[0].member[0]['$'].id);
+								//console.log(result2.results.members[0].member[0].name[0]);
+								//extract the name of the user from result2
+								result2.results.members[0].member.forEach(function(item){
+									exclusion = false;
+									exclusions.forEach(function(exclusionitem){
+										if(item['$'].id == exclusionitem) exclusion = true;
+									});
+									if(!exclusion){
+										ids.push(item['$'].id);
+										names.push(item.name[0]);
+									}
+								});
+								dates={};
+								dates.repeatend = JSON.stringify(task.repeatend);
+								dates.timedue = JSON.stringify(task.timedue);
+								res.render('edittask',{title: 'Edit Task',task: task,id: task.taskid,ids: ids, names: names, dates: dates});
 							});
-							dates={};
-							dates.repeatend = JSON.stringify(task.repeatend);
-							dates.timedue = JSON.stringify(task.timedue);
-							res.render('edittask',{title: 'Edit Task',task: task,id: task.taskid,ids: ids, names: names, dates: dates});
 						});
 					});
 				});
@@ -722,6 +749,7 @@ router.get('/getadmins',function(req,res,next){
 			adminids = [];
 			ids = [];
 			names = [];
+			exclusions = [];
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
@@ -756,23 +784,43 @@ router.get('/getadmins',function(req,res,next){
 				var post2_req = https.request(post2_options, function(post2_res){
 					post2_res.setEncoding('utf8');
 					post2_res.on('data',function (chunk2){
-						parseString(chunk2, function(err2, result2){
-							result2.results.members[0].member.forEach(function(item){
-								ids.push(item['$'].id);
-								names.push(item.name[0]);
-							});
-							finalhtml = "";
-							ids.forEach(function(item,index){
-								admin = false;
-								adminids.forEach(function(adminitem){
-									if(item==adminitem){
-										admin = true;
-									}
+						query3 = client2.query("select * from Exclusions;");
+						query3.on('error',function(error){
+							error={};
+							error.status = error2;
+							error.stack = error2;
+							res.send(error2);
+						});
+						query3.on('row', function(row){
+							exclusions.push(row);
+						});
+						query3.on('end', function(results){
+							parseString(chunk2, function(err2, result2){
+								result2.results.members[0].member.forEach(function(item){
+									ids.push(item['$'].id);
+									names.push(item.name[0]);
 								});
-								if(admin) finalhtml = finalhtml + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' [ADMIN]</a></div>';
-								else finalhtml = finalhtml  + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' </a></div>';
+								finalhtml = "";
+								ids.forEach(function(item,index){
+									admin = false;
+									excluded = false;
+									adminids.forEach(function(adminitem){
+										if(item==adminitem){
+											admin = true;
+										}
+									});
+									exclusions.forEach(function(exclusion){
+										if(exclusion.memberid==item){
+											excluded = true;
+										}
+									});
+									if(admin) finalhtml = finalhtml + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' [ADMIN]</a>';
+									else finalhtml = finalhtml  + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' </a>';
+									if(excluded) finalhtml = finalhtml + '<a onClick="toggleexclude('+item+');"><img class="xmark" src="/images/fullx.png"></a></div>';
+									else finalhtml = finalhtml + '<a onClick="toggleexclude('+item+');"><img class="xmark" src="/images/emptyx.png"></a></div>';
+								});
+								res.send(finalhtml);
 							});
-							res.send(finalhtml);
 						});
 					});
 				});
@@ -808,6 +856,37 @@ router.get('/toggleadmin',function(req,res,next){
 				done2();
 				if(!wasadmin){
 					query4 = client2.query("insert into myAdministrators(MemberID, AddedById) values($1,$2);",[memberid,id]);
+				}
+				res.send('finished admin toggle');
+			});
+		});
+	});
+});
+
+router.get('/toggleexclude',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		memberid = req.query.memberid;
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			wasexcluded=false;
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select * from Exclusions where MemberID=$1;",[memberid]);
+			query2.on('row', function(row2){
+				query3 = client2.query("delete from Exclusions where MemberID=$1",[memberid]);
+				wasexcluded = true;
+			});
+			query2.on('error', function(error2){
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				if(!wasexcluded){
+					query4 = client2.query("insert into Exclusions(MemberID) values($1);",[memberid]);
 				}
 				res.send('finished admin toggle');
 			});

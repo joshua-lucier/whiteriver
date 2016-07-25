@@ -101,5 +101,11 @@ function togglemark(id){
 function toggleadmin(id){
 	$.get("/admin/toggleadmin?memberid="+id,function(data,status){
 		displayadmin(function(){});
-	})
+	});
+}
+
+function toggleexclude(id){
+	$.get("/admin/toggleexclude?memberid="+id,function(data,status){
+		displayadmin(function(){});
+	});
 }

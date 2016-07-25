@@ -285,8 +285,11 @@ module.exports = {
 											query8.on('end',function(){
 												query9 = client.query("INSERT INTO myAdministrators(memberid, addedbyid, datetimeadded) VALUES (61, 61, '2016-06-22 10:23:54+02');");
 												query9.on('end',function(){
-													done();
-													callback(message);
+													query10 = client.query("create table if not exists Exclusions(ExclusionID serial primary key, MemberID int);").on('error', function(error2){message = 'Exclusions '+error2; console.log(message);});
+													query10.on('end',function(){
+														done();
+														callback(message);
+													});
 												});
 											});
 										});
@@ -330,8 +333,11 @@ module.exports = {
 										query7.on('end',function(){
 											query8 = client.query("drop table if exists Tokens;").on('error', function(error2){message = error2;});
 											query8.on('end',function(){
-												done();
-												callback(message);
+												query9 = client.query("drop table if exists Exclusions;").on('error', function(error2){message = error2;});
+												query9.on('end', function(){
+													done();
+													callback(message);
+												});
 											});
 										});
 									});

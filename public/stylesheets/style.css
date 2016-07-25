@@ -341,3 +341,9 @@ a {
 	padding: 1em;
 	margin: 1em;
 }
+
+.xmark {
+	display: inline-block;
+	height: 1em;
+	width: 1em;
+}
