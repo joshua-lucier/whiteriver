@@ -121,33 +121,43 @@ router.get('/makecallentry', function(req,res,next){
 		var post2_req = https.request(post2_options, function(post2_res){
 			post2_res.setEncoding('utf8');
 			post2_res.on('data',function (chunk2){
-				
-				parseString(chunk2, function(err2, result2){
-					creatorname = '';
-					//console.log(result2.results.members[0].member[0]['$'].id);
-					//console.log(result2.results.members[0].member[0].name[0]);
-					//extract the name of the user from result2
-					result2.results.members[0].member.forEach(function(item){
-						ids.push(item['$'].id);
-						names.push(item.name[0]);
+				exclusions = [];
+				var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+				pg.connect(connectionString, function(err,client,done){
+					var query = client.query("select * from Exclusions;");
+					query.on('row', function(row){
+						exclusions.push(row.memberid);
 					});
-					runnumber = false;
-					call = {};
-					var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
-					pg.connect(connectionString, function(err3,client2,done2){
-						if(err3) console.log('could not connect to postgres',err);
-						var query2 = client2.query("select RunNumber from CallEntries order by RunNumber desc limit 1;");
-						query2.on('row',function(row){
-							runnumber = row;
+					query.on('end', function(results2){
+						parseString(chunk2, function(err2, result2){
+							creatorname = '';
+							//console.log(result2.results.members[0].member[0]['$'].id);
+							//console.log(result2.results.members[0].member[0].name[0]);
+							//extract the name of the user from result2
+							result2.results.members[0].member.forEach(function(item){
+								exclusion = false;
+								exclusions.forEach(function(exclusionitem){
+									if(item['$'].id == exclusionitem) exclusion = true;
+								});
+								if(!exclusion){
+									ids.push(item['$'].id);
+									names.push(item.name[0]);
+								}
+							});
+							runnumber = false;
+							call = {};
+							var query2 = client.query("select RunNumber from CallEntries order by RunNumber desc limit 1;");
+							query2.on('row',function(row){
+								runnumber = row;
+							});
+							query2.on('end', function(results){
+								done();
+								if(runnumber) call = runnumber;
+								else call.runnumber = undefined;
+								console.log(runnumber);
+								res.render('makecallentry',{title: 'New Call Entry',runid: runid,ids: ids, names: names, runnumber: Number(call.runnumber)+1});
+							});
 						});
-						query2.on('end', function(results){
-							done2();
-							if(runnumber) call = runnumber;
-							else call.runnumber = undefined;
-							console.log(runnumber);
-							res.render('makecallentry',{title: 'New Call Entry',runid: runid,ids: ids, names: names, runnumber: Number(call.runnumber)+1});
-						});
-
 					});
 				});
 			});
