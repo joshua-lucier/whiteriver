@@ -333,7 +333,7 @@ a, a:active, a:hover, a:visited, a:link{
 .mainstatus {
 	display: inline-block;
 	padding: 1em;
-	background: white;
+	background: black;
 	margin: 1em;
 }
 
