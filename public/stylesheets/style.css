@@ -74,7 +74,6 @@ a, a:active, a:hover, a:visited, a:link{
 	margin-right: auto;
 	background-color: #304770;
 	z-index: 0;
-	width: 100%;
 	min-height: 47em;
 	padding-left: 1em;
 	padding-right: 1em;
@@ -85,7 +84,6 @@ a, a:active, a:hover, a:visited, a:link{
 	margin-right: auto;
 	background-color: #304770;
 	z-index: 1;
-	width:100%
 	left: 0;
 	right: 0;
 	position: relative;
