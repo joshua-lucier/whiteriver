@@ -355,4 +355,64 @@ router.get('/gettrucks',function(req,res,next){
 	});
 });
 
+router.get('/callentrytable',function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		callentries = [];
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			wasadmin = false;
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, CallEntries.RunID, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber desc limit 10;");
+			query2.on('row', function(row2){
+				callentries.push(row2);
+			});
+			query2.on('error', function(error2){
+				console.log(error2);
+				error={};
+				error.status = error2;
+				error.stack = error2;
+				res.send(error2);
+			});
+			query2.on('end', function(results2){
+				done2();
+				finalhtml = "";
+				finalhtml = finalhtml + "<table id='callentrylog'>";
+				finalhtml = finalhtml + "<tr>";
+				finalhtml = finalhtml + "<th>" + "Time of Call" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Time in Service" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Run ID" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Truck" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Call Type" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Call Location" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Call Destination" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Driver Name" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Primary Care" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Additional Names" + "</th>";
+				finalhtml = finalhtml + "<th>" + "Run Number" + "</th>";
+				finalhtml = finalhtml + "</tr>";
+				callentries.forEach(function(callentry){
+					finalhtml = finalhtml + "<tr>";
+					finalhtml = finalhtml + "<td>" + callentry.timeofcall + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.timeinservice + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.runid + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.truckname + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.calltype + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.calllocation + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.calldestination + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.drivername + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.primarycare + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.additionalnames + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.runnumber + "</td>";
+					finalhtml = finalhtml + "</tr>";
+				});
+				finalhtml = finalhtml + "</table>";
+				res.send(finalhtml);
+			});
+		});		
+	});
+});
+
 module.exports = router;

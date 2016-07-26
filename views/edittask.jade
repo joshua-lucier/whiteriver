@@ -36,7 +36,7 @@ block content
 							div(class="span3 text-right")
 								label Time and Date due:
 							div(class="span6")
-								input(type="datetime-local",name="timedue", class="input", id="timedue", required)
+								input(type="text",name="timedue", class="input", id="timedue", required)
 						div(class="row")
 							div(class="span3 text-right")
 								label Repeat period:
@@ -57,7 +57,7 @@ block content
 							div(class="span3 text-right")
 								label Repeat end date:
 							div(class="span6")
-								input(id="repeatend",type='datetime-local',name="repeatend", class="input", required)
+								input(id="repeatend",type='text',name="repeatend", class="input", required)
 						div(class="row")
 							div(class="span3 text-right")
 								input(type="submit", value="Submit")
@@ -65,4 +65,4 @@ block content
 								br
 								div(class='button')
 									a(href="/admin") Cancel
-		script $("#repeatperiod").val("#{task.repeatperiod}");$("#chargedid").val("#{task.chargedid}");repeatend = "#{dates.repeatend}".replace(/&quot;/g,'').replace(/Z/g,'');$("#repeatend").val(repeatend); timedue = "#{dates.timedue}".replace(/&quot;/g,'').replace(/Z/g,'');$("#timedue").val(timedue);
+		script $("#repeatperiod").val("#{task.repeatperiod}");$("#chargedid").val("#{task.chargedid}");repeatend = "#{dates.repeatend}".replace(/&quot;/g,'').replace(/Z/g,'').replace(/T/g,' ').replace(/-/g,'/');$("#repeatend").val(repeatend); timedue = "#{dates.timedue}".replace(/&quot;/g,'').replace(/Z/g,'').replace(/T/g,' ').replace(/-/g,'/');$("#timedue").val(timedue); $("#timedue").datetimepicker({dayOfWeekStart: 1, lang: 'en', step: 10}); $("#repeatend").datetimepicker({dayOfWeekStart: 1, lang: 'en', step: 10});

@@ -26,12 +26,22 @@ function currenttrucks(callback){
 	});
 }
 
+function callentrytable(callback){
+	$.get("/main/callentrytable", function(data,status){
+		$("#callentrytablediv").html(data);
+		callback();
+	});
+}
+
 
 function loadmainpage(callback){
 		currentalerts(function(){
 			currenttasks(function(){
 				currenttrucks(function(){
-					callback();
+					callentrytable(function(){
+						updateTimeDate();
+						callback();
+					});
 				});
 			});
 		});
@@ -50,3 +60,33 @@ listinterval = setInterval(function(){
 crewinterval = setInterval(function(){
 	currentcrew(function(){});
 },300000);
+
+function updateTimeDate(){
+	date = new Date();
+	month = [];
+	month[0] = "January";
+	month[1] = "February";
+	month[2] = "March";
+	month[3] = "April";
+	month[4] = "May";
+	month[5] = "June";
+	month[6] = "July";
+	month[7] = "August";
+	month[8] = "September";
+	month[9] = "October";
+	month[10] = "November";
+	month[11] = "December";
+	day = [];
+	day[0] = "Sunday";
+	day[1] = "Monday";
+	day[2] = "Tuesday";
+	day[3] = "Wednesday";
+	day[4] = "Thursday";
+	day[5] = "Friday";
+	day[6] = "Saturday";
+	//$("#dater").html(date.getDay()+" "+month[date.getMonth()]+","+date.getFullYear());
+	$("#dater").html(date.toLocaleDateString());
+	$("#dayr").html(day[date.getUTCDay()]);
+	//$("#timer").html(date.getHours()+":"+date.getMinutes().toFixed(2));
+	$("#timer").html(date.toLocaleTimeString());
+}

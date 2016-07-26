@@ -18,7 +18,7 @@ block content
 						div(class="span3 text-right")
 							label Alert Time:
 						div(class="span6")
-							input(type="datetime-local",name="alerttime", class="input", required)
+							input(type="text",name="alerttime", class="input", id="alerttime", required)
 					div(class="row")
 						div(class="span3 text-right")
 							input(type="submit", value="Submit")
@@ -28,3 +28,4 @@ block content
 								a(href="/admin") Cancel
 
 				div(class="span3")
+	script $("#alerttime").datetimepicker({dayOfWeekStart: 1, lang: 'en', step: 10});

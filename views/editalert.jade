@@ -19,7 +19,7 @@ block content
 						div(class="span3 text-right")
 							label Alert Time:
 						div(class="span6")
-							input(id="alerttime",type="datetime-local",name="alerttime", class="input", required)
+							input(id="alerttime",type="text",name="alerttime", class="input", required)
 					div(class="row")
 						div(class="span3 text-right")
 							input(type="submit", value="Submit")
@@ -29,4 +29,4 @@ block content
 								a(href="/admin") Cancel
 
 				div(class="span3")
-		script alerttime = "#{alerttime}".replace(/&quot;/g,'').replace(/Z/g,'');$("#alerttime").val(alerttime);
+		script alerttime = "#{alerttime}".replace(/&quot;/g,'').replace(/Z/g,'').replace(/T/g,' ').replace(/-/g,'/');$("#alerttime").val(alerttime); $("#alerttime").datetimepicker({dayOfWeekStart: 1, lang: 'en', step: 10})

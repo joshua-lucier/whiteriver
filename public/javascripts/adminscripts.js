@@ -75,7 +75,8 @@ function loadpage(callback){
 			listtrucks(function(){
 				listalerts(function(){
 					todaysalerts(function(){
-						displayadmin(function(){});
+						displayadmin(function(){
+						});
 					});
 				});
 			});
@@ -109,3 +110,5 @@ function toggleexclude(id){
 		displayadmin(function(){});
 	});
 }
+
+

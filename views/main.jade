@@ -4,23 +4,34 @@ block content
 	div(class="HomeContainer")
 		div(class="Inner")
 			div(class="row")
-				div(class="span6") 
-					h1 Main Dashboard
-				div(class="span6")
+				div(class="span3")
+					h2
+						div(id="dater")
+				div(class="span6 text-center")
+					h2
+						div(id="dayr")
+				div(class="span3 text-right")
+					h2
+						div(id="timer")
+			div(class="row")
+				div(class="span12")
 					div(class="blockitem") 
 						h2 Alerts
 						div(id="currentalerts")
 			div(class="row")
-				div(class="span4") 
+				div(class="span2 offset2") 
 					div(class="blockitem")
 						h3 Trucks
 						div(id="currenttrucks")
-				div(class="span4")
+				div(class="span2 offset1")
 					div(class="blockitem")
 						h3 Tasks for today
 						div(id="currenttasks")
-				div(class="span4") 
+				div(class="span4 offset1") 
 					div(class="blockitem")
 						h3 Scheduled crew for today
 						div(id="currentcrew")
+			div(class="row")
+				div(class="span12")
+					div(id="callentrytablediv")
 	script(src="/javascripts/mainscripts.js")
