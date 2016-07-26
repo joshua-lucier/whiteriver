@@ -55,7 +55,7 @@ a, a:active, a:hover, a:visited, a:link{
 .mainfooter {
 	background-color: #e5e5e5;
 	width: 100%;
-	position: absolute;
+	position: relative;
 	margin: 0px;
 	padding: 0px;
 	display: table-cell;
