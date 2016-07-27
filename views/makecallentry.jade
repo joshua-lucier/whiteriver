@@ -25,10 +25,40 @@ block content
 								option(value="Critical Care Transfer") Critical Care Transfer
 						br
 						label Call Location:
-							input(type="text", name="calllocation", class=".input", id="calllocation", required)
+							select(name="calllocation", id="calllocation")
+								option(value="Barnard") Barnard
+								option(value="Bethel") Bethel
+								option(value="Braintree") Braintree
+								option(value="Brookfield") Brookfield
+								option(value="East Granville") East Granville
+								option(value="GMC - BC") GMC - BC
+								option(value="GMC - ED") GMC - ED
+								option(value="GMC - HP") GMC - HP
+								option(value="Morgan Orchards") Morgan Orchards
+								option(value="Granville") Granville
+								option(value="Hancock") Hancock
+								option(value="Pittsfield") Pittsfield
+								option(value="Randolph") Randolph
+								option(value="Rochester") Rochester
+								option(value="Stockbridge") Stockbridge
+								option(value="Other") Other
 						br
 						label Call Destination:
-							input(type="text", name="calldestination", class=".input", id="calldestination", required)
+							select(name="calldestination", id="calldestination")
+								option(value="No Transport") No Transport
+								option(value="GMC") GMC
+								option(value="DHMC") DHMC
+								option(value="CVMC") CVMC
+								option(value="UVMMC") UVMMC
+								option(value="PMC") PMC
+								option(value="PRMC") PRMC
+								option(value="VAMC") VAMC
+								option(value="MAH") MAH
+								option(value="Morgan Orchards") Morgan Orchards
+								option(value="Home") Home
+								option(value="Nursing Home") Nursing Home
+								option(value="Landing Zone") Landing Zone
+								option(value="Other Destination") Other Destination
 						br
 						label Driver Name:
 							select(name="drivername",id="drivername")

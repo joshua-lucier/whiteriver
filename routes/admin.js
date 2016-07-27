@@ -926,8 +926,8 @@ router.get('/callentrytable',function(req,res,next){
 
 router.get('/callentries.csv', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
-		var columns = ['CallEntryID','s2.StatusTime timeofcall','s1.StatusTime timeinservice','CallEntries.RunID','CallType','CallLocation','CallDestination','TruckName','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
-		var labels = ['Call Entry ID', 'Time of Call', 'Time in Service', 'Run ID', 'Call Type', 'Call Location', 'Call Destination', 'Truck', 'Driver Name', 'Primary Care', 'Additional Names', 'Run Number'];
+		var columns = ['CallEntryID','s2.StatusTime timeofcall','s1.StatusTime timeinservice','CallType','CallLocation','CallDestination','TruckName','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
+		var labels = ['Call Entry ID', 'Time of Call', 'Time in Service', 'Call Type', 'Call Location', 'Call Destination', 'Truck', 'Driver Name', 'Primary Care', 'Additional Names', 'Run Number'];
 		outcsv = [labels];
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err,client,done){
@@ -938,7 +938,6 @@ router.get('/callentries.csv', function(req,res,next){
 				values.push(row.callentryid);
 				values.push(row.timeofcall);
 				values.push(row.timeinservice);
-				values.push(row.runid);
 				values.push(row.calltype);
 				values.push(row.calllocation);
 				values.push(row.calldestination);
