@@ -591,7 +591,7 @@ router.get('/getalerts',function(req,res,next){
 				done2();
 				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
-					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><span class="radiospan"></span><label><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></label></div>';
+					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"<a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
 				res.send(finalhtml);
