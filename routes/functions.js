@@ -142,7 +142,7 @@ module.exports = {
 						callback(token.userid,username);
 					}
 					else {
-						res.send('Failed on Authorize: Token did not match encrypted token');
+						res.send('Failed on Authorize: Token did not match encrypted token...<a href="/logout">Clear Authentication Data</a>');
 					}
 				});
 			});
