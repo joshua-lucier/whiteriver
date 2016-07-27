@@ -814,10 +814,10 @@ router.get('/getadmins',function(req,res,next){
 											excluded = true;
 										}
 									});
-									if(admin) finalhtml = finalhtml + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' [ADMIN]</a>';
-									else finalhtml = finalhtml  + '<div class="li"><a onClick="toggleadmin('+item+');">'+names[index]+' </a>';
-									if(excluded) finalhtml = finalhtml + '<a onClick="toggleexclude('+item+');"><img class="xmark" src="/images/fullx.png"></a></div>';
-									else finalhtml = finalhtml + '<a onClick="toggleexclude('+item+');"><img class="xmark" src="/images/emptyx.png"></a></div>';
+									if(admin) finalhtml = finalhtml + '<div class="li"><a onClick="toggleadmin('+item+'); return false;">'+names[index]+' [ADMIN]</a>';
+									else finalhtml = finalhtml  + '<div class="li"><a onClick="toggleadmin('+item+'); return false;">'+names[index]+' </a>';
+									if(excluded) finalhtml = finalhtml + '<a onClick="toggleexclude('+item+'); return false;"><img class="xmark" src="/images/fullx.png"></a></div>';
+									else finalhtml = finalhtml + '<a onClick="toggleexclude('+item+'); return false;"><img class="xmark" src="/images/emptyx.png"></a></div>';
 								});
 								res.send(finalhtml);
 							});
@@ -864,6 +864,7 @@ router.get('/toggleadmin',function(req,res,next){
 });
 
 router.get('/toggleexclude',function(req,res,next){
+	console.log('toggleexclude');
 	AdminAuthorize(req,res,next,function(id,username){
 		memberid = req.query.memberid;
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;

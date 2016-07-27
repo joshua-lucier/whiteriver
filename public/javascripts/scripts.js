@@ -1,3 +1,5 @@
+$.ajaxSetup({ cache: false });
+
 $("body").ready(function(){
 	$(".input").each(function(index){
 		if(!$(this).val()){

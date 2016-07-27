@@ -92,7 +92,8 @@ tasklistinterval = setInterval(function(){
 }, 30000);
 
 function togglemark(id){
-	$.get("/admin/togglemark?taskid="+id,function(data,status){
+	togglemarky = "/admin/togglemark?taskid=" + id;
+	$.get(togglemarky,function(data,status){
 		listtasks(function(){
 			todaystasks(function(){});
 		});
@@ -100,13 +101,15 @@ function togglemark(id){
 }
 
 function toggleadmin(id){
-	$.get("/admin/toggleadmin?memberid="+id,function(data,status){
+	toggleadminy = "/admin/toggleadmin?memberid=" + id;
+	$.get(toggleadminy,function(data,status){
 		displayadmin(function(){});
 	});
 }
 
 function toggleexclude(id){
-	$.get("/admin/toggleexclude?memberid="+id,function(data,status){
+	toggleexcludey = "/admin/toggleexclude?memberid=" + id;
+	$.get(toggleexcludey,function(data,status){
 		displayadmin(function(){});
 	});
 }

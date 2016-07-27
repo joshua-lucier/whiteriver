@@ -1,6 +1,7 @@
 extends layout
 
 block content
+	script(src="/javascripts/adminscripts.js")
 	div(class="HomeContainer")
 		div(class="Inner")
 			div(class="row")
@@ -38,4 +39,3 @@ block content
 					div.button
 						a(onClick="toggleadminlist(function(){});") Admins
 					div(id="adminlist",class="span3",class="list",style="color: black;") +
-		script(src="/javascripts/adminscripts.js")
