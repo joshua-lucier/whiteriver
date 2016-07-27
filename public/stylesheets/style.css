@@ -52,7 +52,7 @@ a, a:active, a:hover, a:visited, a:link{
 	margin-top: 0px;
 	margin-bottom: auto;
 }
-
+/*
 .mainfooter {
 	background-color: #e5e5e5;
 	width: 100%;
@@ -70,6 +70,7 @@ a, a:active, a:hover, a:visited, a:link{
 	bottom: 0px;
 	padding: 0px;
 }
+*/
 .HomeContainer {
 	margin-left: auto;
 	margin-right: auto;
@@ -78,6 +79,8 @@ a, a:active, a:hover, a:visited, a:link{
 	min-height: 47em;
 	padding-left: 1em;
 	padding-right: 1em;
+	padding-top: 1em;
+	padding-bottom: 0px;
 }
 
 .Inner {
@@ -88,9 +91,6 @@ a, a:active, a:hover, a:visited, a:link{
 	left: 0;
 	right: 0;
 	position: relative;
-	top: 5em;
-	bottom: 5em;
-
 }
 /*
 .HomeContainer:after {
@@ -111,13 +111,13 @@ a, a:active, a:hover, a:visited, a:link{
 	float: right;
 	margin-left: 90%;
 	margin-right: auto;
-	background-color: #304770;
+	background-color: #1e73be;
 	border: 2px solid;
-	border-color: #e5e5e5;
+	border-color: #006abc;
 	padding: 5px;
 	display: inline;
-	position: fixed;
-	top:4%;
+	position: absolute;
+	top:0px;
 	right:5em;
 	z-index: 2;
 }
@@ -127,12 +127,12 @@ a, a:active, a:hover, a:visited, a:link{
 	float: right;
 	margin-left: 90%;
 	margin-right: auto;
-	background-color: #304770;
+	background-color: #1e73be;
 	border: 2px solid;
-	border-color: #e5e5e5;
+	border-color: #006abc;
 	padding: 5px;
-	position: fixed;
-	top: 4%;
+	position: absolute;
+	top: 0px;
 	right: 9em;
 	z-index:2;
 }
@@ -365,4 +365,16 @@ a, a:active, a:hover, a:visited, a:link{
 #currentcrew {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#callentrytablediv {
+	margin-top: 2em;
+}
+
+.alert {
+	color: black;
+}
+
+.listofalerts {
+	margin-top: 2em;
 }

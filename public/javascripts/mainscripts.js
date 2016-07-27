@@ -88,5 +88,5 @@ function updateTimeDate(){
 	$("#dater").html(date.toLocaleDateString());
 	$("#dayr").html(day[date.getUTCDay()]);
 	//$("#timer").html(date.getHours()+":"+date.getMinutes().toFixed(2));
-	$("#timer").html(date.toLocaleTimeString());
+	$("#timer").html(date.toLocaleTimeString().replace(/:\d\d PM/g,' PM'));
 }

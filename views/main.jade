@@ -3,7 +3,7 @@ extends layout
 block content
 	div(class="HomeContainer")
 		div(class="Inner")
-			div(class="row")
+			div(class="row-fluid")
 				div(class="span3")
 					h2
 						div(id="dater")
@@ -13,25 +13,24 @@ block content
 				div(class="span3 text-right")
 					h2
 						div(id="timer")
-			div(class="row")
-				div(class="span12")
-					div(class="blockitem") 
-						h2 Alerts
+			div(class="row-fluid")
+				div(class="span8 offset2")
+					div(class="blockitem listofalerts") 
 						div(id="currentalerts")
-			div(class="row")
+			div(class="row-fluid")
 				div(class="span2 offset2") 
 					div(class="blockitem")
 						h3 Trucks
 						div(id="currenttrucks")
 				div(class="span2 offset1")
 					div(class="blockitem")
-						h3 Tasks for today
+						h3 Tasks for Today
 						div(id="currenttasks")
 				div(class="span4 offset1") 
 					div(class="blockitem")
 						h3 Scheduled crew for today
 						div(id="currentcrew")
-			div(class="row")
-				div(class="span12")
+			div(class="row-fluid")
+				div(class="span8 offset2")
 					div(id="callentrytablediv")
 	script(src="/javascripts/mainscripts.js")

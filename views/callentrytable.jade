@@ -13,7 +13,6 @@ block content
 				div(class="span8 offset2")
 					table(id="callentrylog")
 						tr
-							th Run ID
 							th Call Time/Date
 							th In Service Time/Date
 							th Call Type
@@ -26,9 +25,8 @@ block content
 							th Run Number
 						each callentry in callentries
 							tr
-								td=callentry.runid
-								td=callentry.timeofcall
-								td=callentry.timeinservice
+								td #{callentry.timeofcall.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'')}
+								td #{callentry.timeinservice.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'')}
 								td=callentry.calltype
 								td=callentry.calllocation
 								td=callentry.calldestination

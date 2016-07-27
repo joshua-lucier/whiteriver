@@ -4,7 +4,7 @@ block content
 	script(src="/javascripts/adminscripts.js")
 	div(class="HomeContainer")
 		div(class="Inner")
-			div(class="row")
+			div(class="row-fluid")
 				div(class="span12")
 					h1 #{username}'s Administrator Console
 					h4.message #{message}
@@ -18,24 +18,28 @@ block content
 				div(class="span3")
 					h2 
 						a(href="/admin/callentrytable") Call Entry Log
-			div(class="row adminconsole")
+			div(class="row-fluid adminconsole")
 				div(class="span3")
-					h2 Trucks
-					div.button
-						a(href="/admin/addtruck") Add Truck
-					div(id="trucklist",class="span3",class="list")
+					div
+						h2 Trucks
+						div.button
+							a(href="/admin/addtruck") Add Truck
+					div(id="trucklist",class="list")
 				div(class="span3")
-					h2 Tasks
-					div.button
-						a(href="/admin/addtaskform") Add Task
-					div(id="tasklist",class="span3",class="list")
+					div
+						h2 Tasks
+						div.button
+							a(href="/admin/addtaskform") Add Task
+					div(id="tasklist",class="list")
 				div(class="span3")
-					h2 Alerts
-					div.button
-						a(href="/admin/addalertform") Add Alert
-					div(id="alertlist",class="span3",class="list")
+					div
+						h2 Alerts
+						div.button
+							a(href="/admin/addalertform") Add Alert
+					div(id="alertlist",class="list")
 				div(class="span3")
-					h2 Admins
-					div.button
-						a(onClick="toggleadminlist(function(){});") Admins
-					div(id="adminlist",class="span3",class="list",style="color: black;") +
+					div
+						h2 Admins
+						div.button
+							a(onClick="toggleadminlist(function(){});") Admins
+					div(id="adminlist",class="list",style="color: black;") +

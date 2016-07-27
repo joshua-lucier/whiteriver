@@ -365,7 +365,7 @@ router.get('/callentrytable',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, CallEntries.RunID, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber desc limit 10;");
+			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, CallEntries.RunID, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber desc limit 6;");
 			query2.on('row', function(row2){
 				callentries.push(row2);
 			});
@@ -383,7 +383,6 @@ router.get('/callentrytable',function(req,res,next){
 				finalhtml = finalhtml + "<tr>";
 				finalhtml = finalhtml + "<th>" + "Time of Call" + "</th>";
 				finalhtml = finalhtml + "<th>" + "Time in Service" + "</th>";
-				finalhtml = finalhtml + "<th>" + "Run ID" + "</th>";
 				finalhtml = finalhtml + "<th>" + "Truck" + "</th>";
 				finalhtml = finalhtml + "<th>" + "Call Type" + "</th>";
 				finalhtml = finalhtml + "<th>" + "Call Location" + "</th>";
@@ -395,9 +394,8 @@ router.get('/callentrytable',function(req,res,next){
 				finalhtml = finalhtml + "</tr>";
 				callentries.forEach(function(callentry){
 					finalhtml = finalhtml + "<tr>";
-					finalhtml = finalhtml + "<td>" + callentry.timeofcall + "</td>";
-					finalhtml = finalhtml + "<td>" + callentry.timeinservice + "</td>";
-					finalhtml = finalhtml + "<td>" + callentry.runid + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.timeofcall.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'') + "</td>";
+					finalhtml = finalhtml + "<td>" + callentry.timeinservice.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'') + "</td>";
 					finalhtml = finalhtml + "<td>" + callentry.truckname + "</td>";
 					finalhtml = finalhtml + "<td>" + callentry.calltype + "</td>";
 					finalhtml = finalhtml + "<td>" + callentry.calllocation + "</td>";
@@ -414,5 +412,4 @@ router.get('/callentrytable',function(req,res,next){
 		});		
 	});
 });
-
 module.exports = router;

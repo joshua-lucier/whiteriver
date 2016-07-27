@@ -40,6 +40,7 @@ router.get('/', function(req,res,next){
 		query.on('end', function(results){
 			done();
 			//clear cookies
+			res.clearCookie('lasttruck', {path: '/'});
 			res.clearCookie('username', {path: '/'});
 			res.clearCookie('password', {path: '/'});
 			res.clearCookie('page', {path: '/'});

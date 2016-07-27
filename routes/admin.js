@@ -591,7 +591,7 @@ router.get('/getalerts',function(req,res,next){
 				done2();
 				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
-					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></input></div>';
+					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><span class="radiospan"></span><label><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></label></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
 				res.send(finalhtml);
@@ -905,7 +905,7 @@ router.get('/callentrytable',function(req,res,next){
 			if(err3){
 				console.error('could not connect to postgres', err);
 			}
-			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, CallEntries.RunID, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber;");
+			var query2 = client2.query("select CallEntryID,s2.StatusTime timeofcall,s1.StatusTime timeinservice, TruckName, CallType, CallLocation, CallDestination, DriverName, PrimaryCare, AdditionalNames, RunNumber from CallEntries,(select * from TruckStatusEntries where Status = 'responding') s2,(select * from TruckStatusEntries where Status = 'service') s1,(select TruckName,Runs.RunID from Trucks,Runs where Trucks.TruckID = Runs.TruckID) s3 where CallEntries.RunID = s1.RunID and CallEntries.RunID = s2.RunID and CallEntries.RunID = s3.RunID order by RunNumber;");
 			query2.on('row', function(row2){
 				callentries.push(row2);
 			});

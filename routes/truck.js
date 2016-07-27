@@ -23,6 +23,7 @@ Authorize = require('./functions').Authorize;
 router.get('/', function(req,res,next){
 	truckid = req.query.truckid;
 	truck = {}; //truck information from the database
+	res.cookie('lasttruck',truckid);
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err3,client2,done2){
@@ -179,7 +180,7 @@ router.post('/newcallentry',function(req,res,next){
 			query2.on('end', function(results){
 				done2();
 				message = username + " made call entry for run: " + req.body.runid;
-				res.redirect('/mobile');
+				res.redirect('/truck?truckid='+req.cookies.lasttruck);
 			});
 			query2.on('error', function(error2){
 				console.log(error2);
