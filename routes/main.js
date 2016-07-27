@@ -312,7 +312,7 @@ router.get('/gettrucks',function(req,res,next){
 			if(err){
 				console.error('could not connect to postgres', err);
 			}
-			var query = client.query("select Trucks.TruckName,Trucks.TruckID,TruckStatusEntries.Status,TruckStatusEntries.StatusTime from Trucks,TruckStatusEntries,Runs where Trucks.TruckID = Runs.TruckID and TruckStatusEntries.RunID = Runs.RunID order by StatusTime desc;");
+			var query = client.query("select Trucks.TruckName,Trucks.TruckID,TruckStatusEntries.Status,TruckStatusEntries.StatusTime from Trucks,TruckStatusEntries,Runs where Trucks.TruckID = Runs.TruckID and TruckStatusEntries.RunID = Runs.RunID order by Trucks.TruckName;");
 			query.on('row', function(row2){
 				//console.log(row);
 				statusentries.push(row2);
