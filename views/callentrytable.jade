@@ -24,7 +24,7 @@ block content
 							th Additional Names
 							th Run Number
 						each callentry in callentries
-							tr
+							tr(class="callentryrow" onclick="location.href = '/admin/editcallentryform?entryid=#{callentry.callentryid}';")
 								td #{callentry.timeofcall.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'')}
 								td #{callentry.timeinservice.toJSON().replace(/-/g,'/').replace(/T/g,' ').replace(/:\d\d.\d\d\dZ/g,'')}
 								td=callentry.calltype

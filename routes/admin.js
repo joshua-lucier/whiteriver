@@ -924,6 +924,100 @@ router.get('/callentrytable',function(req,res,next){
 	});
 });
 
+router.get('/editcallentryform', function(req,res,next){
+	AdminAuthorize(req,res,next,function(id,username){
+		entryid = req.query.entryid;
+		console.log(entryid);
+		entry = {};
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			var query = client.query("select * from CallEntries where CallEntryID=$1;",[entryid]);
+			query.on('row', function(row){
+				entry=row;
+			});
+			query.on('error',function(error){
+				res.render('invalid', {title:'Invalid',message: error});
+			});
+			query.on('end', function(results){
+				console.log(entry);
+				done();
+				names = [];
+				ids = [];
+				var post2_data = querystring.stringify({
+						accid: accid,
+						acckey: acckey,
+						cmd: 'getMembers',
+					});
+				var post2_options = {
+					host: 'secure2.aladtec.com',
+					port: 443,
+					path: '/wrva/xmlapi.php',
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Content-Length': Buffer.byteLength(post2_data)
+					}
+				}
+				var post2_req = https.request(post2_options, function(post2_res){
+					post2_res.setEncoding('utf8');
+					post2_res.on('data',function (chunk2){
+						exclusions = [];
+						var query2 = client.query("select * from Exclusions;");
+						query2.on('row', function(row){
+							exclusions.push(row.memberid);
+						});
+						query2.on('end', function(results2){
+							parseString(chunk2, function(err2, result2){
+								creatorname = '';
+								//console.log(result2.results.members[0].member[0]['$'].id);
+								//console.log(result2.results.members[0].member[0].name[0]);
+								//extract the name of the user from result2
+								result2.results.members[0].member.forEach(function(item){
+									exclusion = false;
+									exclusions.forEach(function(exclusionitem){
+										if(item['$'].id == exclusionitem) exclusion = true;
+									});
+									if(!exclusion){
+										ids.push(item['$'].id);
+										names.push(item.name[0]);
+									}
+								});
+								res.render('editcallentry',{title: 'Edit Call Entry', entry: entry, ids: ids, names: names});
+							});
+						});
+					});
+				});
+				post2_req.write(post2_data);
+				post2_req.end();
+			});
+		});
+	});
+});
+
+router.post('/editcallentry',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		if(req.body.additionalnames=="") additionalnames="none";
+		else additionalnames=req.body.additionalnames;
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err3,client2,done2){
+			console.log('connection complete');
+			if(err3){
+				console.error('could not connect to postgres', err);
+			}
+			var query2 = client2.query("update CallEntries set CallType=$1,CallLocation=$2,CallDestination=$3,DriverName=$4,PrimaryCare=$5,AdditionalNames=$6,RunNumber=$7 where CallEntryID = $8",[req.body.calltype,req.body.calllocation,req.body.calldestination,req.body.drivername,req.body.primarycare,additionalnames,req.body.runnumber,req.body.callentryid]);
+			query2.on('end', function(results){
+				done2();
+				message = username + " made edited entry: " + req.body.callentryid;
+				res.redirect('/admin/callentrytable');
+			});
+			query2.on('error', function(error2){
+				console.log(error2);
+				res.render('invalid', {title: 'Error', message: error2});
+			});
+		});
+	});
+});
+
 router.get('/callentries.csv', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var columns = ['CallEntryID','s2.StatusTime timeofcall','s1.StatusTime timeinservice','CallType','CallLocation','CallDestination','TruckName','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
