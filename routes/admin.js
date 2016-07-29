@@ -72,7 +72,7 @@ router.get('/gettrucks', function(req,res,next){
 				done2();
 				finalhtml = '<form name="deleteTruck" action="/admin/deletetruckprompt" method="post">';
 				trucks.forEach(function(item){
-					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+'"><a href="/admin/edittruckform?truckid='+item.truckid+'">' + item.truckname + '</a></input></div>';
+					finalhtml = finalhtml + '<div class="li"><label><input class="truckradio" type="radio" name="truckgroup" value="'+item.truckname+'"><span></span><a href="/admin/edittruckform?truckid='+item.truckid+'">' + item.truckname + '</a></label></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Truck"></input></form>';
 				res.send(finalhtml);
@@ -521,7 +521,7 @@ router.get("/todaystasks",function(req,res,next){
 						else marked = false;
 					}
 					if(marked==false){
-						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></input></div>';
+						finalhtml = finalhtml + '<div class="li"><label><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><span></span><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></label></div>';
 					}
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
@@ -591,7 +591,7 @@ router.get('/getalerts',function(req,res,next){
 				done2();
 				finalhtml = '<form name="deleteAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
-					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"<a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></div>';
+					finalhtml = finalhtml + '<div class="li"><label for="alert'+item.alertid+'"><input id="alert'+item.alertid+'" class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><span></span><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></label></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
 				res.send(finalhtml);
@@ -732,7 +732,7 @@ router.get('/todaysalerts', function(req,res,next){
 				done2();
 				finalhtml = '<form name="deleteTopAlert" action="/admin/deletealertprompt" method="post">';
 				alerts.forEach(function(item){
-					finalhtml = finalhtml + '<div class="li"><input class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></input></div>';
+					finalhtml = finalhtml + '<div class="li"><label for="alertid'+item.alertid+'"><input id="alertid' + item.alertid +'" class="truckradio" type="radio" name="alertid" value="'+item.alertid+'"><span></span><a href="/admin/editalertform?alertid='+item.alertid+'">' + item.alerttext + '</a></label></div>';
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Alert"></input></form>';
 				res.send(finalhtml);

@@ -577,7 +577,7 @@ module.exports = {
 							else marked = false;
 						}
 						if(marked) finalhtml=finalhtml+"<s>";
-						finalhtml = finalhtml + '<div class="li"><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></input></div>';
+						finalhtml = finalhtml + '<div class="li"><label><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><span></span><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></label></div>';
 						if(marked) finalhtml=finalhtml+"</s>";
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
