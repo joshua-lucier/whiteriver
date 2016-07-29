@@ -421,3 +421,7 @@ span {
 [type="radio"]:focus + span::before {
 	box-shadow: 0 0 0 0.15em #000;
 }
+
+label {
+	display: inline-block;
+}

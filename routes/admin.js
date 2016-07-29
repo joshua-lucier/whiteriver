@@ -521,7 +521,7 @@ router.get("/todaystasks",function(req,res,next){
 						else marked = false;
 					}
 					if(marked==false){
-						finalhtml = finalhtml + '<div class="li"><label><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><span></span><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></label></div>';
+						finalhtml = finalhtml + '<div class="li"><label><input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><span></span><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a></label><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></div>';
 					}
 				});
 				finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
