@@ -350,6 +350,7 @@ a, a:active, a:hover, a:visited, a:link{
 	display: inline-block;
 	height: 1em;
 	width: 1em;
+	margin-left: 1em;
 }
 
 #currenttrucks {
@@ -404,25 +405,19 @@ span {
 
 [type="radio"] + span::before {
   content: '';
+  background: url(/images/emptycheck.png) no-repeat;
   display: inline-block;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.25em;
-  border-radius: 1em;
-  border: 0.125em solid #fff;
-  box-shadow: 0 0 0 0.15em #000;
-  margin-right: 0.75em;
+  width: 18px;
+  height: 18px;
+  bottom: 0px;
   transition: 0.5s ease all;
+  margin-right: 1em;
 }
 
 [type="radio"]:checked + span::before {
-  background: green;
-  box-shadow: 0 0 0 0.25em #000;
+  background: url(/images/checked.png) no-repeat;
 }
 
-[type="radio"]:focus + span::after {
-  content: '\0020\2190';
-  font-size: 1.5em;
-  line-height: 1;
-  vertical-align: -0.125em;
+[type="radio"]:focus + span::before {
+	box-shadow: 0 0 0 0.15em #000;
 }

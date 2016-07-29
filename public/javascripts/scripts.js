@@ -17,13 +17,3 @@ $("body").ready(function(){
 			$(this).next().remove();
 	}); 
 });
-
-$('input[type="radio"] + span::before').html('<img src="/images/emptycheck.png');
-$('input[type="radio"]:checked + span::before').html('<img src="/images/checked.png">');
-
-$('input[type="radio"]').click(function(){
-	$('input[type="radio"] + span::before').html('<img src="/images/emptycheck.png');
-	if($($(this)).is(':checked')) {
-
-	}
-});
