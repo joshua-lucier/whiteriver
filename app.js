@@ -15,6 +15,7 @@ var main = require('./routes/main');
 var truck = require('./routes/truck');
 var logout = require('./routes/logout');
 var database = require('./routes/database');
+var reports = require('./routes/reports');
 
 var app = express();
 
@@ -46,6 +47,7 @@ app.use('/main', main);
 app.use('/truck', truck);
 app.use('/logout', logout);
 app.use('/database', database);
+app.use('/reports',reports);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
