@@ -1,3 +1,9 @@
+/*Scripts for main dashboard
+By Joshua Lucier
+MIT Licensed
+*/
+
+//Generates current crew
 function currentcrew(callback){
 	$.get("/main/getschedules", function(data,status){
 		$("#currentcrew").html(data);
@@ -5,6 +11,7 @@ function currentcrew(callback){
 	});
 }
 
+//Generates current alerts
 function currentalerts(callback){
 	$.get("/main/getalerts", function(data,status){
 		$("#currentalerts").html(data);
@@ -12,6 +19,7 @@ function currentalerts(callback){
 	});
 }
 
+//Generates current tasks
 function currenttasks(callback){
 	$.get("/main/gettasks", function(data,status){
 		$("#currenttasks").html(data);
@@ -19,6 +27,7 @@ function currenttasks(callback){
 	});
 }
 
+//Generates current truck status
 function currenttrucks(callback){
 	$.get("/main/gettrucks", function(data,status){
 		$("#currenttrucks").html(data);
@@ -26,6 +35,7 @@ function currenttrucks(callback){
 	});
 }
 
+//Generates call entry table
 function callentrytable(callback){
 	$.get("/main/callentrytable", function(data,status){
 		$("#callentrytablediv").html(data);
@@ -33,7 +43,7 @@ function callentrytable(callback){
 	});
 }
 
-
+//Generates all the content for the main page
 function loadmainpage(callback){
 		currentalerts(function(){
 			currenttasks(function(){
@@ -47,20 +57,24 @@ function loadmainpage(callback){
 		});
 }
 
+//Calls loadmainpage when page initially opens up
 $("body").ready(function(){
 	loadmainpage(function(){
 		currentcrew(function(){});
 	});
 });
 
+//sets up an interval timer for main page to refresh every 10 seconds
 listinterval = setInterval(function(){
 	loadmainpage(function(){});
 }, 10000);
 
+//A separate interval timer because the API cannot handle one call every 10 seconds.
 crewinterval = setInterval(function(){
 	currentcrew(function(){});
 },300000);
 
+//This displays the time and date at the top of the main page
 function updateTimeDate(){
 	date = new Date();
 	month = [];
