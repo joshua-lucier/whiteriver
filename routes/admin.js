@@ -1,6 +1,7 @@
 /*
 Admin Page
 By Joshua Lucier
+Last modified 8/24/2016
 MIT Licensed 
 */
 
@@ -44,19 +45,21 @@ router.get('/', function(req, res, next){
 	});
 });
 
+//Generates add truck form
 router.get('/addtruck', function(req,res,next){
 	AdminAuthorize(req,res,next,function(auth,username){	
 		res.render('addtruck', {title: 'Add a Truck', username: username});
 	});
 });
 
+//Adds a truck and returns to the admin page
 router.post('/finishtruck', function(req,res,next){
 	AddTruck(req,res,next,function(message){
-
 		res.render('admin',{title: 'Admin', message:message});
 	});
 });
 
+//Gets the trucks for the admin page
 router.get('/gettrucks', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		//Get trucks from database as an object
@@ -89,6 +92,7 @@ router.get('/gettrucks', function(req,res,next){
 	});
 });
 
+//prompts to delete truck before finalizing
 router.post('/deletetruckprompt', function(req,res,next){
 	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 	pg.connect(connectionString, function(err,client,done){
@@ -117,12 +121,14 @@ router.post('/deletetruckprompt', function(req,res,next){
 	});
 });
 
+//deletes the truck
 router.post('/deletetruck', function(req,res,next){
 	DeleteTruck(req,res,next,function(message){
 		res.render('admin',{title: ' Admin', message: message, username: username});
 	});
 });
 
+//generates edit truck form
 router.get('/edittruckform', function(req,res,next){
 	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 	pg.connect(connectionString, function(err,client,done){
@@ -151,12 +157,14 @@ router.get('/edittruckform', function(req,res,next){
 	});
 });
 
+//edits the truck
 router.post('/edittruck', function(req,res,next){
 	EditTruck(req,res,next,function(message){
 		res.render('admin',{title: 'Admin',message: message, username: username});
 	});
 });
 
+//Adds a task form
 router.get('/addtaskform', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		names = [];
@@ -214,16 +222,19 @@ router.get('/addtaskform', function(req,res,next){
 	});
 });
 
+//Add a task
 router.post('/addtask',function(req,res,next){
 	AddTask(req,res,next,function(message){
 		res.render('admin',{title: 'Admin Page',message: message});
 	});
 });
 
+//get tasks form
 router.get('/gettasks',function(req,res,next){
 	GetTasks(req,res,next);
 });
 
+//toggles admin mark
 router.get('/togglemark',function(req,res,next){
 	taskid=req.query.taskid;
 	AdminAuthorize(req,res,next,function(id,username){
@@ -282,6 +293,7 @@ router.get('/togglemark',function(req,res,next){
 	});
 });
 
+//prompts to delete a task
 router.post('/deletetaskprompt', function(req,res,next){
 	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 	pg.connect(connectionString, function(err,client,done){
@@ -310,6 +322,7 @@ router.post('/deletetaskprompt', function(req,res,next){
 	});
 });
 
+//delete task
 router.post('/deletetask', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -335,6 +348,7 @@ router.post('/deletetask', function(req,res,next){
 	});
 });
 
+//edit task form
 router.get('/edittaskform', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -412,6 +426,7 @@ router.get('/edittaskform', function(req,res,next){
 	});
 });
 
+//edit the task
 router.post("/edittask",function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -440,6 +455,7 @@ router.post("/edittask",function(req,res,next){
 	});
 });
 
+//generate list of current tasks
 router.get("/todaystasks",function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		marked=false;
@@ -539,12 +555,14 @@ router.get("/todaystasks",function(req,res,next){
 	});
 });
 
+//Add alert form
 router.get('/addalertform',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		res.render('addalert',{title: 'Add an alert'});
 	});
 });
 
+//Adds the alert
 router.post('/addalert',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		alertcreator = id;
@@ -574,6 +592,7 @@ router.post('/addalert',function(req,res,next){
 	});
 });
 
+//gets list of alerts
 router.get('/getalerts',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 				//Get trucks from database as an object
@@ -608,6 +627,7 @@ router.get('/getalerts',function(req,res,next){
 	});
 });
 
+//edit alert form
 router.get('/editalertform',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -636,6 +656,7 @@ router.get('/editalertform',function(req,res,next){
 	});
 });
 
+//edits the alert
 router.post('/editalert',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -662,6 +683,7 @@ router.post('/editalert',function(req,res,next){
 	});
 });
 
+//delete alert prompt
 router.post('/deletealertprompt',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -688,6 +710,7 @@ router.post('/deletealertprompt',function(req,res,next){
 	});
 });
 
+//deletes the alert
 router.post('/deletealert',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -711,6 +734,7 @@ router.post('/deletealert',function(req,res,next){
 	});
 });
 
+//generates list of current alerts
 router.get('/todaysalerts', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -749,6 +773,7 @@ router.get('/todaysalerts', function(req,res,next){
 	});
 });
 
+//Gets all the possible admins
 router.get('/getadmins',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -839,6 +864,7 @@ router.get('/getadmins',function(req,res,next){
 	});
 });
 
+//Toggles a user as an admin or not
 router.get('/toggleadmin',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		memberid = req.query.memberid;
@@ -871,6 +897,7 @@ router.get('/toggleadmin',function(req,res,next){
 	});
 });
 
+//Toggles a user to be excluded from drop down lists
 router.get('/toggleexclude',function(req,res,next){
 	console.log('toggleexclude');
 	AdminAuthorize(req,res,next,function(id,username){
@@ -903,6 +930,7 @@ router.get('/toggleexclude',function(req,res,next){
 	});
 });
 
+//Generates call entry table
 router.get('/callentrytable',function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		callentries = [];
@@ -932,6 +960,7 @@ router.get('/callentrytable',function(req,res,next){
 	});
 });
 
+//Edit a call entry
 router.get('/editcallentryform', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		entryid = req.query.entryid;
@@ -1002,6 +1031,7 @@ router.get('/editcallentryform', function(req,res,next){
 	});
 });
 
+//Finalize edit of call entry
 router.post('/editcallentry',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		if(req.body.additionalnames=="") additionalnames="none";
@@ -1026,6 +1056,7 @@ router.post('/editcallentry',function(req,res,next){
 	});
 });
 
+//Generate csv of call entries
 router.get('/callentries.csv', function(req,res,next){
 	AdminAuthorize(req,res,next,function(id,username){
 		var columns = ['CallEntryID','s2.StatusTime timeofcall','s1.StatusTime timeinservice','CallType','CallLocation','CallDestination','TruckName','DriverName','PrimaryCare','AdditionalNames','RunNumber'];
