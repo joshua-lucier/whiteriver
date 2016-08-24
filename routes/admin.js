@@ -1,3 +1,9 @@
+/*
+Admin Page
+By Joshua Lucier
+MIT Licensed 
+*/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');
@@ -21,6 +27,8 @@ router.use(cookieSession({
   name: 'whiteriver',
   keys: [secret]
 }));
+
+//Load functions used in Admin Section
 AddTruck = require('./functions').AddTruck;
 GetTrucks = require('./functions').GetTrucks;
 DeleteTruck = require('./functions').DeleteTruck;
