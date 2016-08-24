@@ -40,13 +40,26 @@
 	"buffers":
 	[
 		{
-			"contents": "var router = express.Router();\nrouter.use(cookieParser(secret));\nrouter.use(cookieSession({\n  name: 'whiteriver',\n  keys: [secret]\n}));\nAdminAuthorize = require('./functions').AdminAuthorize;\n\nrouter.get('/',function(req,res,next){\n	AdminAuthorize(req,res,next,function(id,username){\n		res.render('selectreport',{title: 'Select Report'});\n	});\n});\n\nrouter.get('/pie', function(req,res,next){\n	\n});\n",
 			"file": "routes/reports.js",
-			"file_size": 359,
-			"file_write_time": 131159366451212144,
 			"settings":
 			{
-				"buffer_size": 398,
+				"buffer_size": 2796,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app.js",
+			"settings":
+			{
+				"buffer_size": 2261,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "views/selectreport.jade",
+			"settings":
+			{
+				"buffer_size": 3216,
 				"line_ending": "Windows"
 			}
 		},
@@ -115,14 +128,6 @@
 			}
 		},
 		{
-			"file": "public/javascripts/jquery.datetimepicker.full.min.js",
-			"settings":
-			{
-				"buffer_size": 53456,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "public/stylesheets/style.css",
 			"settings":
 			{
@@ -134,7 +139,7 @@
 			"file": "views/admin.jade",
 			"settings":
 			{
-				"buffer_size": 1227,
+				"buffer_size": 1301,
 				"line_ending": "Windows"
 			}
 		},
@@ -348,7 +353,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -357,15 +362,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 398,
+						"buffer_size": 2796,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								285,
-								285
+								551,
+								551
 							]
 						],
 						"settings":
@@ -377,11 +382,69 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2261,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "views/selectreport.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								511,
+								511
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 132.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "views/deletetruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -406,11 +469,11 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 4,
 					"file": "routes/admin.js",
 					"semi_transient": false,
 					"settings":
@@ -422,8 +485,8 @@
 						"selection":
 						[
 							[
-								1000,
-								945
+								551,
+								528
 							]
 						],
 						"settings":
@@ -432,14 +495,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 132.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
 					"file": "views/callentrytable.jade",
 					"semi_transient": false,
 					"settings":
@@ -464,11 +527,11 @@
 						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 6,
 					"file": "views/deletetask.jade",
 					"semi_transient": false,
 					"settings":
@@ -493,11 +556,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 7,
 					"file": "routes/main.js",
 					"semi_transient": false,
 					"settings":
@@ -521,11 +584,11 @@
 						"translation.y": 6418.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 8,
 					"file": "public/javascripts/mainscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -549,11 +612,11 @@
 						"translation.y": 1100.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 9,
 					"file": "public/javascripts/scripts.js",
 					"semi_transient": false,
 					"settings":
@@ -578,11 +641,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 10,
 					"file": "public/javascripts/adminscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -607,39 +670,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "public/javascripts/jquery.datetimepicker.full.min.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 53456,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "public/stylesheets/style.css",
 					"semi_transient": false,
 					"settings":
@@ -664,24 +699,24 @@
 						"translation.y": 8882.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 12,
 					"file": "views/admin.jade",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1227,
+						"buffer_size": 1301,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								924,
-								924
+								141,
+								141
 							]
 						],
 						"settings":
@@ -693,11 +728,11 @@
 						"translation.y": 95.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 13,
 					"file": "views/addtruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -722,11 +757,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 14,
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
@@ -751,11 +786,11 @@
 						"translation.y": 404.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 15,
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -779,11 +814,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 16,
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -795,8 +830,8 @@
 						"selection":
 						[
 							[
-								475,
-								475
+								1589,
+								1565
 							]
 						],
 						"settings":
@@ -805,14 +840,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 455.0,
+						"translation.y": 792.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 17,
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -841,7 +876,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 18,
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -853,8 +888,8 @@
 						"selection":
 						[
 							[
-								877,
-								951
+								0,
+								78
 							]
 						],
 						"settings":
@@ -863,10 +898,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 153.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]

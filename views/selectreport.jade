@@ -7,33 +7,35 @@ block content
 			div(id="pieselect")
 				h2 Pie Chart Generator
 				form(action="/reports/pie" method="get")
-					label Pie Type
-					select(name="pietype")
-						option(value="calltype") Call Type
-						option(value="calllocation") Call Location
-						option(value="destination") Destination
-						option(value="unit") Unit
-						option(value="driver") Driver
-						option(value="provider") Primary Care Provider
+					label Pie Type:
+						select(name="pietype")
+							option(value="calltype") Call Type
+							option(value="calllocation") Call Location
+							option(value="destination") Destination
+							option(value="unit") Unit
+							option(value="driver") Driver
+							option(value="provider") Primary Care Provider
 					input(type="submit", value="Generate")
 			div(id="generalreportselect")
 				h2 General Report Generator
 				form(action"/reports/general" method="post")
 					label Driver:
-						select(name="drivers",multiselect)
+						select(name="drivers",multiple)
 							for name in names
 								option(value="#{name}") #{name}
 					br
 					label Provider:
-						select(name="provider", multiselect)
+						select(name="provider", multiple)
 							for name in names
 								option(value="#{name}") #{name}
+					br
 					label Units:
-						select(name="units", multiselect)
+						select(name="units", multiple)
 							for truck in trucks
 								option(value="#{truck.truckname}") #{truck.truckname}
+					br
 					label Call Types:
-						select(name="calltypes", multiselect)
+						select(name="calltypes", multiple)
 							option(value="Trauma") Trauma
 							option(value="Medical") Medical
 							option(value="Transfer") Transfer
@@ -47,7 +49,7 @@ block content
 							option(value="Critical Care Transfer") Critical Care Transfer
 					br
 					label Call Locations:
-						select(name="calllocations", id="calllocations", multiselect)
+						select(name="calllocations", id="calllocations", multiple)
 							option(value="Barnard") Barnard
 							option(value="Bethel") Bethel
 							option(value="Braintree") Braintree
@@ -66,7 +68,7 @@ block content
 							option(value="Other") Other
 					br
 					label Call Destination:
-						select(name="calldestinations", id="calldestinations", multiselect)
+						select(name="calldestinations", id="calldestinations", multiple)
 							option(value="No Transport") No Transport
 							option(value="GMC") GMC
 							option(value="DHMC") DHMC
@@ -81,3 +83,5 @@ block content
 							option(value="Nursing Home") Nursing Home
 							option(value="Landing Zone") Landing Zone
 							option(value="Other Destination") Other Destination
+					br
+					input(type="submit",value="Generate")

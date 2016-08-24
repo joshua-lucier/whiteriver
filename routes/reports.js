@@ -1,9 +1,9 @@
+var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
+var express = require('express');
+var querystring = require('querystring');
+var https = require('https');
 var router = express.Router();
-router.use(cookieParser(secret));
-router.use(cookieSession({
-  name: 'whiteriver',
-  keys: [secret]
-}));
 var secret = process.env.secret;
 var accid = process.env.accid;
 var acckey = process.env.key;
@@ -12,6 +12,12 @@ var pgpassword = process.env.pgpassword;
 var pghost = process.env.pghost;
 var pgdatabase = process.env.pgdatabase;
 var parseString = require('xml2js').parseString;
+var pg = require('pg');
+router.use(cookieParser(secret));
+router.use(cookieSession({
+  name: 'whiteriver',
+  keys: [secret]
+}));
 AdminAuthorize = require('./functions').AdminAuthorize;
 
 router.get('/',function(req,res,next){
@@ -81,3 +87,6 @@ router.get('/',function(req,res,next){
 router.get('/pie', function(req,res,next){
 	
 });
+
+
+module.exports = router;
