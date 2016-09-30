@@ -107,11 +107,11 @@ function ClearAdmins(callback){
 */
 function ToggleAdminList(callback){
 	if($("#adminlist").html() == '+'){
-		listadmins(function(){
+		ListAdmins(function(){
 			callback();
 		});
 	} else {
-		clearadmins(function(){
+		ClearAdmins(function(){
 			callback();
 		});
 	}
@@ -125,11 +125,11 @@ function ToggleAdminList(callback){
 */
 function DisplayAdmin(callback){
 	if($("#adminlist").html()=='+'){
-		clearadmins(function(){
+		ClearAdmins(function(){
 			callback();
 		});
 	} else {
-		listadmins(function(){
+		ListAdmins(function(){
 			callback();
 		});
 	}

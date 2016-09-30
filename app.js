@@ -81,6 +81,6 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port ' + port);
 });
 module.exports = app;

@@ -581,7 +581,7 @@ module.exports = {
 						if(marked) finalhtml=finalhtml+"<s>";
 						finalhtml = finalhtml + '<input class="taskradio" type="radio" name="taskid" value="'+item.taskid+'"><span></span><a href="/admin/edittaskform?taskid='+item.taskid+'">' + item.title + '</a>';
 						if(marked) finalhtml=finalhtml+"</s>";
-						finalhtml = finalhtml + '</label><a onClick="togglemark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></div>';
+						finalhtml = finalhtml + '</label><a onClick="ToggleMark('+item.taskid+');"><img src="/images/check.png" class="checkmark"></a></div>';
 					});
 					finalhtml = finalhtml + '<input type="submit" value="Delete Task"></input></form>';
 					res.send(finalhtml);

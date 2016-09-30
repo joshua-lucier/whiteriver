@@ -1,3 +1,8 @@
+/*Scripts for entire site
+By Joshua Lucier
+MIT Licensed
+*/
+
 $.ajaxSetup({ cache: false });
 
 $("body").ready(function(){
