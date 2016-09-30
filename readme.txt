@@ -39,3 +39,5 @@ var ImAPain /** These are some more details */
 var Hello ///< Hello This is a description of this variable
 
 
+2  Cloud 9 IDE
+	1.  Press delete at the end of the username and password to log in to heroku and git.
