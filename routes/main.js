@@ -356,7 +356,7 @@ router.get('/gettrucks',function(req,res,next){
 });
 
 router.get('/callentrytable',function(req,res,next){
-	AdminAuthorize(req,res,next,function(id,username){
+	Authorize(req,res,next,function(id,username){
 		callentries = [];
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
 		pg.connect(connectionString, function(err3,client2,done2){

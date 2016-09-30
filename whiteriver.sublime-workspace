@@ -40,7 +40,14 @@
 	"buffers":
 	[
 		{
+<<<<<<< HEAD
 			"file": "routes/reports.js",
+=======
+			"contents": "var cookieParser = require('cookie-parser');\nvar cookieSession = require('cookie-session');\nvar express = require('express');\nvar querystring = require('querystring');\nvar https = require('https');\nvar router = express.Router();\nvar secret = process.env.secret;\nvar accid = process.env.accid;\nvar acckey = process.env.key;\nvar pgusername = process.env.pgusername;\nvar pgpassword = process.env.pgpassword;\nvar pghost = process.env.pghost;\nvar pgdatabase = process.env.pgdatabase;\nvar parseString = require('xml2js').parseString;\nvar pg = require('pg');\nrouter.use(cookieParser(secret));\nrouter.use(cookieSession({\n  name: 'whiteriver',\n  keys: [secret]\n}));\nAdminAuthorize = require('./functions').AdminAuthorize;\n\nrouter.get('/',function(req,res,next){\n	AdminAuthorize(req,res,next,function(id,username){\n		names = [];\n		ids = [];\n		exclusions = [];\n		trucks = [];\n		//Get employee roster\n		var post2_data = querystring.stringify({\n			accid: accid,\n			acckey: acckey,\n			cmd: 'getMembers',\n		});\n		var post2_options = {\n			host: 'secure2.aladtec.com',\n			port: 443,\n			path: '/wrva/xmlapi.php',\n			method: 'POST',\n			headers: {\n				'Content-Type': 'application/x-www-form-urlencoded',\n				'Content-Length': Buffer.byteLength(post2_data)\n			}\n		}\n		var post2_req = https.request(post2_options, function(post2_res){\n			post2_res.setEncoding('utf8');\n			post2_res.on('data',function (chunk2){\n				var connectionString = \"postgres:\" + pgusername +\":\" + pgpassword + \"@\" + pghost +\"/\" + pgdatabase;\n				pg.connect(connectionString, function(err,client,done){\n					var query2 = client.query(\"select * from Exclusions;\");\n					query2.on('row', function(row){\n						exclusions.push(row.memberid);\n					});\n					query2.on('end', function(results2){\n						parseString(chunk2, function(err2, result2){\n							creatorname = '';\n							//console.log(result2.results.members[0].member[0]['$'].id);\n							//console.log(result2.results.members[0].member[0].name[0]);\n							//extract the name of the user from result2\n							result2.results.members[0].member.forEach(function(item){\n								exclusion = false;\n								exclusions.forEach(function(exclusionitem){\n									if(item['$'].id == exclusionitem) exclusion = true;\n								});\n								if(!exclusion){\n									ids.push(item['$'].id);\n									names.push(item.name[0]);\n								}\n							});\n							query3 = client.query(\"select * from Trucks;\");\n							query3.on('row', function(row2){\n								trucks.push(row2);\n							});\n							query3.on('end', function(results3){\n								res.render('selectreport',{title: 'Select Report',ids: ids, names: names, trucks: trucks});\n							});\n						});\n					});\n				});\n			});\n		});\n		post2_req.write(post2_data);\n		post2_req.end();\n	});\n});\n\nrouter.get('/pie', function(req,res,next){\n	\n});\n\n\nmodule.exports = router;",
+			"file": "routes/reports.js",
+			"file_size": 2887,
+			"file_write_time": 131160097571341064,
+>>>>>>> master
 			"settings":
 			{
 				"buffer_size": 2796,
@@ -51,23 +58,37 @@
 			"file": "app.js",
 			"settings":
 			{
+<<<<<<< HEAD
 				"buffer_size": 2261,
+=======
+				"buffer_size": 2189,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"contents": "extends layout\n\nblock content\n	div(class=\"HomeContainer\")\n		div(class=\"Inner\")\n			h1 Report Generator\n			div(id=\"pieselect\")\n				h2 Pie Chart Generator\n				form(action=\"/reports/pie\" method=\"get\")\n					label Pie Type:\n						select(name=\"pietype\")\n							option(value=\"calltype\") Call Type\n							option(value=\"calllocation\") Call Location\n							option(value=\"destination\") Destination\n							option(value=\"unit\") Unit\n							option(value=\"driver\") Driver\n							option(value=\"provider\") Primary Care Provider\n					input(type=\"submit\", value=\"Generate\")\n			div(id=\"generalreportselect\")\n				h2 General Report Generator\n				form(action\"/reports/general\" method=\"post\")\n					label Driver:\n						select(name=\"drivers\",multiple)\n							for name in names\n								option(value=\"#{name}\") #{name}\n					br\n					label Provider:\n						select(name=\"provider\", multiple)\n							for name in names\n								option(value=\"#{name}\") #{name}\n					br\n					label Units:\n						select(name=\"units\", multiple)\n							for truck in trucks\n								option(value=\"#{truck.truckname}\") #{truck.truckname}\n					br\n					label Call Types:\n						select(name=\"calltypes\", multiple)\n							option(value=\"Trauma\") Trauma\n							option(value=\"Medical\") Medical\n							option(value=\"Transfer\") Transfer\n							option(value=\"Motor Vehicle Accident\") Motor Vehicle Accident\n							option(value=\"SCT\") SCT\n							option(value=\"Paramedic Intercept\") Paramedic Intercept\n							option(value=\"Fire Standby\") Fire Standby\n							option(value=\"Mutual Aid\") Mutual Aid\n							option(value=\"Medical Alarm Activation\") Medical Alarm Activation\n							option(value=\"Public Assist\") Public Assist\n							option(value=\"Critical Care Transfer\") Critical Care Transfer\n					br\n					label Call Locations:\n						select(name=\"calllocations\", id=\"calllocations\", multiple)\n							option(value=\"Barnard\") Barnard\n							option(value=\"Bethel\") Bethel\n							option(value=\"Braintree\") Braintree\n							option(value=\"Brookfield\") Brookfield\n							option(value=\"East Granville\") East Granville\n							option(value=\"GMC - BC\") GMC - BC\n							option(value=\"GMC - ED\") GMC - ED\n							option(value=\"GMC - HP\") GMC - HP\n							option(value=\"Morgan Orchards\") Morgan Orchards\n							option(value=\"Granville\") Granville\n							option(value=\"Hancock\") Hancock\n							option(value=\"Pittsfield\") Pittsfield\n							option(value=\"Randolph\") Randolph\n							option(value=\"Rochester\") Rochester\n							option(value=\"Stockbridge\") Stockbridge\n							option(value=\"Other\") Other\n					br\n					label Call Destination:\n						select(name=\"calldestinations\", id=\"calldestinations\", multiple)\n							option(value=\"No Transport\") No Transport\n							option(value=\"GMC\") GMC\n							option(value=\"DHMC\") DHMC\n							option(value=\"CVMC\") CVMC\n							option(value=\"UVMMC\") UVMMC\n							option(value=\"PMC\") PMC\n							option(value=\"PRMC\") PRMC\n							option(value=\"VAMC\") VAMC\n							option(value=\"MAH\") MAH\n							option(value=\"Morgan Orchards\") Morgan Orchards\n							option(value=\"Home\") Home\n							option(value=\"Nursing Home\") Nursing Home\n							option(value=\"Landing Zone\") Landing Zone\n							option(value=\"Other Destination\") Other Destination\n					br\n					input(type=\"submit\",value=\"Generate\")\n",
+			"file": "views/selectreport.jade",
+			"file_size": 3303,
+			"file_write_time": 131160100143112549,
+			"settings":
+			{
+				"buffer_size": 3216,
+>>>>>>> master
+				"line_ending": "Windows"
+			}
+		},
+		{
+<<<<<<< HEAD
 			"file": "views/selectreport.jade",
 			"settings":
 			{
 				"buffer_size": 3216,
-				"line_ending": "Windows"
-			}
-		},
-		{
+=======
 			"file": "views/deletetruck.jade",
 			"settings":
 			{
 				"buffer_size": 866,
+>>>>>>> master
 				"line_ending": "Windows"
 			}
 		},
@@ -75,7 +96,19 @@
 			"file": "routes/admin.js",
 			"settings":
 			{
+				"buffer_size": 38226,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "routes/functions.js",
+			"settings":
+			{
+<<<<<<< HEAD
 				"buffer_size": 39133,
+=======
+				"buffer_size": 23914,
+>>>>>>> master
 				"line_ending": "Windows"
 			}
 		},
@@ -99,7 +132,7 @@
 			"file": "routes/main.js",
 			"settings":
 			{
-				"buffer_size": 15552,
+				"buffer_size": 15547,
 				"line_ending": "Windows"
 			}
 		},
@@ -126,15 +159,24 @@
 			"file": "public/javascripts/truckscripts.js",
 			"settings":
 			{
+<<<<<<< HEAD
 				"buffer_size": 1897,
+=======
+				"buffer_size": 1521,
+>>>>>>> master
 				"line_ending": "Windows"
 			}
 		},
 		{
 			"contents": "/*\nScripts for admin page\nBy Joshua Lucier\nMIT Licensed\n*/\n\n//lists trucks under #trucklist div\nfunction listtrucks(callback){\n	$.get(\"/admin/gettrucks\", function(data,status){\n		$(\"#trucklist\").html(data);\n		callback();\n	});\n}\n\n//lists tasks under #tasklist div\nfunction listtasks(callback){\n	$.get(\"/admin/gettasks\", function(data,status){\n		$(\"#tasklist\").html(data);\n		callback();\n	});\n}\n\n//lists alerts under #alertlist div\nfunction listalerts(callback){\n	$.get(\"/admin/getalerts\", function(data,status){\n		$(\"#alertlist\").html(data);\n		callback();\n	});\n}\n\n//lists Current tasks under todaystasks div\nfunction todaystasks(callback){\n	$.get(\"/admin/todaystasks\", function(data,status){\n		$(\"#todaystasks\").html(data);\n		callback();\n	});\n}\n\n//lists current alerts\nfunction todaysalerts(callback){\n	$.get(\"/admin/todaysalerts\", function(data,status){\n		$(\"#todaysalerts\").html(data);\n		callback();\n	});\n}\n\n//generates the list of users to mark as admins or exclude from lists\nfunction listadmins(callback){\n	$.get(\"/admin/getadmins\", function(data,status){\n		$(\"#adminlist\").html(data);\n		callback();\n	});\n}\n\n//this contracts the admins list\nfunction clearadmins(callback){\n	$(\"#adminlist\").html('+');\n	callback();\n}\n\n//determines if the admin list is expanded or not\nfunction toggleadminlist(callback){\n	if($(\"#adminlist\").html() == '+'){\n		listadmins(function(){\n			callback();\n		});\n	} else {\n		clearadmins(function(){\n			callback();\n		});\n	}\n}\n\n//displays the admin list on load page\nfunction displayadmin(callback){\n	if($(\"#adminlist\").html()=='+'){\n		clearadmins(function(){\n			callback();\n		});\n	} else {\n		listadmins(function(){\n			callback();\n		});\n	}\n}\n\n//Called when page first comes up.  Displays all content\nfunction loadpage(callback){\n	listtasks(function(){\n		todaystasks(function(){\n			listtrucks(function(){\n				listalerts(function(){\n					todaysalerts(function(){\n						displayadmin(function(){\n						});\n					});\n				});\n			});\n		});\n	});\n}\n\n//calls load page\n$(\"body\").ready(function(){\n	loadpage(function(){});\n});\n\n//creates task interval which calls load page every 30 seconds\ntasklistinterval = setInterval(function(){\n	loadpage(function(){});\n}, 30000);\n\n//toggles a check mark under task list\nfunction togglemark(id){\n	togglemarky = \"/admin/togglemark?taskid=\" + id;\n	$.get(togglemarky,function(data,status){\n		listtasks(function(){\n			todaystasks(function(){});\n		});\n	});\n}\n\n//toggles admin mark\nfunction toggleadmin(id){\n	toggleadminy = \"/admin/toggleadmin?memberid=\" + id;\n	$.get(toggleadminy,function(data,status){\n		displayadmin(function(){});\n	});\n}\n\n//toggles exclusion mark\nfunction toggleexclude(id){\n	toggleexcludey = \"/admin/toggleexclude?memberid=\" + id;\n	$.get(toggleexcludey,function(data,status){\n		displayadmin(function(){});\n	});\n}\n\n\n",
 			"file": "public/javascripts/adminscripts.js",
+<<<<<<< HEAD
 			"file_size": 2853,
 			"file_write_time": 131165317858659887,
+=======
+			"file_size": 2248,
+			"file_write_time": 131183574426226333,
+>>>>>>> master
 			"settings":
 			{
 				"buffer_size": 2780,
@@ -198,6 +240,17 @@
 			}
 		},
 		{
+<<<<<<< HEAD
+=======
+			"file": "routes/truck.js",
+			"settings":
+			{
+				"buffer_size": 21590,
+				"line_ending": "Windows"
+			}
+		},
+		{
+>>>>>>> master
 			"file": "views/addalert.jade",
 			"settings":
 			{
@@ -367,7 +420,11 @@
 	"groups":
 	[
 		{
+<<<<<<< HEAD
 			"selected": 4,
+=======
+			"selected": 8,
+>>>>>>> master
 			"sheets":
 			[
 				{
@@ -391,12 +448,14 @@
 						{
 							"auto_name": "",
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+<<<<<<< HEAD
+=======
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -405,7 +464,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2261,
+						"buffer_size": 2189,
 						"regions":
 						{
 						},
@@ -418,6 +477,56 @@
 						],
 						"settings":
 						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+>>>>>>> master
+						},
+						"translation.x": -0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+<<<<<<< HEAD
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2261,
+=======
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "views/selectreport.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3216,
+>>>>>>> master
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+<<<<<<< HEAD
+								0,
+								0
+=======
+								511,
+								511
+>>>>>>> master
+							]
+						],
+						"settings":
+						{
+<<<<<<< HEAD
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
@@ -436,25 +545,14 @@
 					"settings":
 					{
 						"buffer_size": 3216,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								511,
-								511
-							]
-						],
-						"settings":
-						{
+=======
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -464,35 +562,52 @@
 					"settings":
 					{
 						"buffer_size": 866,
+>>>>>>> master
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
+<<<<<<< HEAD
+								511,
+								511
+=======
 								203,
 								203
+>>>>>>> master
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
+<<<<<<< HEAD
+						"translation.y": 132.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "views/deletetruck.jade",
+=======
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
 					"file": "routes/admin.js",
+>>>>>>> master
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 39133,
+						"buffer_size": 38226,
 						"regions":
 						{
 						},
@@ -512,11 +627,66 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+<<<<<<< HEAD
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "routes/admin.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 39133,
+=======
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
+					"file": "routes/functions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23914,
+>>>>>>> master
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+<<<<<<< HEAD
+								54,
+								54
+=======
+								0,
+								0
+>>>>>>> master
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+<<<<<<< HEAD
+						"translation.y": 0.0,
+=======
+						"translation.y": 3696.0,
+>>>>>>> master
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+<<<<<<< HEAD
+					"buffer": 5,
+=======
+					"buffer": 6,
+>>>>>>> master
 					"file": "views/callentrytable.jade",
 					"semi_transient": false,
 					"settings":
@@ -541,11 +711,19 @@
 						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 14,
 					"type": "text"
 				},
 				{
 					"buffer": 6,
+=======
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+>>>>>>> master
 					"file": "views/deletetask.jade",
 					"semi_transient": false,
 					"settings":
@@ -570,24 +748,32 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 18,
 					"type": "text"
 				},
 				{
 					"buffer": 7,
+=======
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+>>>>>>> master
 					"file": "routes/main.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15552,
+						"buffer_size": 15547,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11102,
-								11102
+								12422,
+								12422
 							]
 						],
 						"settings":
@@ -595,14 +781,18 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6418.0,
+						"translation.y": 7722.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
+<<<<<<< HEAD
 					"buffer": 8,
+=======
+					"buffer": 9,
+>>>>>>> master
 					"file": "public/javascripts/mainscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -626,11 +816,19 @@
 						"translation.y": 1540.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 9,
+=======
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+>>>>>>> master
 					"file": "public/javascripts/scripts.js",
 					"semi_transient": false,
 					"settings":
@@ -655,16 +853,28 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 10,
+=======
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+>>>>>>> master
 					"file": "public/javascripts/truckscripts.js",
 					"semi_transient": false,
 					"settings":
 					{
+<<<<<<< HEAD
 						"buffer_size": 1897,
+=======
+						"buffer_size": 1521,
+>>>>>>> master
 						"regions":
 						{
 						},
@@ -684,11 +894,19 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 11,
+=======
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+>>>>>>> master
 					"file": "public/javascripts/adminscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -717,7 +935,11 @@
 					"type": "text"
 				},
 				{
+<<<<<<< HEAD
 					"buffer": 12,
+=======
+					"buffer": 13,
+>>>>>>> master
 					"file": "public/stylesheets/style.css",
 					"semi_transient": false,
 					"settings":
@@ -742,11 +964,19 @@
 						"translation.y": 8470.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 13,
+=======
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+>>>>>>> master
 					"file": "views/admin.jade",
 					"semi_transient": false,
 					"settings":
@@ -771,11 +1001,19 @@
 						"translation.y": 95.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 12,
 					"type": "text"
 				},
 				{
 					"buffer": 14,
+=======
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+>>>>>>> master
 					"file": "views/addtruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -800,11 +1038,19 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 16,
 					"type": "text"
 				},
 				{
 					"buffer": 15,
+=======
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+>>>>>>> master
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
@@ -826,14 +1072,22 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 404.0,
+						"translation.y": 118.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 17,
 					"type": "text"
 				},
 				{
 					"buffer": 16,
+=======
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+>>>>>>> master
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -857,11 +1111,19 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 19,
 					"type": "text"
 				},
 				{
 					"buffer": 17,
+=======
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+>>>>>>> master
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -883,6 +1145,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
+<<<<<<< HEAD
 						"translation.y": 792.0,
 						"zoom_level": 1.0
 					},
@@ -891,6 +1154,16 @@
 				},
 				{
 					"buffer": 18,
+=======
+						"translation.y": 220.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+>>>>>>> master
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -913,6 +1186,7 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+<<<<<<< HEAD
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -920,6 +1194,44 @@
 				},
 				{
 					"buffer": 19,
+=======
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "routes/truck.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 21590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+>>>>>>> master
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -944,7 +1256,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+<<<<<<< HEAD
 					"stack_index": 11,
+=======
+					"stack_index": 20,
+>>>>>>> master
 					"type": "text"
 				}
 			]
