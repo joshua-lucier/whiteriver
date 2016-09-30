@@ -40,58 +40,13 @@
 	"buffers":
 	[
 		{
-			"file": "routes/functions.js",
+			"contents": "var cookieParser = require('cookie-parser');\nvar cookieSession = require('cookie-session');\nvar express = require('express');\nvar querystring = require('querystring');\nvar https = require('https');\nvar router = express.Router();\nvar secret = process.env.secret;\nvar accid = process.env.accid;\nvar acckey = process.env.key;\nvar pgusername = process.env.pgusername;\nvar pgpassword = process.env.pgpassword;\nvar pghost = process.env.pghost;\nvar pgdatabase = process.env.pgdatabase;\nvar parseString = require('xml2js').parseString;\nvar pg = require('pg');\nrouter.use(cookieParser(secret));\nrouter.use(cookieSession({\n  name: 'whiteriver',\n  keys: [secret]\n}));\nAdminAuthorize = require('./functions').AdminAuthorize;\n\nrouter.get('/',function(req,res,next){\n	AdminAuthorize(req,res,next,function(id,username){\n		names = [];\n		ids = [];\n		exclusions = [];\n		trucks = [];\n		//Get employee roster\n		var post2_data = querystring.stringify({\n			accid: accid,\n			acckey: acckey,\n			cmd: 'getMembers',\n		});\n		var post2_options = {\n			host: 'secure2.aladtec.com',\n			port: 443,\n			path: '/wrva/xmlapi.php',\n			method: 'POST',\n			headers: {\n				'Content-Type': 'application/x-www-form-urlencoded',\n				'Content-Length': Buffer.byteLength(post2_data)\n			}\n		}\n		var post2_req = https.request(post2_options, function(post2_res){\n			post2_res.setEncoding('utf8');\n			post2_res.on('data',function (chunk2){\n				var connectionString = \"postgres:\" + pgusername +\":\" + pgpassword + \"@\" + pghost +\"/\" + pgdatabase;\n				pg.connect(connectionString, function(err,client,done){\n					var query2 = client.query(\"select * from Exclusions;\");\n					query2.on('row', function(row){\n						exclusions.push(row.memberid);\n					});\n					query2.on('end', function(results2){\n						parseString(chunk2, function(err2, result2){\n							creatorname = '';\n							//console.log(result2.results.members[0].member[0]['$'].id);\n							//console.log(result2.results.members[0].member[0].name[0]);\n							//extract the name of the user from result2\n							result2.results.members[0].member.forEach(function(item){\n								exclusion = false;\n								exclusions.forEach(function(exclusionitem){\n									if(item['$'].id == exclusionitem) exclusion = true;\n								});\n								if(!exclusion){\n									ids.push(item['$'].id);\n									names.push(item.name[0]);\n								}\n							});\n							query3 = client.query(\"select * from Trucks;\");\n							query3.on('row', function(row2){\n								trucks.push(row2);\n							});\n							query3.on('end', function(results3){\n								res.render('selectreport',{title: 'Select Report',ids: ids, names: names, trucks: trucks});\n							});\n						});\n					});\n				});\n			});\n		});\n		post2_req.write(post2_data);\n		post2_req.end();\n	});\n});\n\nrouter.get('/pie', function(req,res,next){\n	\n});\n\n\nmodule.exports = router;",
+			"file": "routes/reports.js",
+			"file_size": 2887,
+			"file_write_time": 131160097571341064,
 			"settings":
 			{
-				"buffer_size": 23819,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/invalid.jade",
-			"settings":
-			{
-				"buffer_size": 88,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "package.json",
-			"settings":
-			{
-				"buffer_size": 778,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/deletealert.jade",
-			"settings":
-			{
-				"buffer_size": 725,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/appdevlogin.jade",
-			"settings":
-			{
-				"buffer_size": 317,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/adminlogin.jade",
-			"settings":
-			{
-				"buffer_size": 316,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": ".gitignore",
-			"settings":
-			{
-				"buffer_size": 657,
+				"buffer_size": 2796,
 				"line_ending": "Windows"
 			}
 		},
@@ -104,164 +59,13 @@
 			}
 		},
 		{
-			"file": "views/login.jade",
+			"contents": "extends layout\n\nblock content\n	div(class=\"HomeContainer\")\n		div(class=\"Inner\")\n			h1 Report Generator\n			div(id=\"pieselect\")\n				h2 Pie Chart Generator\n				form(action=\"/reports/pie\" method=\"get\")\n					label Pie Type:\n						select(name=\"pietype\")\n							option(value=\"calltype\") Call Type\n							option(value=\"calllocation\") Call Location\n							option(value=\"destination\") Destination\n							option(value=\"unit\") Unit\n							option(value=\"driver\") Driver\n							option(value=\"provider\") Primary Care Provider\n					input(type=\"submit\", value=\"Generate\")\n			div(id=\"generalreportselect\")\n				h2 General Report Generator\n				form(action\"/reports/general\" method=\"post\")\n					label Driver:\n						select(name=\"drivers\",multiple)\n							for name in names\n								option(value=\"#{name}\") #{name}\n					br\n					label Provider:\n						select(name=\"provider\", multiple)\n							for name in names\n								option(value=\"#{name}\") #{name}\n					br\n					label Units:\n						select(name=\"units\", multiple)\n							for truck in trucks\n								option(value=\"#{truck.truckname}\") #{truck.truckname}\n					br\n					label Call Types:\n						select(name=\"calltypes\", multiple)\n							option(value=\"Trauma\") Trauma\n							option(value=\"Medical\") Medical\n							option(value=\"Transfer\") Transfer\n							option(value=\"Motor Vehicle Accident\") Motor Vehicle Accident\n							option(value=\"SCT\") SCT\n							option(value=\"Paramedic Intercept\") Paramedic Intercept\n							option(value=\"Fire Standby\") Fire Standby\n							option(value=\"Mutual Aid\") Mutual Aid\n							option(value=\"Medical Alarm Activation\") Medical Alarm Activation\n							option(value=\"Public Assist\") Public Assist\n							option(value=\"Critical Care Transfer\") Critical Care Transfer\n					br\n					label Call Locations:\n						select(name=\"calllocations\", id=\"calllocations\", multiple)\n							option(value=\"Barnard\") Barnard\n							option(value=\"Bethel\") Bethel\n							option(value=\"Braintree\") Braintree\n							option(value=\"Brookfield\") Brookfield\n							option(value=\"East Granville\") East Granville\n							option(value=\"GMC - BC\") GMC - BC\n							option(value=\"GMC - ED\") GMC - ED\n							option(value=\"GMC - HP\") GMC - HP\n							option(value=\"Morgan Orchards\") Morgan Orchards\n							option(value=\"Granville\") Granville\n							option(value=\"Hancock\") Hancock\n							option(value=\"Pittsfield\") Pittsfield\n							option(value=\"Randolph\") Randolph\n							option(value=\"Rochester\") Rochester\n							option(value=\"Stockbridge\") Stockbridge\n							option(value=\"Other\") Other\n					br\n					label Call Destination:\n						select(name=\"calldestinations\", id=\"calldestinations\", multiple)\n							option(value=\"No Transport\") No Transport\n							option(value=\"GMC\") GMC\n							option(value=\"DHMC\") DHMC\n							option(value=\"CVMC\") CVMC\n							option(value=\"UVMMC\") UVMMC\n							option(value=\"PMC\") PMC\n							option(value=\"PRMC\") PRMC\n							option(value=\"VAMC\") VAMC\n							option(value=\"MAH\") MAH\n							option(value=\"Morgan Orchards\") Morgan Orchards\n							option(value=\"Home\") Home\n							option(value=\"Nursing Home\") Nursing Home\n							option(value=\"Landing Zone\") Landing Zone\n							option(value=\"Other Destination\") Other Destination\n					br\n					input(type=\"submit\",value=\"Generate\")\n",
+			"file": "views/selectreport.jade",
+			"file_size": 3303,
+			"file_write_time": 131160100143112549,
 			"settings":
 			{
-				"buffer_size": 318,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/layout.jade",
-			"settings":
-			{
-				"buffer_size": 863,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/index.jade",
-			"settings":
-			{
-				"buffer_size": 489,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/manage.jade",
-			"settings":
-			{
-				"buffer_size": 321,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/main.jade",
-			"settings":
-			{
-				"buffer_size": 915,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/logout.jade",
-			"settings":
-			{
-				"buffer_size": 185,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/mobile.jade",
-			"settings":
-			{
-				"buffer_size": 350,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/truck.jade",
-			"settings":
-			{
-				"buffer_size": 458,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/edittruck.jade",
-			"settings":
-			{
-				"buffer_size": 1140,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/edittask.jade",
-			"settings":
-			{
-				"buffer_size": 2971,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/error.jade",
-			"settings":
-			{
-				"buffer_size": 136,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "routes/index.js",
-			"settings":
-			{
-				"buffer_size": 2352,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "routes/logout.js",
-			"settings":
-			{
-				"buffer_size": 1826,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "routes/login.js",
-			"settings":
-			{
-				"buffer_size": 1076,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "routes/truck.js",
-			"settings":
-			{
-				"buffer_size": 21590,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/makecallentry.jade",
-			"settings":
-			{
-				"buffer_size": 3118,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/editcallentry.jade",
-			"settings":
-			{
-				"buffer_size": 3423,
-				"line_ending": "Windows",
-				"name": "extends layout"
-			}
-		},
-		{
-			"file": "public/javascripts/locationpicker.jquery.min.js",
-			"settings":
-			{
-				"buffer_size": 6902,
-				"line_ending": "Windows",
-				"name": "/*! jquery-locationpicker - v0.1.13 - 2016-03-11 *"
-			}
-		},
-		{
-			"file": "public/javascripts/truckscripts.js",
-			"settings":
-			{
-				"buffer_size": 1521,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "views/editalert.jade",
-			"settings":
-			{
-				"buffer_size": 1183,
+				"buffer_size": 3216,
 				"line_ending": "Windows"
 			}
 		},
@@ -277,7 +81,15 @@
 			"file": "routes/admin.js",
 			"settings":
 			{
-				"buffer_size": 38020,
+				"buffer_size": 38226,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "routes/functions.js",
+			"settings":
+			{
+				"buffer_size": 23914,
 				"line_ending": "Windows"
 			}
 		},
@@ -301,7 +113,7 @@
 			"file": "routes/main.js",
 			"settings":
 			{
-				"buffer_size": 15552,
+				"buffer_size": 15547,
 				"line_ending": "Windows"
 			}
 		},
@@ -314,26 +126,32 @@
 			}
 		},
 		{
+			"contents": "/*Scripts for entire site\nBy Joshua Lucier\nMIT Licensed\n*/\n\n$.ajaxSetup({ cache: false });\n\n$(\"body\").ready(function(){\n	$(\".input\").each(function(index){\n		if(!$(this).val()){\n			$(this).after('<span class=\"message\">Empty Field!!</span>');\n		}\n	});\n	$(\".input\").blur(function(index){\n		if(!$(this).val()){\n			$(this).after('<span class=\"message\">Empty Field!!</span>');\n		}\n	});\n\n	$(\".input\").focus(function(index){\n			console.log($(this));\n			$(this).next().remove();\n	}); \n});\n",
 			"file": "public/javascripts/scripts.js",
+			"file_size": 439,
+			"file_write_time": 131142824040512233,
 			"settings":
 			{
-				"buffer_size": 420,
+				"buffer_size": 480,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"file": "public/javascripts/truckscripts.js",
+			"settings":
+			{
+				"buffer_size": 1521,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "/*\nScripts for admin page\nBy Joshua Lucier\nMIT Licensed\n*/\n\n//lists trucks under #trucklist div\nfunction listtrucks(callback){\n	$.get(\"/admin/gettrucks\", function(data,status){\n		$(\"#trucklist\").html(data);\n		callback();\n	});\n}\n\n//lists tasks under #tasklist div\nfunction listtasks(callback){\n	$.get(\"/admin/gettasks\", function(data,status){\n		$(\"#tasklist\").html(data);\n		callback();\n	});\n}\n\n//lists alerts under #alertlist div\nfunction listalerts(callback){\n	$.get(\"/admin/getalerts\", function(data,status){\n		$(\"#alertlist\").html(data);\n		callback();\n	});\n}\n\n//lists Current tasks under todaystasks div\nfunction todaystasks(callback){\n	$.get(\"/admin/todaystasks\", function(data,status){\n		$(\"#todaystasks\").html(data);\n		callback();\n	});\n}\n\n//lists current alerts\nfunction todaysalerts(callback){\n	$.get(\"/admin/todaysalerts\", function(data,status){\n		$(\"#todaysalerts\").html(data);\n		callback();\n	});\n}\n\n//generates the list of users to mark as admins or exclude from lists\nfunction listadmins(callback){\n	$.get(\"/admin/getadmins\", function(data,status){\n		$(\"#adminlist\").html(data);\n		callback();\n	});\n}\n\n//this contracts the admins list\nfunction clearadmins(callback){\n	$(\"#adminlist\").html('+');\n	callback();\n}\n\n//determines if the admin list is expanded or not\nfunction toggleadminlist(callback){\n	if($(\"#adminlist\").html() == '+'){\n		listadmins(function(){\n			callback();\n		});\n	} else {\n		clearadmins(function(){\n			callback();\n		});\n	}\n}\n\n//displays the admin list on load page\nfunction displayadmin(callback){\n	if($(\"#adminlist\").html()=='+'){\n		clearadmins(function(){\n			callback();\n		});\n	} else {\n		listadmins(function(){\n			callback();\n		});\n	}\n}\n\n//Called when page first comes up.  Displays all content\nfunction loadpage(callback){\n	listtasks(function(){\n		todaystasks(function(){\n			listtrucks(function(){\n				listalerts(function(){\n					todaysalerts(function(){\n						displayadmin(function(){\n						});\n					});\n				});\n			});\n		});\n	});\n}\n\n//calls load page\n$(\"body\").ready(function(){\n	loadpage(function(){});\n});\n\n//creates task interval which calls load page every 30 seconds\ntasklistinterval = setInterval(function(){\n	loadpage(function(){});\n}, 30000);\n\n//toggles a check mark under task list\nfunction togglemark(id){\n	togglemarky = \"/admin/togglemark?taskid=\" + id;\n	$.get(togglemarky,function(data,status){\n		listtasks(function(){\n			todaystasks(function(){});\n		});\n	});\n}\n\n//toggles admin mark\nfunction toggleadmin(id){\n	toggleadminy = \"/admin/toggleadmin?memberid=\" + id;\n	$.get(toggleadminy,function(data,status){\n		displayadmin(function(){});\n	});\n}\n\n//toggles exclusion mark\nfunction toggleexclude(id){\n	toggleexcludey = \"/admin/toggleexclude?memberid=\" + id;\n	$.get(toggleexcludey,function(data,status){\n		displayadmin(function(){});\n	});\n}\n\n\n",
 			"file": "public/javascripts/adminscripts.js",
+			"file_size": 2248,
+			"file_write_time": 131183574426226333,
 			"settings":
 			{
-				"buffer_size": 2131,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "public/javascripts/jquery.datetimepicker.full.min.js",
-			"settings":
-			{
-				"buffer_size": 53456,
+				"buffer_size": 2780,
 				"line_ending": "Windows"
 			}
 		},
@@ -341,7 +159,7 @@
 			"file": "public/stylesheets/style.css",
 			"settings":
 			{
-				"buffer_size": 5523,
+				"buffer_size": 6149,
 				"line_ending": "Windows"
 			}
 		},
@@ -390,6 +208,14 @@
 			"settings":
 			{
 				"buffer_size": 1178,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "routes/truck.js",
+			"settings":
+			{
+				"buffer_size": 21590,
 				"line_ending": "Windows"
 			}
 		},
@@ -444,46 +270,52 @@
 	],
 	"file_history":
 	[
-		"/C/Users/joshu/Desktop/whiteriver/views/admin.jade",
-		"/C/Users/joshu/Desktop/whiteriver/public/stylesheets/style.css",
+		"/C/Users/joshu/Desktop/whiteriver/views/editalert.jade",
 		"/C/Users/joshu/Desktop/whiteriver/public/javascripts/truckscripts.js",
+		"/C/Users/joshu/Desktop/whiteriver/public/javascripts/locationpicker.jquery.min.js",
+		"/C/Users/joshu/Desktop/whiteriver/views/editcallentry.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/makecallentry.jade",
+		"/C/Users/joshu/Desktop/whiteriver/routes/truck.js",
+		"/C/Users/joshu/Desktop/whiteriver/routes/login.js",
+		"/C/Users/joshu/Desktop/whiteriver/routes/logout.js",
+		"/C/Users/joshu/Desktop/whiteriver/routes/index.js",
+		"/C/Users/joshu/Desktop/whiteriver/views/error.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/edittask.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/edittruck.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/truck.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/mobile.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/logout.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/main.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/manage.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/index.jade",
+		"/C/Users/joshu/Desktop/whiteriver/views/login.jade",
+		"/C/Users/joshu/Desktop/whiteriver/app.js",
 		"/C/Users/joshu/Desktop/whiteriver/views/layout.jade",
-		"/C/Users/joshu/Desktop/whiteriver/.env",
-		"/C/Users/joshu/Desktop/whiteriver/views/invalid.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/addtruck.jade",
+		"/C/Users/joshu/Desktop/whiteriver/.gitignore",
 		"/C/Users/joshu/Desktop/whiteriver/views/adminlogin.jade",
 		"/C/Users/joshu/Desktop/whiteriver/views/appdevlogin.jade",
-		"/C/Users/joshu/Desktop/whiteriver/routes/login.js",
-		"/C/Users/joshu/Desktop/whiteriver/routes/index.js",
+		"/C/Users/joshu/Desktop/whiteriver/views/deletealert.jade",
+		"/C/Users/joshu/Desktop/whiteriver/package.json",
+		"/C/Users/joshu/Desktop/whiteriver/views/invalid.jade",
+		"/C/Users/joshu/Desktop/whiteriver/routes/functions.js",
+		"/C/Users/joshu/Desktop/whiteriver/views/admin.jade",
+		"/C/Users/joshu/Desktop/whiteriver/public/stylesheets/style.css",
+		"/C/Users/joshu/Desktop/whiteriver/.env",
+		"/C/Users/joshu/Desktop/whiteriver/views/addtruck.jade",
 		"/C/Users/joshu/Desktop/whiteriver/public/javascripts/adminscripts.js",
 		"/C/Users/joshu/Desktop/whiteriver/public/javascripts/scripts.js",
-		"/C/Users/joshu/Desktop/whiteriver/routes/logout.js",
 		"/C/Users/joshu/Desktop/whiteriver/routes/main.js",
 		"/C/Users/joshu/Desktop/whiteriver/routes/mobile.js",
-		"/C/Users/joshu/Desktop/whiteriver/views/logout.jade",
 		"/C/Users/joshu/Desktop/whiteriver/routes/database.js",
-		"/C/Users/joshu/Desktop/whiteriver/routes/truck.js",
 		"/C/Users/joshu/Desktop/whiteriver/routes/users.js",
 		"/C/Users/joshu/Desktop/whiteriver/routes/admin.js",
 		"/C/Users/joshu/Desktop/whiteriver/views/deletetruck.jade",
 		"/C/Users/joshu/Desktop/whiteriver/views/addtask.jade",
 		"/C/Users/joshu/Desktop/whiteriver/views/deletetask.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/edittask.jade",
 		"/C/Users/joshu/Desktop/whiteriver/views/addalert.jade",
 		"/C/Users/joshu/Desktop/whiteriver/routes/edittask",
 		"/C/Users/joshu/Desktop/nodeSite/nodeSite/routes/index.js",
-		"/C/Users/joshu/Desktop/whiteriver/views/error.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/login.jade",
 		"/C/Users/joshu/Desktop/whiteriver/Procfile",
-		"/C/Users/joshu/Desktop/whiteriver/package.json",
-		"/C/Users/joshu/Desktop/whiteriver/.gitignore",
-		"/C/Users/joshu/Desktop/whiteriver/views/index.jade",
-		"/C/Users/joshu/Desktop/whiteriver/app.js",
-		"/C/Users/joshu/Desktop/whiteriver/routes/functions.js",
-		"/C/Users/joshu/Desktop/whiteriver/views/manage.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/truck.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/mobile.jade",
-		"/C/Users/joshu/Desktop/whiteriver/views/main.jade",
 		"/C/Users/joshu/Desktop/whiteriver/index.js",
 		"/C/Users/joshu/Desktop/nodeSite/nodeSite/views/profile.jade",
 		"/C/Users/joshu/Desktop/nodeSite/nodeSite/views/contact.jade",
@@ -512,7 +344,7 @@
 	],
 	"find":
 	{
-		"height": 43.0
+		"height": 30.0
 	},
 	"find_in_files":
 	{
@@ -526,6 +358,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"gettasks",
+			"getcurrent",
+			"gettasks",
 			"edittask",
 			".li",
 			"li ",
@@ -554,211 +389,40 @@
 	"groups":
 	[
 		{
-			"selected": 29,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "routes/functions.js",
+					"file": "routes/reports.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 23819,
+						"buffer_size": 2796,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4934,
-								4934
+								551,
+								551
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"auto_name": "",
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 885.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "views/invalid.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 88,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								78,
-								78
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 41,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "package.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 778,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								712,
-								712
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 37,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "views/deletealert.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 725,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								346,
-								346
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 23.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 27,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "views/appdevlogin.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 317,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								275,
-								275
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 44,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "views/adminlogin.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 316,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								274,
-								274
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": ".gitignore",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 657,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								107,
-								107
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 36,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
 					"file": "app.js",
 					"semi_transient": false,
 					"settings":
@@ -770,8 +434,8 @@
 						"selection":
 						[
 							[
-								2077,
-								2077
+								0,
+								0
 							]
 						],
 						"settings":
@@ -780,173 +444,28 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 35,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "views/login.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 318,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								206,
-								206
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 29,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "views/layout.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 863,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								862,
-								862
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 462.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "views/index.jade",
+					"buffer": 2,
+					"file": "views/selectreport.jade",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 489,
+						"buffer_size": 3216,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								417,
-								417
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 30,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "views/manage.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 321,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								243,
-								243
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 39,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "views/main.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 915,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								384,
-								384
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 102.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 17,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "views/logout.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 185,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								133,
-								133
+								511,
+								511
 							]
 						],
 						"settings":
@@ -954,421 +473,14 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 40,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
-					"file": "views/mobile.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 350,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								294,
-								325
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 20,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "views/truck.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 458,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								458,
-								458
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "views/edittruck.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1140,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								942,
-								942
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 43,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "views/edittask.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2971,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2457,
-								2511
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 602.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 18,
-					"file": "views/error.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 136,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								78,
-								30
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 42,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
-					"file": "routes/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2352,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1543,
-								1543
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 550.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 32,
-					"type": "text"
-				},
-				{
-					"buffer": 20,
-					"file": "routes/logout.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1826,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1445,
-								1445
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 528.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 22,
-					"type": "text"
-				},
-				{
-					"buffer": 21,
-					"file": "routes/login.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1076,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								531,
-								531
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 31,
-					"type": "text"
-				},
-				{
-					"buffer": 22,
-					"file": "routes/truck.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21590,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6843,
-								5677
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3413.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"file": "views/makecallentry.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3118,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3118,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 24,
-					"file": "views/editcallentry.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3423,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								310,
-								310
-							]
-						],
-						"settings":
-						{
-							"auto_name": "extends layout",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 25,
-					"file": "public/javascripts/locationpicker.jquery.min.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6902,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6902,
-								6902
-							]
-						],
-						"settings":
-						{
-							"auto_name": "/*! jquery-locationpicker - v0.1.13 - 2016-03-11 *",
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 26,
-					"file": "public/javascripts/truckscripts.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1521,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								299,
-								299
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 334.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 27,
-					"file": "views/editalert.jade",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1183,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1077,
-								1041
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 153.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 26,
-					"type": "text"
-				},
-				{
-					"buffer": 28,
+					"buffer": 3,
 					"file": "views/deletetruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -1393,24 +505,24 @@
 						"translation.y": 120.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 38,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 4,
 					"file": "routes/admin.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 38020,
+						"buffer_size": 38226,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								36050,
-								36050
+								54,
+								54
 							]
 						],
 						"settings":
@@ -1419,14 +531,43 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 21676.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 5,
+					"file": "routes/functions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23914,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3696.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
 					"file": "views/callentrytable.jade",
 					"semi_transient": false,
 					"settings":
@@ -1451,11 +592,11 @@
 						"translation.y": 132.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 7,
 					"file": "views/deletetask.jade",
 					"semi_transient": false,
 					"settings":
@@ -1480,24 +621,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 8,
 					"file": "routes/main.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15552,
+						"buffer_size": 15547,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11102,
-								11102
+								12422,
+								12422
 							]
 						],
 						"settings":
@@ -1505,14 +646,14 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6418.0,
+						"translation.y": 7722.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 9,
 					"file": "public/javascripts/mainscripts.js",
 					"semi_transient": false,
 					"settings":
@@ -1524,8 +665,8 @@
 						"selection":
 						[
 							[
-								1981,
-								1981
+								1667,
+								1667
 							]
 						],
 						"settings":
@@ -1533,27 +674,27 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1327.0,
+						"translation.y": 1540.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 10,
 					"file": "public/javascripts/scripts.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 480,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								30,
-								30
+								55,
+								55
 							]
 						],
 						"settings":
@@ -1565,24 +706,53 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 11,
+					"file": "public/javascripts/truckscripts.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1521,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								599,
+								599
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
 					"file": "public/javascripts/adminscripts.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2131,
+						"buffer_size": 2780,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1989,
-								1989
+								55,
+								55
 							]
 						],
 						"settings":
@@ -1594,52 +764,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 36,
-					"file": "public/javascripts/jquery.datetimepicker.full.min.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 53456,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 37,
+					"buffer": 13,
 					"file": "public/stylesheets/style.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5523,
+						"buffer_size": 6149,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5520,
-								5520
+								6146,
+								6146
 							]
 						],
 						"settings":
@@ -1648,14 +790,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 8067.0,
+						"translation.y": 8470.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 14,
 					"file": "views/admin.jade",
 					"semi_transient": false,
 					"settings":
@@ -1667,8 +809,8 @@
 						"selection":
 						[
 							[
-								924,
-								924
+								141,
+								141
 							]
 						],
 						"settings":
@@ -1677,14 +819,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 381.0,
+						"translation.y": 95.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 15,
 					"file": "views/addtruck.jade",
 					"semi_transient": false,
 					"settings":
@@ -1709,11 +851,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 16,
 					"file": "views/addtask.jade",
 					"semi_transient": false,
 					"settings":
@@ -1735,14 +877,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 404.0,
+						"translation.y": 118.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 17,
 					"file": ".env",
 					"semi_transient": false,
 					"settings":
@@ -1766,11 +908,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 34,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 42,
+					"buffer": 18,
 					"file": "routes/mobile.js",
 					"semi_transient": false,
 					"settings":
@@ -1782,8 +924,8 @@
 						"selection":
 						[
 							[
-								475,
-								475
+								1589,
+								1565
 							]
 						],
 						"settings":
@@ -1792,14 +934,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 455.0,
+						"translation.y": 220.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 43,
+					"buffer": 19,
 					"file": "routes/database.js",
 					"semi_transient": false,
 					"settings":
@@ -1821,14 +963,43 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 142.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 20,
+					"file": "routes/truck.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 21590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
 					"file": "views/addalert.jade",
 					"semi_transient": false,
 					"settings":
@@ -1840,8 +1011,8 @@
 						"selection":
 						[
 							[
-								877,
-								951
+								0,
+								78
 							]
 						],
 						"settings":
@@ -1850,10 +1021,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 153.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 20,
 					"type": "text"
 				}
 			]
