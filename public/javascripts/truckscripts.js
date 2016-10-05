@@ -1,43 +1,77 @@
-/*Trucks page scripts
-By Joshua Lucier
-MIT Licensed
+/*******************************************************************************************************//**
+*	\file truckscripts.js
+*	\brief Scripts applied to mobile app
+*	\details These scripts are applied to the mobile trucks page.  It is mostly AJAX calls.
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date October 5, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
+/** \fn GetTidyRuns
+*	\brief Gets runs that need to be reported on and displays them
+*	\pre The page is loaded
+*	\param TruckID Id of the truck that the user is in
+*	\param callback A function
+*	\details Cache is set to false so that IE does not store ajax output.
+*	\return void
 */
-
-//Gets all runs that need to be tidied and displays them
-function gettidyruns(truckid,callback){
-	$.get("/truck/gettidyruns?truckid="+truckid, function(data,status){
-		$("#TidyRuns").html(data);
-		callback();
+function GetTidyRuns(TruckID,Callback){
+	$.get("/truck/gettidyruns?truckid="+TruckID, function(Data,Status){
+		$("#TidyRuns").html(Data);
+		Callback();
 	});
 }
 
 
-//Gets the actual status of the truck
-function getstatus(truckid,callback){
-	$.get("/truck/getstatus?truckid="+truckid, function(data,status){
-		$("#truckstatus").html(data);
-		gettidyruns(truckid,function(){
-			callback();
+/** \fn GetStatus
+*	\brief Gets the truck status and displays it
+*	\param TruckID The ID of the truck the user is in
+*	\param Callback A function
+*	\details This function gets the code for the status menu along with the status.
+*	\details It then displays the html in the #truckstatus div.
+*	\return void
+*/
+function GetStatus(TruckID,Callback){
+	$.get("/truck/getstatus?truckid="+TruckID, function(Data,Status){
+		$("#truckstatus").html(Data);
+		GetTidyRuns(TruckID,function(){
+			Callback();
 		});
 	});
 }
 
-//Called when user presses responding.  Marks status as responding and opens a new run.
-function responding(truckid, callback){
-	$.get("/truck/responding?truckid="+truckid, function(data,status){
-		$("#Message").html(data);
-		getstatus(truckid, function(){
-			callback();
+/** \fn Responding
+*	\brief Called when the user presses responding.
+*	\pre The user presses responding.
+*	\param TruckID The ID of the current truck
+*	\param Callback A function
+*	\details The status is changed to responding and then GetStatus is called
+*	\return void
+*/
+function Responding(TruckID, Callback){
+	$.sget("/truck/responding?truckid="+TruckID, function(Data,Status){
+		$("#Message").html(Data);
+		GetStatus(TruckID, function(){
+			Callback();
 		});
 	});
 }
 
-//Marks status as onscene
-function onscene(truckid, callback){
-	$.get("/truck/onscene?truckid="+truckid, function(data,status){
-		$("#Message").html(data);
-		getstatus(truckid, function(){
-			callback();
+/** \fn OnScene
+*	\brief Changes status to onscene
+*	\pre The user clicks on onscene
+*	\param TruckID Truck ID of the current truck
+*	\details Changes the status of the current truck to onscene and calls Getstatus
+*	\details to refresh the status display.
+*	\return void
+*/
+function OnScene(TruckID, Callback){
+	$.get("/truck/onscene?truckid="+TruckID, function(Data,Status){
+		$("#Message").html(Data);
+		GetStatus(TruckID, function(){
+			Callback();
 		});
 	})
 }
