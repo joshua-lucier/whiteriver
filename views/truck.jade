@@ -6,10 +6,13 @@ block content
 			div(class="row")
 				div(class="span2 text-center")
 					h1 #{truck.truckname}
-				div(class="span10")
+				div(class="span9")
 					div(id="truckstatus")
+				div(class="span1")
+					div(id="responsetime")
 			div(class="row")
 				div(class="span2 offset1 text-left", id="Message")
-				div(class="span9 text-left", id="TidyRuns")
+				div(class="span10 text-left", id="TidyRuns")
 	script(src="/javascripts/truckscripts.js", type="text/javascript")
 	script(sync) getstatus(#{truck.truckid},function(){});
+	script(sync) getresponsetime(#{truck.truckid},function(){});

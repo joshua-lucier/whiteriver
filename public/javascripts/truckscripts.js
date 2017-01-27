@@ -17,7 +17,9 @@ function getstatus(truckid,callback){
 	$.get("/truck/getstatus?truckid="+truckid, function(data,status){
 		$("#truckstatus").html(data);
 		gettidyruns(truckid,function(){
-			callback();
+			getresponsetime(truckid,function(){
+				callback();
+			});
 		});
 	});
 }
@@ -79,5 +81,15 @@ function service(truckid, callback){
 		getstatus(truckid, function(){
 			callback();
 		});
-	})
+	});
+}
+
+//Gets response time for the current call
+function getresponsetime(truckid, callback){
+	$.get("/truck/responsetime?truckid="+truckid, function(data,status){
+		data = data.replace(/\d\d\d\d-\d\d-\d\dT/, "");
+		data = data.replace(/:\d\d.\d\d\dZ/,"");
+		$("#responsetime").html(data);
+		callback();
+	});
 }

@@ -569,4 +569,30 @@ router.get('/service',function(req,res,next){
 
 	});
 });
+
+router.get('/responsetime',function(req,res,next){
+	Authorize(req,res,next,function(id,username){
+		truckid = req.query.truckid;
+		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
+		pg.connect(connectionString, function(err,client,done){
+			console.log('connection complete');
+			if(err){
+				console.error('could not connect to postgres', err);
+			}
+			var query = client.query("select StatusTime from (select RunID from Runs where TruckID = $1) a,(select StatusTime, RunID from TruckStatusEntries where Status='responding') b where a.RunID = b.RunID order by StatusTime desc limit 1;", [truckid]);
+			query.on('row', function(row){
+				responsetime = row;
+				console.log(responsetime.statustime);
+				res.send(responsetime.statustime);
+			});
+			query.on('error', function(error){
+				res.send("Could not get query" + error);
+			});
+			query.on('end', function(results){
+				done();
+			});
+		});
+	});
+});
+
 module.exports = router;
