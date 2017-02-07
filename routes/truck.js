@@ -583,7 +583,7 @@ router.get('/responsetime',function(req,res,next){
 			query.on('row', function(row){
 				responsetime = row;
 				console.log(responsetime.statustime);
-				res.send(responsetime.statustime);
+				res.send(responsetime.statustime + "");
 			});
 			query.on('error', function(error){
 				res.send("Could not get query" + error);
