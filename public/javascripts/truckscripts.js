@@ -89,7 +89,10 @@ function getresponsetime(truckid, callback){
 	$.get("/truck/responsetime?truckid="+truckid, function(data,status){
 		console.log(data);
 		data = data.replace(/\w\w\w\s\w\w\w\s\d\d\s\d\d\d\d\s/, "");
-		data = data.replace(/\s\w\w\w-\d\d\d\d\s\(Eastern Standard Time\)/,"");
+		data = data.replace(/\s\w\w\w-\d\d\d\d/,"");
+		data = data.replace(/\s\(Eastern Standard Time\)/,"");
+		data = data.replace(/\s\(EST\)/,"");
+
 		$("#responsetime").html(data);
 		callback();
 	});
