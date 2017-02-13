@@ -1,3 +1,14 @@
+/*******************************************************************************************************//**
+*	\file functions.js
+*	\brief Dumping ground for functions that need a new home
+*	\details Dumping ground for functions that need a new home
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');
@@ -26,6 +37,7 @@ router.use(cookieSession({
   keys: [secret],
 }));
 
+//encrypts a string
 function encrypt(text){
 	var cipher = crypto.createCipher(algorithm,encpassword);
 	var crypted = cipher.update(text,'utf8','hex');
@@ -33,6 +45,7 @@ function encrypt(text){
 	return crypted;
 }
 
+//decrypts a string
 function decrypt(text){
   var decipher = crypto.createDecipher(algorithm,encpassword)
   var dec = decipher.update(text,'hex','utf8')
@@ -41,7 +54,7 @@ function decrypt(text){
 }
 
 module.exports = {
-
+	//Basic authorization function
 	Authorize: function(req,res,next,callback){
 		if(req.body.username && req.body.password){//if coming from /login
 			username = req.body.username;
@@ -155,6 +168,7 @@ module.exports = {
 
 	},
 
+	//Admin authorization function
 	AdminAuthorize: function(req,res,next,callback){
 		Authorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -186,6 +200,7 @@ module.exports = {
 		});
 	},
 
+	//App Developer authorization function
 	AppDevAuthorize: function(req,res,next,callback){
 		if(req.body.username && req.body.password){//if coming from /login
 			username = req.body.username;
@@ -253,6 +268,7 @@ module.exports = {
 		post_req.end();
 	},
 
+	//Creates all tables in database
 	DatabaseInit: function(req,res,next,callback){
 		AppDevAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -303,6 +319,7 @@ module.exports = {
 		});
 	},
 
+	//Deletes all tables in the database
 	DatabaseClear: function(req,res,next,callback){
 		AppDevAuthorize(req,res,next,function(id,username){	
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -350,6 +367,7 @@ module.exports = {
 		});
 	},
 
+	//Adds a truck to the admin page
 	AddTruck: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(id,username){
 			//add the truck to the database
@@ -415,6 +433,7 @@ module.exports = {
 		});
 	},
 
+	//Deletes a truck
 	DeleteTruck: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -440,6 +459,7 @@ module.exports = {
 		});
 	},
 
+	//Edit truck information
 	EditTruck: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -464,6 +484,7 @@ module.exports = {
 		});
 	},
 
+	//adds a task
 	AddTask: function(req,res,next,callback){
 		AdminAuthorize(req,res,next,function(id,username){
 			var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -491,6 +512,7 @@ module.exports = {
 		});
 	},
 
+	//Get a list of tasks
 	GetTasks: function(req,res,next){
 		AdminAuthorize(req,res,next,function(id,username){
 			marked=false;

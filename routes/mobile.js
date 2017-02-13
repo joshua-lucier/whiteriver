@@ -1,3 +1,14 @@
+/*******************************************************************************************************//**
+*	\file mobile.js
+*	\brief The backend script for the mobile app
+*	\details This holds the backend functions for the mobile app.
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');

@@ -1,3 +1,14 @@
+/*******************************************************************************************************//**
+*	\file index.js
+*	\brief Holds test page and index for home page
+*	\details This script links the test page and gets the home page
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');

@@ -1,3 +1,14 @@
+/*******************************************************************************************************//**
+*	\file truck.js
+*	\brief The backend script for the truck page in the mobile app
+*	\details This holds the backend functions for the truck page
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');
@@ -20,6 +31,7 @@ router.use(cookieSession({
 }));
 Authorize = require('./functions').Authorize;
 
+//Gets information about the truck
 router.get('/', function(req,res,next){
 	truckid = req.query.truckid;
 	truck = {}; //truck information from the database
@@ -47,6 +59,7 @@ router.get('/', function(req,res,next){
 	});
 });
 
+//gets runs that haven't been addressed yet for truck
 router.get('/gettidyruns', function(req,res,next){
 	truckid = req.query.truckid;
 	entriesneeded = [];
@@ -99,6 +112,7 @@ router.get('/gettidyruns', function(req,res,next){
 	});
 });
 
+//Make call entry page
 router.get('/makecallentry', function(req,res,next){
 	runid = req.query.runid;
 	Authorize(req,res,next,function(id,username){
@@ -168,6 +182,7 @@ router.get('/makecallentry', function(req,res,next){
 	});
 });
 
+//Enters call entry info into database
 router.post('/newcallentry',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		if(req.body.additionalnames=="") additionalnames="none";
@@ -192,7 +207,7 @@ router.post('/newcallentry',function(req,res,next){
 	});
 });
 
-
+//gets status menu with appropriate status hilited
 router.get('/getstatus', function(req,res,next){
 	truckid = req.query.truckid;
 	status = false;
@@ -240,6 +255,7 @@ router.get('/getstatus', function(req,res,next){
 	});
 });
 
+//Starts a new run with responding status
 router.get('/responding',function(req,res,next){
 	truckid = req.query.truckid;
 	openrun = false;
@@ -305,6 +321,7 @@ router.get('/responding',function(req,res,next){
 	});
 });
 
+//Change status to onscene
 router.get('/onscene',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		truckid = req.query.truckid;
@@ -356,6 +373,7 @@ router.get('/onscene',function(req,res,next){
 	});
 });
 
+//Change status to transporting
 router.get('/transporting',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -408,6 +426,7 @@ router.get('/transporting',function(req,res,next){
 	});
 });
 
+//change status to arrived
 router.get('/arrived',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -460,6 +479,7 @@ router.get('/arrived',function(req,res,next){
 	});
 });
 
+//changes status to clear
 router.get('/clear',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -512,6 +532,7 @@ router.get('/clear',function(req,res,next){
 	});
 });
 
+//change status to service
 router.get('/service',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -570,6 +591,7 @@ router.get('/service',function(req,res,next){
 	});
 });
 
+//display the response time of the last response
 router.get('/responsetime',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		truckid = req.query.truckid;

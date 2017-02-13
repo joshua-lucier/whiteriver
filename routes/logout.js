@@ -1,3 +1,15 @@
+/*******************************************************************************************************//**
+*	\file logout.js
+*	\brief Holds the logout script
+*	\details Holds the logout script
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\bug API and Database server can only handle syncronous ajax requests.  Async will overload.
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');
@@ -20,6 +32,7 @@ router.use(cookieSession({
 }));
 Authenticate = require('./functions').Authenticate;
 
+//Logout script clears all cookies and clear the user's encrypted token
 router.get('/', function(req,res,next){
 	//delete tokens associated with account
 	var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;

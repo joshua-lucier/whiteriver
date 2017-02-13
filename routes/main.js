@@ -1,3 +1,14 @@
+/*******************************************************************************************************//**
+*	\file main.js
+*	\brief The backend script for the main dashboard
+*	\details This holds the backend functions for the main dashboard.
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
+
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var express = require('express');
@@ -27,6 +38,7 @@ router.get('/', function(req,res,next){
 	});
 });
 
+//Gets the crew that is on today
 router.get('/getschedules', function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var post_data = querystring.stringify({
@@ -166,6 +178,7 @@ router.get('/getschedules', function(req,res,next){
 	});
 });
 
+//gets the alerts that are active today
 router.get('/getalerts',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -203,6 +216,7 @@ router.get('/getalerts',function(req,res,next){
 	});
 });
 
+//get due tasks
 router.get('/gettasks', function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		marked=false;
@@ -302,6 +316,7 @@ router.get('/gettasks', function(req,res,next){
 	});
 });
 
+//Displays trucks and truck statuses
 router.get('/gettrucks',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		var connectionString = "postgres:" + pgusername +":" + pgpassword + "@" + pghost +"/" + pgdatabase;
@@ -355,6 +370,7 @@ router.get('/gettrucks',function(req,res,next){
 	});
 });
 
+//Displays last 10 calls
 router.get('/callentrytable',function(req,res,next){
 	Authorize(req,res,next,function(id,username){
 		callentries = [];

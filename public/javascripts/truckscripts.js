@@ -1,7 +1,13 @@
-/*Trucks page scripts
-By Joshua Lucier
-MIT Licensed
-*/
+/*******************************************************************************************************//**
+*	\file truckcripts.js
+*	\brief A front end script for the mobile app
+*	\details This script is used for the trucks page.  All functions call ajax requests to update data.
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date February 13, 2017
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
 
 //Gets all runs that need to be tidied and displays them
 function gettidyruns(truckid,callback){
@@ -84,7 +90,7 @@ function service(truckid, callback){
 	});
 }
 
-//Gets response time for the current call
+//Gets response time for the current call and display
 function getresponsetime(truckid, callback){
 	$.get("/truck/responsetime?truckid="+truckid, function(data,status){
 		console.log(data);
@@ -92,7 +98,6 @@ function getresponsetime(truckid, callback){
 		data = data.replace(/\s\w\w\w-\d\d\d\d/,"");
 		data = data.replace(/\s\(Eastern Standard Time\)/,"");
 		data = data.replace(/\s\(EST\)/,"");
-
 		$("#responsetime").html(data);
 		callback();
 	});

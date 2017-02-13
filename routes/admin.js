@@ -1,9 +1,13 @@
-/*
-Admin Page
-By Joshua Lucier
-Last modified 8/24/2016
-MIT Licensed 
-*/
+/*******************************************************************************************************//**
+*	\file admin.js
+*	\brief Back end scripts for the admin page
+*	\details This script holds the back end functions for the admin page.
+*   \author Joshua Lucier
+*	\version 0.1
+*	\date September 30, 2016
+*	\pre Must have working API
+*	\copyright MIT License
+***********************************************************************************************************/
 
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
